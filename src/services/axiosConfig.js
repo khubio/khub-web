@@ -1,8 +1,7 @@
 import axios from 'axios';
 
-const BASE_API_URL = 'https://hcmus-kahoot-be.herokuapp.com/';
 const axiosConfig = axios.create({
-  baseURL: BASE_API_URL,
+  baseURL: process.env.REACT_APP_BASE_API_URL,
 });
 
 axiosConfig.interceptors.request.use(
