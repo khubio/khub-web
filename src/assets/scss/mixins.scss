@@ -1,0 +1,52 @@
+@import "./variables.scss";
+
+@mixin logo_icon {
+  width: $icon-height;
+  height: $icon-height;
+  border-radius: 50%;
+  object-fit: cover;
+}
+@mixin logo_icon--large {
+  width: $icon-height--large;
+  height: $icon-height--large;
+  border-radius: 50%;
+  object-fit: cover;
+}
+@mixin logo_icon--small {
+  width: $icon-width--small;
+  height: $icon-height--small;
+  border-radius: 50%;
+  object-fit: cover;
+}
+@mixin zoom_animation {
+  cursor: pointer;
+  transition: transform 0.1s ease-in-out;
+  transform: scale(1.2);
+  overflow: hidden;
+}
+
+@mixin flex($align, $justify) {
+  display: flex;
+  justify-content: $justify;
+  align-items: $align;
+}
+
+@mixin position_top_left {
+  position: absolute;
+  top: 0;
+  left: 0;
+}
+
+@mixin circle($height, $width) {
+  border-radius: 50% !important;
+  height: $height !important;
+  width: $width !important;
+}
+
+@mixin defaultBackground($imageName) {
+  background-image: url("../../../public/images/#{$imageName}");
+  background-position: center;
+  background-repeat: no-repeat;
+  background-size: cover;
+  min-height: 100vh;
+}

@@ -1,0 +1,72 @@
+$base-font-size: 0.875rem;
+$font-size--xl: 1rem;
+$font-size--xxl: 1.25rem;
+$font-size--xxxl: 2rem;
+
+$font-weight--bold: 700;
+$font-weight--semibold: 600;
+$font-weight--base: 500;
+
+$orange-primary: #ec8b54;
+$gray-primary: #888;
+$gray-secondary: #999999;
+$gray-dark: rgb(102, 102, 102);
+$gray-light: #e5e7eb;
+$gray-background: #43434375;
+$gray-gradient: linear-gradient(
+  90deg,
+  rgb(0, 0, 0) 0%,
+  rgb(70, 70, 70) 25%,
+  rgb(153, 153, 153) 51%,
+  rgb(0, 0, 0) 100%
+) !important;
+$gradient-background--primary: linear-gradient(
+  90deg,
+  #7448ef 0%,
+  #1d6ade 50%,
+  #9222ca 100%
+) !important;
+$gradient-background--secondary: linear-gradient(
+  90deg,
+  #3c1053 0%,
+  #ad5389 100%
+) !important;
+$gradient-background--light: linear-gradient(
+  90deg,
+  #d3cce3 0%,
+  #e9e4f0 100%
+) !important;
+$gradient-background--blue: linear-gradient(
+  90deg,
+  #d3cce3 0%,
+  #64468f 100%
+) !important ;
+
+$pink-primary: #b565a7;
+$purple-primary: #7928c1;
+$violet: #85388d;
+$violet-dark: #4c2889;
+$blue-primary: rgb(0, 206, 209);
+
+$orange-primary: rgb(255, 160, 122);
+$green-secondary: rgb(5, 89, 91);
+$green-primary: rgb(36, 161, 156);
+$white-primary: rgba(246, 255, 247, 0.95);
+$beige-primary: rgb(245, 245, 220);
+$error-color: rgb(116, 21, 21);
+$success-color: rgb(106, 255, 106);
+$icon-height--large: 5rem;
+$icon-width--large: 5rem;
+$icon-height: 2rem;
+$icon-width: 2rem;
+$icon-height--small: 1.5rem;
+$icon-width--small: 1.5rem;
+
+$medium-key-line: 0.0625rem solid;
+$thin-key-line: 0.0125rem solid;
+
+$min-width-container--small: 16rem;
+$min-heigh-container--small: 16rem;
+$min-width-container--extra-large: 50.5rem;
+
+$letter-spacing--base: 0.0125rem;

@@ -1,43 +1,28 @@
-import './App.css';
-import { BrowserRouter, Route, Routes } from 'react-router-dom';
-import { publicRoutes, privateRoutes } from './routes';
-import { PublicLayout, PrivateLayout } from './layouts';
+import Login from '@pages/Login/Login';
+import Register from '@pages/Register/Register';
+import {
+  BrowserRouter as Router,
+  Routes,
+  Route,
+  Navigate,
+} from 'react-router-dom';
+import './App.scss';
 
 function App() {
   return (
-    <BrowserRouter>
-      <Routes>
-        {publicRoutes.map((route) => {
-          const Page = route.component;
-          return (
-            <Route
-              key={route.key}
-              path={route.path}
-              element={(
-                <PublicLayout>
-                  <Page />
-                </PublicLayout>
-              )}
-            />
-          );
-        })}
-
-        {privateRoutes.map((route) => {
-          const Page = route.component;
-          return (
-            <Route
-              key={route.key}
-              path={route.path}
-              element={(
-                <PrivateLayout>
-                  <Page />
-                </PrivateLayout>
-              )}
-            />
-          );
-        })}
-      </Routes>
-    </BrowserRouter>
+    <Router>
+      <div className="App">
+        <Routes>
+          <Route path="auth">
+            <Route path="login" element={<Login />} />
+            <Route path="sign-up" element={<Register />} />
+            <Route path="*" element={<Login />} />
+          </Route>
+          <Route path="home" element={<Login />} />
+          <Route path="*" element={<Navigate to="/auth/login" replace />} />
+        </Routes>
+      </div>
+    </Router>
   );
 }
 
