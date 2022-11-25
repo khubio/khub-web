@@ -1,6 +1,8 @@
-import React, { useState, ReactElement } from 'react';
+import React, { useState, ReactElement, useEffect } from 'react';
 import { RiErrorWarningFill } from 'react-icons/ri';
 import { IoCheckmarkDoneCircleSharp } from 'react-icons/io5';
+import { gapi } from 'gapi-script';
+import GoogleLogin from 'react-google-login';
 import { yupResolver } from '@hookform/resolvers/yup';
 import { useForm, FieldValues } from 'react-hook-form';
 import { Link } from 'react-router-dom';
@@ -30,6 +32,7 @@ const FORM_LOGIN = {
     message: 'Don’t have an account?',
   },
 };
+const googleClientId = process.env.REACT_APP_GOOGLE_CLIENT_ID;
 
 const Login = ({ isOpen, setOpen }) => {
   const [isError, setIsError] = useState(false);
@@ -66,6 +69,23 @@ const Login = ({ isOpen, setOpen }) => {
       })
       .finally(() => setLoading(false));
   };
+
+  const onSuccess = (res) => {
+    console.log('[Login Success] currentUser:', res.profileObj);
+  };
+  const onFailure = (res) => {
+    console.log('[Login failed] res:', res);
+  };
+  useEffect(() => {
+    const initClient = () => {
+      gapi.client.init({
+        googleClientId,
+        scope: '',
+      });
+    };
+    gapi.load('client:auth2', initClient);
+  });
+
   return (
     <div className="login">
       <div className="login__container">
@@ -149,15 +169,13 @@ const Login = ({ isOpen, setOpen }) => {
               <div className="login__third_party-title">Or</div>
               <div className="login__third_party-list">
                 <div className="login__third_party-item">
-                  <img
-                    src={`${process.env.PUBLIC_URL}/images/google_icon.png`}
-                    alt="google"
-                  />
-                </div>
-                <div className="login__third_party-item">
-                  <img
-                    src={`${process.env.PUBLIC_URL}/images/facebook_icon.png`}
-                    alt="facebook"
+                  <GoogleLogin
+                    clientId={googleClientId}
+                    buttonText="Login with Google"
+                    onSuccess={onSuccess}
+                    onFailure={onFailure}
+                    cookiePolicy="single_host_origin"
+                    isSignedIn
                   />
                 </div>
               </div>

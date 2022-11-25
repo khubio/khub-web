@@ -148,22 +148,15 @@
       font-weight: $font-weight--bold;
     }
     &-list {
-      @include flex(center, space-evenly);
+      @include flex(center, space-around);
       flex-direction: row;
       padding: 0.5rem 0;
     }
     &-item {
       @include flex(center, center);
-      height: fit-content;
-      width: fit-content;
-      padding: 0.2rem;
-      border: 0.1rem solid $green-secondary;
       border-radius: 50%;
       &:hover {
         cursor: pointer;
-      }
-      > img {
-        @include logo_icon--small;
       }
     }
   }
