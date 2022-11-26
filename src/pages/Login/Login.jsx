@@ -1,18 +1,19 @@
-import React, { useState, ReactElement, useEffect } from 'react';
-import { RiErrorWarningFill } from 'react-icons/ri';
-import { IoCheckmarkDoneCircleSharp } from 'react-icons/io5';
-import { gapi } from 'gapi-script';
-import GoogleLogin from 'react-google-login';
-import FacebookLogin from 'react-facebook-login/dist/facebook-login-render-props';
+import { HTTP_STATUS } from '@constants/HTTP_STATUS';
 import { yupResolver } from '@hookform/resolvers/yup';
-import { useForm, FieldValues } from 'react-hook-form';
-import { Link } from 'react-router-dom';
-import axiosConfig from '@services/axiosConfig';
 import { validateLoginSchema } from '@models/validateFormSchema';
+import { useEffect, useState } from 'react';
+import axiosConfig from '@services/axiosConfig';
+import { gapi } from 'gapi-script';
+import { Link } from 'react-router-dom';
+import FacebookLogin from 'react-facebook-login/dist/facebook-login-render-props';
+import GoogleLogin from 'react-google-login';
+import { useForm } from 'react-hook-form';
+import { FACEBOOK_ID, GOOGLE_ID } from '@configs';
+import { IoCheckmarkDoneCircleSharp } from 'react-icons/io5';
+import { RiErrorWarningFill } from 'react-icons/ri';
 import './Login.scss';
 
 const SUCCESS_LOG_IN_MESSAGE = 'Login successfully';
-const ERROR_LOG_IN_MESSAGE = 'Email or password is incorrect';
 const FORM_LOGIN = {
   data: [
     {
@@ -33,8 +34,6 @@ const FORM_LOGIN = {
     message: 'Don’t have an account?',
   },
 };
-const googleClientId = process.env.REACT_APP_GOOGLE_CLIENT_ID;
-const facebookAppId = process.env.REACT_APP_FACEBOOK_APP_ID;
 
 const Login = ({ isOpen, setOpen }) => {
   const [isError, setIsError] = useState(false);
@@ -59,10 +58,10 @@ const Login = ({ isOpen, setOpen }) => {
     await axiosConfig
       .post(targetUrl, submitData)
       .then((res) => {
-        if (res?.error) {
+        if (res?.error || res.code === HTTP_STATUS.UNAUTHORIZED) {
           setIsSuccess(false);
           setIsError(true);
-          setErrorMessage(ERROR_LOG_IN_MESSAGE || res.message);
+          setErrorMessage(res.message);
         } else {
           setIsError(false);
           setIsSuccess(true);
@@ -85,7 +84,7 @@ const Login = ({ isOpen, setOpen }) => {
   useEffect(() => {
     const initClient = () => {
       gapi.client.init({
-        googleClientId,
+        GOOGLE_ID,
         scope: '',
       });
     };
@@ -102,7 +101,7 @@ const Login = ({ isOpen, setOpen }) => {
         />
         <div className="login__logo">
           <img
-            src={`${process.env.PUBLIC_URL}/images/khub_icon_2.png`}
+            src={`${process.env.PUBLIC_URL}/images/khub_icon_3.png`}
             alt="logo"
           />
         </div>
@@ -166,7 +165,7 @@ const Login = ({ isOpen, setOpen }) => {
               <div className="login__third_party-list">
                 <div className="login__third_party-item">
                   <GoogleLogin
-                    clientId={googleClientId}
+                    clientId={GOOGLE_ID}
                     buttonText="Login with Google"
                     render={(renderProps) => (
                       <img
@@ -186,7 +185,7 @@ const Login = ({ isOpen, setOpen }) => {
                 </div>
                 <div className="login__third_party-item">
                   <FacebookLogin
-                    appId={facebookAppId}
+                    appId={FACEBOOK_ID}
                     autoLoad={false}
                     fields="name,email,picture"
                     callback={onSuccessFacebook}

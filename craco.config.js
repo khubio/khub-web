@@ -12,6 +12,7 @@ module.exports = {
       '@assets': path.resolve(__dirname, 'src/assets'),
       '@models': path.resolve(__dirname, 'src/models'),
       '@services': path.resolve(__dirname, 'src/services'),
+      '@configs': path.resolve(__dirname, 'src/configs'),
     },
   },
 };
