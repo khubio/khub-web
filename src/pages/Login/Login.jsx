@@ -3,6 +3,7 @@ import { RiErrorWarningFill } from 'react-icons/ri';
 import { IoCheckmarkDoneCircleSharp } from 'react-icons/io5';
 import { gapi } from 'gapi-script';
 import GoogleLogin from 'react-google-login';
+import FacebookLogin from 'react-facebook-login/dist/facebook-login-render-props';
 import { yupResolver } from '@hookform/resolvers/yup';
 import { useForm, FieldValues } from 'react-hook-form';
 import { Link } from 'react-router-dom';
@@ -33,6 +34,7 @@ const FORM_LOGIN = {
   },
 };
 const googleClientId = process.env.REACT_APP_GOOGLE_CLIENT_ID;
+const facebookAppId = process.env.REACT_APP_FACEBOOK_APP_ID;
 
 const Login = ({ isOpen, setOpen }) => {
   const [isError, setIsError] = useState(false);
@@ -70,12 +72,16 @@ const Login = ({ isOpen, setOpen }) => {
       .finally(() => setLoading(false));
   };
 
-  const onSuccess = (res) => {
+  const onSuccessGoogle = (res) => {
     console.log('[Login Success] currentUser:', res.profileObj);
   };
   const onFailure = (res) => {
     console.log('[Login failed] res:', res);
   };
+  const onSuccessFacebook = (res) => {
+    console.log('[Login Success] currentUser:', res);
+  };
+
   useEffect(() => {
     const initClient = () => {
       gapi.client.init({
@@ -154,6 +160,52 @@ const Login = ({ isOpen, setOpen }) => {
             {loading ? 'Please wait...' : FORM_LOGIN.button.title}
           </button>
 
+          <div className="login__third_party">
+            <div className="login__third_party">
+              <div className="login__third_party-title">Or sign in with</div>
+              <div className="login__third_party-list">
+                <div className="login__third_party-item">
+                  <GoogleLogin
+                    clientId={googleClientId}
+                    buttonText="Login with Google"
+                    render={(renderProps) => (
+                      <img
+                        className="login__third_party-item-button"
+                        onClick={renderProps.onClick}
+                        disabled={renderProps.disabled}
+                        src={`${process.env.PUBLIC_URL}/images/google_icon.png`}
+                        alt="google"
+                        aria-hidden
+                      />
+                    )}
+                    onSuccess={onSuccessGoogle}
+                    onFailure={onFailure}
+                    cookiePolicy="single_host_origin"
+                    isSignedIn
+                  />
+                </div>
+                <div className="login__third_party-item">
+                  <FacebookLogin
+                    appId={facebookAppId}
+                    autoLoad={false}
+                    fields="name,email,picture"
+                    callback={onSuccessFacebook}
+                    render={(renderProps) => (
+                      <img
+                        className="login__third_party-item-button"
+                        onClick={renderProps.onClick}
+                        disabled={renderProps.disabled}
+                        src={`${process.env.PUBLIC_URL}/images/facebook_icon.png`}
+                        alt="facebook"
+                        aria-hidden
+                      />
+                    )}
+                  />
+                </div>
+              </div>
+            </div>
+          </div>
+
           <div className="login__form-option">
             <span>{FORM_LOGIN.button.message}</span>
             <Link
@@ -163,23 +215,6 @@ const Login = ({ isOpen, setOpen }) => {
             >
               {FORM_LOGIN.button.option}
             </Link>
-          </div>
-          <div className="login__third_party">
-            <div className="login__third_party">
-              <div className="login__third_party-title">Or</div>
-              <div className="login__third_party-list">
-                <div className="login__third_party-item">
-                  <GoogleLogin
-                    clientId={googleClientId}
-                    buttonText="Login with Google"
-                    onSuccess={onSuccess}
-                    onFailure={onFailure}
-                    cookiePolicy="single_host_origin"
-                    isSignedIn
-                  />
-                </div>
-              </div>
-            </div>
           </div>
         </form>
       </div>

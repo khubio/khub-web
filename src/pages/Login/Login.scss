@@ -88,7 +88,7 @@
       }
     }
     &-option {
-      padding: 1rem 0;
+      padding: 0.5rem 0 1rem;
       > span:first-child {
         padding-right: 0.5rem;
         font-style: italic;
@@ -140,23 +140,30 @@
 
   &__third_party {
     width: 100%;
-    padding-bottom: 1rem;
+    margin-top: 0.5rem;
     &-title {
       @include flex(center, center);
       color: $gray-dark;
       font-size: $font-size--xl;
-      font-weight: $font-weight--bold;
+      // font-weight: $font-weight--bold;
     }
     &-list {
       @include flex(center, space-around);
+      margin: 1rem 1rem;
       flex-direction: row;
-      padding: 0.5rem 0;
     }
     &-item {
       @include flex(center, center);
+      border: 0.15rem solid $green-secondary;
+      padding: 0.15rem;
       border-radius: 50%;
       &:hover {
         cursor: pointer;
+      }
+      &-button {
+        @include logo_icon--small;
+        border-radius: 50%;
+        background-image: transparent;
       }
     }
   }

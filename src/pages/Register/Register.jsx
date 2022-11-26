@@ -39,7 +39,7 @@ const FORM_SIGN_UP = {
     title: 'Sign up',
     target: '/registration',
     option: 'Login',
-    message: 'Don’t have an account?',
+    message: 'Already have an account?',
   },
 };
 
@@ -58,11 +58,6 @@ const Register = ({ isOpen, setOpen }) => {
   } = useForm({
     resolver: yupResolver(validateSignUpSchema),
   });
-  const handleChangeForm = () => {
-    reset();
-    setIsError(false);
-    setIsSuccess(false);
-  };
 
   const handleSubmitForm = async (data) => {
     const targetUrl = '/auth/register';

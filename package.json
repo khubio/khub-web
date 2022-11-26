@@ -31,7 +31,7 @@
     "yup": "^0.32.11"
   },
   "scripts": {
-    "start": "craco start",
+    "start": "set HTTPS=true && craco start",
     "build": "craco build",
     "test": "craco test",
     "eject": "craco eject",
