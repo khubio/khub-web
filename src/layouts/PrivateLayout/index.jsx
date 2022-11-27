@@ -1,12 +1,8 @@
-import Header from '../../components/Header';
-import Footer from '../../components/Footer';
-
-const PrivateLayout = ({ children }) => (
+const PrivateLayout = ({ children }) => {
   <>
-    <Header />
+    <h1>Private layout</h1>
     {children}
-    <Footer />
-  </>
-);
+  </>;
+};
 
 export default PrivateLayout;

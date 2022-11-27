@@ -1,0 +1,170 @@
+@import '../../assets/scss/mixins.scss';
+@import '../../assets/scss/variables.scss';
+
+.login {
+  @include flex(center, center);
+  @include defaultBackground('khub-auth-background.png');
+
+  &__container {
+    @include flex(center, center);
+    flex-direction: column;
+    width: 60vh;
+    background-color: $white-primary;
+    border-radius: 0.5rem;
+  }
+  &__close-tag {
+    align-self: flex-end;
+    padding: 0.5rem 0.8rem 0 0;
+    font-weight: $font-weight--bold;
+    color: $violet-dark;
+    &:hover {
+      cursor: pointer;
+    }
+  }
+  &__title {
+    padding: 0.5rem 0 1rem;
+    background-color: transparent;
+    color: white;
+  }
+  &__logo {
+    padding-top: 1rem;
+    > img {
+      max-width: 13rem;
+      max-height: 13rem;
+    }
+  }
+  &__form {
+    @include flex(center, center);
+    flex-direction: column;
+    &-item {
+      @include flex(flex-start, center);
+      flex-direction: column;
+      width: 100%;
+      padding: 0 0 0.3rem 0;
+
+      &-label {
+        padding: 0.5rem 0;
+        background-color: transparent;
+        color: black;
+        font-size: $font-size--xl;
+      }
+
+      &-input {
+        width: 50vh;
+        padding: 0.5rem;
+        border: none;
+        border: $medium-key-line black;
+        background-color: transparent;
+        color: black;
+        font-size: $base-font-size;
+        border-radius: 0.3rem;
+        &::placeholder {
+          color: rgba(0, 0, 0, 0.4);
+          font-style: italic;
+        }
+      }
+
+      &--error {
+        padding-top: 0.3rem;
+        background-color: transparent;
+        color: $error-color;
+        font-size: $font-size--xl;
+      }
+    }
+    &-button {
+      width: 100%;
+      padding: 0.625rem 0;
+      margin-top: 1rem;
+      border-radius: 0.3rem;
+      border: none;
+      color: white;
+      font-size: $font-size--xl;
+      font-weight: $font-weight--semibold;
+      background-color: $green-secondary;
+      &:hover {
+        cursor: pointer;
+        background-color: $green-primary;
+        color: white;
+      }
+    }
+    &-option {
+      padding: 0.5rem 0 1rem;
+      > span:first-child {
+        padding-right: 0.5rem;
+        font-style: italic;
+        font-size: $font-size--xl;
+        color: $gray-dark;
+      }
+      &-link {
+        text-decoration: none;
+        font-size: $font-size--xl;
+        font-weight: $font-weight--bold;
+        color: black;
+
+        &:hover {
+          cursor: pointer;
+          color: $green-secondary;
+        }
+      }
+    }
+    &-submit {
+      &-result {
+        @include flex(center, flex-start);
+        width: 100%;
+        padding: 1rem 0 0 0;
+        &-status {
+          &--error {
+            color: red;
+          }
+
+          &--success {
+            color: $success-color;
+          }
+        }
+
+        &-message {
+          &--success {
+            font-size: smaller;
+            padding-left: 0.5rem;
+            color: $success-color;
+          }
+          &--error {
+            font-size: smaller;
+            padding-left: 0.5rem;
+            color: $error-color;
+          }
+        }
+      }
+    }
+  }
+
+  &__third_party {
+    width: 100%;
+    margin-top: 0.5rem;
+    &-title {
+      @include flex(center, center);
+      color: $gray-dark;
+      font-size: $font-size--xl;
+      // font-weight: $font-weight--bold;
+    }
+    &-list {
+      @include flex(center, space-around);
+      margin: 1rem 1rem;
+      flex-direction: row;
+    }
+    &-item {
+      @include flex(center, center);
+      border: 0.15rem solid $green-secondary;
+      padding: 0.15rem;
+      border-radius: 50%;
+      &:hover {
+        cursor: pointer;
+      }
+      &-button {
+        @include logo_icon--small;
+        border-radius: 50%;
+        background-image: transparent;
+      }
+    }
+  }
+}
