@@ -1,5 +1,5 @@
-import Login from '@pages/Login/Login';
-import Register from '@pages/Register/Register';
+import Login from '@pages/Login';
+import Register from '@pages/Register';
 import {
   BrowserRouter as Router,
   Routes,
