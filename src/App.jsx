@@ -1,6 +1,7 @@
 import Login from '@pages/Login';
 import Register from '@pages/Register';
-import Home from '@pages/Home';
+// import Home from '@pages/Home';
+import Group from '@pages/Group';
 import PrivateLayout from '@layouts/PrivateLayout';
 import {
   BrowserRouter as Router,
@@ -24,7 +25,7 @@ function App() {
             path=""
             element={(
               <PrivateLayout>
-                <Home />
+                <Group />
               </PrivateLayout>
             )}
           />

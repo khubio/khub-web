@@ -24,6 +24,7 @@
     "linebreak-style": 0,
     "import/no-unresolved": 0,
     "no-unused-vars": 1,
-    "no-return-assign": "off"
+    "no-return-assign": "off",
+    "no-nested-ternary": "off"
   }
 }
