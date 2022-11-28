@@ -5,13 +5,12 @@ import { useForm } from 'react-hook-form';
 import { IoCheckmarkDoneCircleSharp } from 'react-icons/io5';
 import { RiErrorWarningFill } from 'react-icons/ri';
 import { Link } from 'react-router-dom';
-import { validateSignUpSchema } from '../../models/validateFormSchema';
-import axiosConfig from '../../services/axiosConfig';
+import { sendVerifyEmail } from '@utils/mailer';
+import { validateSignUpSchema } from '@models/validateFormSchema';
+import axiosConfig from '@services/axiosConfig';
 import './Register.scss';
 
-const SUCCESS_SIGN_UP_MESSAGE = 'Success! Try to log in now!';
-const SUCCESS_LOG_IN_MESSAGE = 'Login successfully';
-const ERROR_LOG_IN_MESSAGE = 'Email or password is incorrect';
+const SUCCESS_SIGN_UP_MESSAGE = 'Success! Please confirm your account in email!';
 const FORM_SIGN_UP = {
   data: [
     {
@@ -74,6 +73,7 @@ const Register = ({ isOpen, setOpen }) => {
           setIsError(false);
           setIsSuccess(true);
           setSuccessMessage(SUCCESS_SIGN_UP_MESSAGE);
+          sendVerifyEmail(data);
         }
       })
       .finally(() => setLoading(false));
