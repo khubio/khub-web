@@ -8,8 +8,7 @@ export const sendVerifyEmail = async (user) => {
   const templateParams = {
     to_name: `${user.firstName} ${user.lastName}`,
     to_email: user.email,
-    message: 'Verify your email',
+    message: `<a href={${process.env.REACT_APP_BASE_URL}/verify/${user.email}/ >Xác thực tài khoản</a>`,
   };
   await emailJs.send(MAILJS_SERVICE_ID, VERIFY_EMAIL_TEMPLATE_ID, templateParams, MAILJS_PUBLIC_KEY);
-  console.log('Email sent');
 };

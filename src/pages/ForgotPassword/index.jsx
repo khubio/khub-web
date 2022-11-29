@@ -6,44 +6,28 @@ import { useForm } from 'react-hook-form';
 import { IoCheckmarkDoneCircleSharp } from 'react-icons/io5';
 import { RiErrorWarningFill } from 'react-icons/ri';
 import { Link } from 'react-router-dom';
-import { validateSignUpSchema } from '@models/validateFormSchema';
+import { validateForgotPasswordSchema } from '@models/validateFormSchema';
 import axiosConfig from '@services/axiosConfig';
-import './Register.scss';
+import './ForgotPassword.scss';
 
-const SUCCESS_SIGN_UP_MESSAGE =
-  'Success! Please confirm your account in email!';
-const FORM_SIGN_UP = {
+const SUCCESS_MESSAGE = 'Email has been sent';
+const FORM_FORGET_PASSWORD = {
   data: [
     {
-      type: 'firstName',
-      title: 'First name',
-      placeholder: 'Nguyen',
-    },
-    {
-      type: 'lastName',
-      title: 'Last name',
-      placeholder: 'Trinh',
-    },
-    {
       type: 'email',
-      title: 'Email',
+      title: 'Enter your registered email',
       placeholder: 'god.mentor@kms-technology.com',
-    },
-    {
-      type: 'password',
-      title: 'Password',
-      placeholder: '',
     },
   ],
   button: {
-    title: 'Sign up',
-    target: '/registration',
+    title: 'Send',
+    target: '/forgot-password',
     option: 'Login',
     message: 'Already have an account?',
   },
 };
 
-const Register = ({ isOpen, setOpen }) => {
+const ForgotPassword = ({ isOpen, setOpen }) => {
   const [isError, setIsError] = useState(false);
   const [errorMessage, setErrorMessage] = useState('');
   const [isSuccess, setIsSuccess] = useState(false);
@@ -56,11 +40,11 @@ const Register = ({ isOpen, setOpen }) => {
     formState: { errors },
     reset,
   } = useForm({
-    resolver: yupResolver(validateSignUpSchema),
+    resolver: yupResolver(validateForgotPasswordSchema),
   });
 
   const handleSubmitForm = async (data) => {
-    const targetUrl = '/auth/register';
+    const targetUrl = '/auth/forgot-password';
     setLoading(true);
     const submitData = queryString.stringify(data);
     await axiosConfig
@@ -73,39 +57,42 @@ const Register = ({ isOpen, setOpen }) => {
         } else {
           setIsError(false);
           setIsSuccess(true);
-          setSuccessMessage(SUCCESS_SIGN_UP_MESSAGE);
+          setSuccessMessage(SUCCESS_MESSAGE);
         }
       })
       .finally(() => setLoading(false));
   };
   return (
-    <div className="register">
-      <div className="register__container">
+    <div className="forgot-password">
+      <div className="forgot-password__container">
         <div
-          className="register__close-tag"
+          className="forgot-password__close-tag"
           onClick={() => setOpen(!isOpen)}
           aria-hidden
         />
-        <div className="register__logo">
+        <div className="forgot-password__logo">
           <img
             src={`${process.env.PUBLIC_URL}/images/khub_icon_3.png`}
             alt="logo"
           />
         </div>
         <form
-          className="register__form"
+          className="forgot-password__form"
           onSubmit={handleSubmit((data) => handleSubmitForm(data))}
         >
-          {FORM_SIGN_UP.data.map((item) => {
+          {FORM_FORGET_PASSWORD.data.map((item) => {
             const { type, title, placeholder } = item;
             const validateErrorMessage = errors[type]?.message;
             return (
-              <div className="register__form-item">
-                <label className="register__form-item-label" htmlFor={type}>
+              <div className="forgot-password__form-item">
+                <label
+                  className="forgot-password__form-item-label"
+                  htmlFor={type}
+                >
                   {title}
                 </label>
                 <input
-                  className="register__form-item-input"
+                  className="forgot-password__form-item-input"
                   type={type === 'password' ? 'password' : 'text'}
                   id={type}
                   placeholder={placeholder}
@@ -113,7 +100,7 @@ const Register = ({ isOpen, setOpen }) => {
                   {...register(type, { required: true })}
                 />
                 {validateErrorMessage && (
-                  <span className="register__form-item--error">
+                  <span className="forgot-password__form-item--error">
                     {validateErrorMessage}
                   </span>
                 )}
@@ -121,11 +108,11 @@ const Register = ({ isOpen, setOpen }) => {
             );
           })}
 
-          <div className="register__form-submit-result">
+          <div className="forgot-password__form-submit-result">
             {!loading && isError && (
               <>
-                <RiErrorWarningFill className="register__form-submit-result-status--error" />
-                <span className="register__form-submit-result-message--error">
+                <RiErrorWarningFill className="forgot-password__form-submit-result-status--error" />
+                <span className="forgot-password__form-submit-result-message--error">
                   {' '}
                   {errorMessage}
                 </span>
@@ -133,8 +120,8 @@ const Register = ({ isOpen, setOpen }) => {
             )}
             {!loading && isSuccess && (
               <>
-                <IoCheckmarkDoneCircleSharp className="register__form-submit-result-status--success" />
-                <span className="register__form-submit-result-message--success">
+                <IoCheckmarkDoneCircleSharp className="forgot-password__form-submit-result-status--success" />
+                <span className="forgot-password__form-submit-result-message--success">
                   {' '}
                   {successMessage}
                 </span>
@@ -142,18 +129,18 @@ const Register = ({ isOpen, setOpen }) => {
             )}
           </div>
 
-          <button className="register__form-button" type="submit">
-            {loading ? 'Please wait...' : FORM_SIGN_UP.button.title}
+          <button className="forgot-password__form-button" type="submit">
+            {loading ? 'Please wait...' : FORM_FORGET_PASSWORD.button.title}
           </button>
 
-          <div className="register__form-option">
-            <span>{FORM_SIGN_UP.button.message}</span>
+          <div className="forgot-password__form-option">
+            <span>{FORM_FORGET_PASSWORD.button.message}</span>
             <Link
-              className="register__form-option-link"
+              className="forgot-password__form-option-link"
               to="/auth/login"
               aria-hidden
             >
-              {FORM_SIGN_UP.button.option}
+              {FORM_FORGET_PASSWORD.button.option}
             </Link>
           </div>
         </form>
@@ -162,4 +149,4 @@ const Register = ({ isOpen, setOpen }) => {
   );
 };
 
-export default Register;
+export default ForgotPassword;
