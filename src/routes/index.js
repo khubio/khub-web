@@ -1,6 +1,6 @@
 import Login from '../pages/Login';
 import Register from '../pages/Register';
-import Groups from '../pages/Groups';
+import Groups from '../pages/Group';
 import GroupDetails from '../pages/GroupDetails';
 import NewGroup from '../pages/NewGroup';
 import Home from '../pages/Home';
