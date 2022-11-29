@@ -1,9 +1,10 @@
+/* eslint-disable react/jsx-wrap-multilines */
 import Login from '@pages/Login';
 import Register from '@pages/Register';
 import Home from '@pages/Home';
 import ForgotPassword from '@pages/ForgotPassword';
 import ResetPassword from '@pages/ResetPassword';
-
+import PrivateLayout from '@layouts/PrivateLayout';
 import {
   BrowserRouter as Router,
   Routes,
@@ -24,6 +25,14 @@ function App() {
             <Route path="reset-password" element={<ResetPassword />} />
             <Route path="*" element={<Login />} />
           </Route>
+          <Route
+            path=""
+            element={
+              <PrivateLayout>
+                <Home />
+              </PrivateLayout>
+            }
+          />
           <Route path="*" element={<Navigate to="/auth/login" replace />} />
         </Routes>
       </div>
