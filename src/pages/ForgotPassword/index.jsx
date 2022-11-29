@@ -72,7 +72,7 @@ const ForgotPassword = ({ isOpen, setOpen }) => {
         />
         <div className="forgot-password__logo">
           <img
-            src={`${process.env.PUBLIC_URL}/images/khub_icon_2.png`}
+            src={`${process.env.PUBLIC_URL}/images/khub_icon_3.png`}
             alt="logo"
           />
         </div>

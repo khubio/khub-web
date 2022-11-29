@@ -12,6 +12,7 @@ import {
   Navigate,
 } from 'react-router-dom';
 import './App.scss';
+import Group from '@pages/Group';
 
 function App() {
   return (
@@ -29,7 +30,7 @@ function App() {
             path=""
             element={
               <PrivateLayout>
-                <Home />
+                <Group />
               </PrivateLayout>
             }
           />
