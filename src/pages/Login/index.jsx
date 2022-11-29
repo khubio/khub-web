@@ -1,16 +1,14 @@
-import { HTTP_STATUS } from '@constants/HTTP_STATUS';
+import { FACEBOOK_ID, GOOGLE_ID } from '@configs';
 import { yupResolver } from '@hookform/resolvers/yup';
 import { validateLoginSchema } from '@models/validateFormSchema';
-import { useEffect, useState } from 'react';
 import axiosConfig from '@services/axiosConfig';
 import { gapi } from 'gapi-script';
-import { Link } from 'react-router-dom';
+import queryString from 'query-string';
+import { useEffect, useState } from 'react';
 import FacebookLogin from 'react-facebook-login/dist/facebook-login-render-props';
 import GoogleLogin from 'react-google-login';
 import { useForm } from 'react-hook-form';
-import { FACEBOOK_ID, GOOGLE_ID } from '@configs';
-import { IoCheckmarkDoneCircleSharp } from 'react-icons/io5';
-import { RiErrorWarningFill } from 'react-icons/ri';
+import { Link } from 'react-router-dom';
 import './Login.scss';
 
 const SUCCESS_LOG_IN_MESSAGE = 'Login successfully';
@@ -24,7 +22,7 @@ const FORM_LOGIN = {
     {
       type: 'password',
       title: 'Password',
-      placeholder: '',
+      // placeholder: '',
     },
   ],
   button: {
@@ -58,7 +56,7 @@ const Login = ({ isOpen, setOpen }) => {
     await axiosConfig
       .post(targetUrl, submitData)
       .then((res) => {
-        if (res?.error || res.code === HTTP_STATUS.UNAUTHORIZED) {
+        if (res.code) {
           setIsSuccess(false);
           setIsError(true);
           setErrorMessage(res.message);
@@ -71,8 +69,30 @@ const Login = ({ isOpen, setOpen }) => {
       .finally(() => setLoading(false));
   };
 
-  const onSuccessGoogle = (res) => {
-    console.log('[Login Success] currentUser:', res.profileObj);
+  const onSuccessGoogle = async (data) => {
+    // if exist data => login, else => register and login
+    const targetUrl = '/auth/register';
+    const registerData = {
+      email: data.profileObj.email,
+      firstName: data.profileObj.givenName,
+      lastName: data.profileObj.familyName,
+      password: `firstLogin${data.profileObj.googleId}`,
+    };
+    setLoading(true);
+    const submitData = queryString.stringify(registerData);
+    await axiosConfig
+      .post(targetUrl, submitData)
+      .then((res) => {
+        if (res.code) {
+          setIsSuccess(false);
+          setIsError(true);
+          setErrorMessage(res.message);
+        } else {
+          setIsError(false);
+          setIsSuccess(true);
+        }
+      })
+      .finally(() => setLoading(false));
   };
   const onFailure = (res) => {
     console.log('[Login failed] res:', res);
@@ -134,7 +154,15 @@ const Login = ({ isOpen, setOpen }) => {
             );
           })}
 
-          <div className="login__form-submit-result">
+          <Link
+            className="login__form-option-link login__form-forgot-password"
+            to="/auth/forgot-password"
+            aria-hidden
+          >
+            Forgot password?
+          </Link>
+
+          {/* <div className="login__form-submit-result">
             {isError && (
               <>
                 <RiErrorWarningFill className="login__form-submit-result-status--error" />
@@ -144,7 +172,7 @@ const Login = ({ isOpen, setOpen }) => {
                 </span>
               </>
             )}
-            {isSuccess && (
+            {!loading && isSuccess && (
               <>
                 <IoCheckmarkDoneCircleSharp className="login__form-submit-result-status--success" />
                 <span className="login__form-submit-result-message--success">
@@ -153,7 +181,7 @@ const Login = ({ isOpen, setOpen }) => {
                 </span>
               </>
             )}
-          </div>
+          </div> */}
 
           <button className="login__form-button" type="submit">
             {loading ? 'Please wait...' : FORM_LOGIN.button.title}
@@ -171,7 +199,6 @@ const Login = ({ isOpen, setOpen }) => {
                       <img
                         className="login__third_party-item-button"
                         onClick={renderProps.onClick}
-                        disabled={renderProps.disabled}
                         src={`${process.env.PUBLIC_URL}/images/google_icon.png`}
                         alt="google"
                         aria-hidden
