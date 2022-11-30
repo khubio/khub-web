@@ -46,3 +46,9 @@ export const validateResetPasswordSchema = yup.object().shape({
     .oneOf([yup.ref('password'), null], 'Passwords must match')
     .required('Confirm password is required'),
 });
+
+export const validateEditProfileSchema = yup.object().shape({
+  firstName: yup.string().required('First name is required'),
+  lastName: yup.string().required('Last name is required'),
+  phone: yup.string().required('Phone is required').min(10, 'Phone must be at least 10 characters').max(11, 'Phone must be maximum 11 characters'),
+});

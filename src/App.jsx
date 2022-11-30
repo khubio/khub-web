@@ -17,6 +17,7 @@ import GroupDetails from '@pages/GroupDetails';
 import { useEffect } from 'react';
 import { useDispatch } from 'react-redux';
 import { setUser } from '@store/slice/auth.slice';
+import Profile from '@pages/Profile/Profile';
 
 function App() {
   const dispatch = useDispatch();
@@ -34,8 +35,9 @@ function App() {
             <Route path="sign-up" element={<Register />} />
             <Route path="forgot-password" element={<ForgotPassword />} />
             <Route path="reset-password" element={<ResetPassword />} />
-            {/* <Route path="*" element={<Login key="login" />} /> */}
+            <Route path="*" element={<Login key="login" />} />
           </Route>
+
           <Route
             path="/"
             element={
@@ -44,6 +46,15 @@ function App() {
               </PrivateLayout>
             }
           />
+          <Route
+            path="/profile"
+            element={
+              <PrivateLayout>
+                <Profile />
+              </PrivateLayout>
+            }
+          />
+
           <Route path="groups">
             <Route
               index

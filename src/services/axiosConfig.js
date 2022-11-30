@@ -6,8 +6,9 @@ const axiosConfig = axios.create({
 
 axiosConfig.interceptors.request.use(
   (config) => {
-    if (localStorage.getItem('profile')) {
-      config.headers.Authrization = JSON.parse(localStorage.getItem('profile')).token;
+    if (localStorage.getItem('tokens')) {
+      const accessToken = JSON.parse(localStorage.getItem('tokens')).access.token;
+      config.headers.Authorization = `Bearer ${accessToken}`;
     }
     return config;
   },
