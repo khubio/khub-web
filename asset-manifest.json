@@ -1,0 +1,16 @@
+{
+  "files": {
+    "main.css": "/khub-web/static/css/main.fbcb7dd0.css",
+    "main.js": "/khub-web/static/js/main.c38a472e.js",
+    "static/js/787.1499b302.chunk.js": "/khub-web/static/js/787.1499b302.chunk.js",
+    "static/media/khub-auth-background.png": "/khub-web/static/media/khub-auth-background.a12815997a17802432bd.png",
+    "index.html": "/khub-web/index.html",
+    "main.fbcb7dd0.css.map": "/khub-web/static/css/main.fbcb7dd0.css.map",
+    "main.c38a472e.js.map": "/khub-web/static/js/main.c38a472e.js.map",
+    "787.1499b302.chunk.js.map": "/khub-web/static/js/787.1499b302.chunk.js.map"
+  },
+  "entrypoints": [
+    "static/css/main.fbcb7dd0.css",
+    "static/js/main.c38a472e.js"
+  ]
+}
