@@ -69,7 +69,7 @@ const Profile = () => {
       firstName,
       lastName,
     };
-    const targetUrl = `user/${id}`;
+    const targetUrl = `users/${id}`;
     setLoading(true);
     const requestBody = queryString.stringify(submitData);
     await axiosConfig
@@ -123,21 +123,31 @@ const Profile = () => {
         >
           {FORM_EDIT.data.map((item) => {
             const { type, title } = item;
-            const readOnly = isEdit && type === 'id';
+            const readOnly = type === 'id';
             const validateErrorMessage = errors[type]?.message;
             return (
               <div className="edit__form-item" key={item.key}>
                 <label className="edit__form-item-label" htmlFor={type}>
                   {title}
                 </label>
-                <input
-                  className="edit__form-item-input"
-                  type="text"
-                  id={type}
-                  {...register(type, { required: true })}
-                  readOnly={readOnly}
-                  value={user[type]}
-                />
+                {isEdit ? (
+                  <input
+                    className="edit__form-item-input"
+                    type="text"
+                    id={type}
+                    {...register(type, { required: true })}
+                    readOnly={readOnly}
+                    defaultValue={user[type]}
+                  />
+                ) : (
+                  <input
+                    className="edit__form-item-input"
+                    type="text"
+                    id={type}
+                    disabled
+                    defaultValue={user[type]}
+                  />
+                )}
                 {validateErrorMessage && (
                   <span className="edit__form-item--error">
                     {validateErrorMessage}
