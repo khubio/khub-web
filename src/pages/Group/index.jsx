@@ -11,7 +11,8 @@ const Group = () => {
   const [groups, setGroups] = useState([]);
   useEffect(() => {
     (async () => {
-      const res = await getGroupsOfUser('63864c9c18cdab068be76dd2');
+      const userID = JSON.parse(localStorage.getItem('profile')).id;
+      const res = await getGroupsOfUser(userID);
       setGroups(res);
     })();
   }, []);

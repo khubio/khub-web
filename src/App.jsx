@@ -62,7 +62,7 @@ function App() {
               }
             />
           </Route>
-          {/* <Route path="*" element={<Navigate to="/auth/login" replace />} /> */}
+          <Route path="*" element={<Navigate to="/auth/login" replace />} />
         </Routes>
       </div>
     </Router>
