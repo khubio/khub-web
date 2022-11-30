@@ -14,8 +14,17 @@ import {
 import './App.scss';
 import Group from '@pages/Group';
 import GroupDetails from '@pages/GroupDetails';
+import { useEffect } from 'react';
+import { useDispatch } from 'react-redux';
+import { setUser } from '@store/slice/auth.slice';
 
 function App() {
+  const dispatch = useDispatch();
+  const user = JSON.parse(localStorage.getItem('profile'));
+  useEffect(() => {
+    dispatch(setUser(user));
+  }, [dispatch, user]);
+
   return (
     <Router>
       <div className="App">
@@ -25,7 +34,7 @@ function App() {
             <Route path="sign-up" element={<Register />} />
             <Route path="forgot-password" element={<ForgotPassword />} />
             <Route path="reset-password" element={<ResetPassword />} />
-            <Route path="*" element={<Login />} />
+            <Route path="*" element={<Login key="login" />} />
           </Route>
           <Route
             path=""

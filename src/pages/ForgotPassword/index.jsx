@@ -17,6 +17,7 @@ const FORM_FORGET_PASSWORD = {
       type: 'email',
       title: 'Enter your registered email',
       placeholder: 'god.mentor@kms-technology.com',
+      key: 'forgot/email',
     },
   ],
   button: {
@@ -84,7 +85,7 @@ const ForgotPassword = ({ isOpen, setOpen }) => {
             const { type, title, placeholder } = item;
             const validateErrorMessage = errors[type]?.message;
             return (
-              <div className="forgot-password__form-item">
+              <div className="forgot-password__form-item" key={item.key}>
                 <label
                   className="forgot-password__form-item-label"
                   htmlFor={type}

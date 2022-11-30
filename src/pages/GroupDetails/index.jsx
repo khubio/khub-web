@@ -2,8 +2,8 @@ import { Box, Typography, useTheme } from '@mui/material';
 import { DataGrid } from '@mui/x-data-grid';
 import Header from '@components/Header';
 import { useState, useEffect } from 'react';
-import { getGroupsOfUser, getGroupById } from '@services/group.service';
-import { Link, useParams } from 'react-router-dom';
+import { getGroupById } from '@services/group.service';
+import { useParams } from 'react-router-dom';
 import { tokens } from '../../theme';
 
 const GroupDetails = () => {
@@ -69,7 +69,7 @@ const GroupDetails = () => {
             // onClick={() => alert('wellll')}
           >
             <Typography color={colors.grey[100]} sx={{ ml: '5px' }}>
-              <Link to={`/groups/${id}`}>Details</Link>
+              Details
             </Typography>
           </Box>
         );

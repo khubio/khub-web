@@ -6,6 +6,9 @@ const axiosConfig = axios.create({
 
 axiosConfig.interceptors.request.use(
   (config) => {
+    if (localStorage.getItem('profile')) {
+      config.headers.Authrization = JSON.parse(localStorage.getItem('profile')).token;
+    }
     return config;
   },
   (error) => {

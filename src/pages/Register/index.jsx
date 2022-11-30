@@ -18,21 +18,25 @@ const FORM_SIGN_UP = {
       type: 'firstName',
       title: 'First name',
       placeholder: 'Nguyen',
+      key: 'signUp/firstName',
     },
     {
       type: 'lastName',
       title: 'Last name',
       placeholder: 'Trinh',
+      key: 'signUp/lastName',
     },
     {
       type: 'email',
       title: 'Email',
       placeholder: 'god.mentor@kms-technology.com',
+      key: 'signUp/email',
     },
     {
       type: 'password',
       title: 'Password',
       placeholder: '',
+      key: 'signUp/password',
     },
   ],
   button: {
@@ -100,7 +104,7 @@ const Register = ({ isOpen, setOpen }) => {
             const { type, title, placeholder } = item;
             const validateErrorMessage = errors[type]?.message;
             return (
-              <div className="register__form-item">
+              <div className="register__form-item" key={item.key}>
                 <label className="register__form-item-label" htmlFor={type}>
                   {title}
                 </label>

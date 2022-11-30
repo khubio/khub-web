@@ -1,13 +1,17 @@
 /* eslint-disable import/no-named-as-default-member */
 import React from 'react';
 import ReactDOM from 'react-dom/client';
+import { Provider } from 'react-redux';
+import configureStore from '@store/configureStore';
 import App from './App';
 import reportWebVitals from './reportWebVitals';
 
 const root = ReactDOM.createRoot(document.getElementById('root'));
 root.render(
   <React.StrictMode>
-    <App />
+    <Provider store={configureStore}>
+      <App />
+    </Provider>
   </React.StrictMode>,
 );
 

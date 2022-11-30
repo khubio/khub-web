@@ -25,6 +25,7 @@
     "import/no-unresolved": 0,
     "no-unused-vars": 1,
     "no-return-assign": "off",
-    "no-nested-ternary": "off"
+    "no-nested-ternary": "off",
+    "no-param-reassign": "off"
   }
 }

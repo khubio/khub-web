@@ -18,11 +18,13 @@ const FORM_LOGIN = {
       type: 'email',
       title: 'Email',
       placeholder: 'god.mentor@kms-technology.com',
+      key: 'login/email',
     },
     {
       type: 'password',
       title: 'Password',
       // placeholder: '',
+      key: 'login/password',
     },
   ],
   button: {
@@ -133,7 +135,7 @@ const Login = ({ isOpen, setOpen }) => {
             const { type, title, placeholder } = item;
             const validateErrorMessage = errors[type]?.message;
             return (
-              <div className="login__form-item">
+              <div className="login__form-item" key={item.key}>
                 <label className="login__form-item-label" htmlFor={type}>
                   {title}
                 </label>

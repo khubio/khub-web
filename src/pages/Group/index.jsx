@@ -12,7 +12,6 @@ const Group = () => {
   useEffect(() => {
     (async () => {
       const res = await getGroupsOfUser('63864c9c18cdab068be76dd2');
-      console.log(res);
       setGroups(res);
     })();
   }, []);
