@@ -1,14 +1,24 @@
 import { Box, Typography, useTheme } from '@mui/material';
 import { DataGrid } from '@mui/x-data-grid';
 import Header from '@components/Header';
-import { mockDataTeam } from '../../data/mockData';
+import { useState, useEffect } from 'react';
+import { getGroupsOfUser } from '@services/group.service';
+import { Link } from 'react-router-dom';
 import { tokens } from '../../theme';
 
 const Group = () => {
   const theme = useTheme();
+  const [groups, setGroups] = useState([]);
+  useEffect(() => {
+    (async () => {
+      const res = await getGroupsOfUser('63864c9c18cdab068be76dd2');
+      console.log(res);
+      setGroups(res);
+    })();
+  }, []);
   const colors = tokens(theme.palette.mode);
   const columns = [
-    { field: 'id', headerName: 'ID' },
+    { field: 'id', headerName: 'ID', flex: 1 },
     {
       field: 'name',
       headerName: 'Group Name',
@@ -16,15 +26,10 @@ const Group = () => {
       cellClassName: 'name-column--cell',
     },
     {
-      field: 'access',
-      headerName: 'Role in group',
-      flex: 1,
-    },
-    {
       field: 'action',
       headerName: 'Action',
       flex: 1,
-      renderCell: () => {
+      renderCell: ({ row: { id } }) => {
         return (
           <Box
             width="30%"
@@ -35,10 +40,9 @@ const Group = () => {
             backgroundColor={colors.greenAccent[700]}
             borderRadius="4px"
             sx={{ cursor: 'pointer' }}
-            onClick={() => alert('wellll')}
           >
             <Typography color={colors.grey[100]} sx={{ ml: '5px' }}>
-              Details
+              <Link to={`/groups/${id}`}>Details</Link>
             </Typography>
           </Box>
         );
@@ -78,7 +82,7 @@ const Group = () => {
           },
         }}
       >
-        <DataGrid checkboxSelection rows={mockDataTeam} columns={columns} />
+        <DataGrid checkboxSelection rows={groups} columns={columns} />
       </Box>
     </Box>
   );

@@ -1,7 +1,7 @@
 /* eslint-disable react/jsx-wrap-multilines */
 import Login from '@pages/Login';
 import Register from '@pages/Register';
-import Home from '@pages/Home';
+// import Home from '@pages/Home';
 import ForgotPassword from '@pages/ForgotPassword';
 import ResetPassword from '@pages/ResetPassword';
 import PrivateLayout from '@layouts/PrivateLayout';
@@ -13,6 +13,7 @@ import {
 } from 'react-router-dom';
 import './App.scss';
 import Group from '@pages/Group';
+import GroupDetails from '@pages/GroupDetails';
 
 function App() {
   return (
@@ -34,6 +35,24 @@ function App() {
               </PrivateLayout>
             }
           />
+          <Route path="groups">
+            <Route
+              index
+              element={
+                <PrivateLayout>
+                  <Group />
+                </PrivateLayout>
+              }
+            />
+            <Route
+              path=":id"
+              element={
+                <PrivateLayout>
+                  <GroupDetails />
+                </PrivateLayout>
+              }
+            />
+          </Route>
           <Route path="*" element={<Navigate to="/auth/login" replace />} />
         </Routes>
       </div>
