@@ -8,7 +8,9 @@ import { useEffect, useState } from 'react';
 import FacebookLogin from 'react-facebook-login/dist/facebook-login-render-props';
 import GoogleLogin from 'react-google-login';
 import { useForm } from 'react-hook-form';
-import { Link } from 'react-router-dom';
+import { IoCheckmarkDoneCircleSharp } from 'react-icons/io5';
+import { RiErrorWarningFill } from 'react-icons/ri';
+import { Link, useHistory } from 'react-router-dom';
 import './Login.scss';
 
 const SUCCESS_LOG_IN_MESSAGE = 'Login successfully';
@@ -41,7 +43,6 @@ const Login = ({ isOpen, setOpen }) => {
   const [isSuccess, setIsSuccess] = useState(false);
   const [successMessage, setSuccessMessage] = useState('');
   const [loading, setLoading] = useState(false);
-
   const {
     register,
     handleSubmit,
@@ -63,38 +64,20 @@ const Login = ({ isOpen, setOpen }) => {
           setIsError(true);
           setErrorMessage(res.message);
         } else {
+          const { tokens, user } = res;
           setIsError(false);
+          localStorage.setItem('tokens', JSON.stringify(tokens));
+          localStorage.setItem('profile', JSON.stringify(user));
           setIsSuccess(true);
           setSuccessMessage(SUCCESS_LOG_IN_MESSAGE);
+          window.location.href = '/';
         }
       })
       .finally(() => setLoading(false));
   };
 
   const onSuccessGoogle = async (data) => {
-    // if exist data => login, else => register and login
-    const targetUrl = '/auth/register';
-    const registerData = {
-      email: data.profileObj.email,
-      firstName: data.profileObj.givenName,
-      lastName: data.profileObj.familyName,
-      password: `firstLogin${data.profileObj.googleId}`,
-    };
-    setLoading(true);
-    const submitData = queryString.stringify(registerData);
-    await axiosConfig
-      .post(targetUrl, submitData)
-      .then((res) => {
-        if (res.code) {
-          setIsSuccess(false);
-          setIsError(true);
-          setErrorMessage(res.message);
-        } else {
-          setIsError(false);
-          setIsSuccess(true);
-        }
-      })
-      .finally(() => setLoading(false));
+    console.log(data.profileObj);
   };
   const onFailure = (res) => {
     console.log('[Login failed] res:', res);
@@ -164,7 +147,7 @@ const Login = ({ isOpen, setOpen }) => {
             Forgot password?
           </Link>
 
-          {/* <div className="login__form-submit-result">
+          <div className="login__form-submit-result">
             {isError && (
               <>
                 <RiErrorWarningFill className="login__form-submit-result-status--error" />
@@ -183,7 +166,7 @@ const Login = ({ isOpen, setOpen }) => {
                 </span>
               </>
             )}
-          </div> */}
+          </div>
 
           <button className="login__form-button" type="submit">
             {loading ? 'Please wait...' : FORM_LOGIN.button.title}

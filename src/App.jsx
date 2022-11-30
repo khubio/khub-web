@@ -34,10 +34,10 @@ function App() {
             <Route path="sign-up" element={<Register />} />
             <Route path="forgot-password" element={<ForgotPassword />} />
             <Route path="reset-password" element={<ResetPassword />} />
-            <Route path="*" element={<Login key="login" />} />
+            {/* <Route path="*" element={<Login key="login" />} /> */}
           </Route>
           <Route
-            path=""
+            path="/"
             element={
               <PrivateLayout>
                 <Group />
@@ -62,7 +62,7 @@ function App() {
               }
             />
           </Route>
-          <Route path="*" element={<Navigate to="/auth/login" replace />} />
+          {/* <Route path="*" element={<Navigate to="/auth/login" replace />} /> */}
         </Routes>
       </div>
     </Router>
