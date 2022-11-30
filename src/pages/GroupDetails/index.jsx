@@ -5,6 +5,7 @@ import { useState, useEffect } from 'react';
 import { getGroupById } from '@services/group.service';
 import { useParams } from 'react-router-dom';
 import { tokens } from '../../theme';
+import ConfirmationDialogRaw from './RoleAssignment';
 
 const GroupDetails = () => {
   const theme = useTheme();
@@ -55,21 +56,20 @@ const GroupDetails = () => {
       field: 'action',
       headerName: 'Action',
       flex: 1,
-      renderCell: ({ row: { id } }) => {
+      renderCell: ({ row: { role } }) => {
         return (
           <Box
             width="30%"
-            m="5px auto"
+            m="5px"
             p="5px"
             display="flex"
             justifyContent="center"
             backgroundColor={colors.greenAccent[700]}
             borderRadius="4px"
             sx={{ cursor: 'pointer' }}
-            // onClick={() => alert('wellll')}
           >
             <Typography color={colors.grey[100]} sx={{ ml: '5px' }}>
-              Details
+              <ConfirmationDialogRaw roleInGroup={role} />
             </Typography>
           </Box>
         );
