@@ -15,6 +15,7 @@ import MenuList from '@mui/material/MenuList';
 import Stack from '@mui/material/Stack';
 import SearchIcon from '@mui/icons-material/Search';
 import { logout } from '@services/auth.service';
+import queryString from 'query-string';
 import { ColorModeContext, tokens } from '../../../theme';
 
 const Topbar = () => {
@@ -39,9 +40,12 @@ const Topbar = () => {
   };
   const handleLogout = () => {
     setOpen(false);
+    const refreshToken = JSON.parse(localStorage.getItem('tokens')).refresh
+      .token;
+    const logoutForm = queryString.stringify({ refreshToken });
     localStorage.removeItem('tokens');
     localStorage.removeItem('profile');
-    logout();
+    logout(logoutForm);
     window.location.reload();
   };
 
