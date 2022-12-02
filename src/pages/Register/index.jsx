@@ -8,6 +8,7 @@ import { RiErrorWarningFill } from 'react-icons/ri';
 import { Link } from 'react-router-dom';
 import { validateSignUpSchema } from '@models/validateFormSchema';
 import axiosConfig from '@services/axiosConfig';
+import { register as registerHandle } from '@services/auth.service';
 import './Register.scss';
 
 const SUCCESS_SIGN_UP_MESSAGE =

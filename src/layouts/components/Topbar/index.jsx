@@ -14,6 +14,7 @@ import Popper from '@mui/material/Popper';
 import MenuList from '@mui/material/MenuList';
 import Stack from '@mui/material/Stack';
 import SearchIcon from '@mui/icons-material/Search';
+import { logout } from '@services/auth.service';
 import { ColorModeContext, tokens } from '../../../theme';
 
 const Topbar = () => {
@@ -35,6 +36,13 @@ const Topbar = () => {
   const handleToProfile = () => {
     setOpen(false);
     window.location.href = '/profile';
+  };
+  const handleLogout = () => {
+    setOpen(false);
+    localStorage.removeItem('tokens');
+    localStorage.removeItem('profile');
+    logout();
+    window.location.reload();
   };
 
   const handleListKeyDown = (event) => {
@@ -92,9 +100,7 @@ const Topbar = () => {
                 aria-expanded={open ? 'true' : undefined}
                 aria-haspopup="true"
                 onClick={handleToggle}
-              >
-                Dashboard
-              </PersonOutlinedIcon>
+              />
               <Popper
                 open={open}
                 anchorEl={anchorRef.current}
@@ -126,7 +132,7 @@ const Topbar = () => {
                           <MenuItem onClick={handleClose}>
                             Change Password
                           </MenuItem>
-                          <MenuItem onClick={handleClose}>Logout</MenuItem>
+                          <MenuItem onClick={handleLogout}>Logout</MenuItem>
                         </MenuList>
                       </ClickAwayListener>
                     </Paper>

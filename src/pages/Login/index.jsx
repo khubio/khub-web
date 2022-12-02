@@ -1,16 +1,15 @@
 import { FACEBOOK_ID, GOOGLE_ID } from '@configs';
 import { yupResolver } from '@hookform/resolvers/yup';
 import { validateLoginSchema } from '@models/validateFormSchema';
-import axiosConfig from '@services/axiosConfig';
+import { login, loginWithGoogle } from '@services/auth.service';
 import { gapi } from 'gapi-script';
-import queryString from 'query-string';
 import { useEffect, useState } from 'react';
 import FacebookLogin from 'react-facebook-login/dist/facebook-login-render-props';
 import GoogleLogin from 'react-google-login';
 import { useForm } from 'react-hook-form';
 import { IoCheckmarkDoneCircleSharp } from 'react-icons/io5';
 import { RiErrorWarningFill } from 'react-icons/ri';
-import { Link, useHistory } from 'react-router-dom';
+import { Link } from 'react-router-dom';
 import './Login.scss';
 
 const SUCCESS_LOG_IN_MESSAGE = 'Login successfully';
@@ -53,11 +52,9 @@ const Login = ({ isOpen, setOpen }) => {
   });
 
   const handleSubmitForm = async (data) => {
-    const targetUrl = 'auth/login';
     setLoading(true);
     const submitData = new URLSearchParams(data);
-    await axiosConfig
-      .post(targetUrl, submitData)
+    login(submitData)
       .then((res) => {
         if (res.code) {
           setIsSuccess(false);
@@ -77,7 +74,23 @@ const Login = ({ isOpen, setOpen }) => {
   };
 
   const onSuccessGoogle = async (data) => {
-    console.log(data.profileObj);
+    await loginWithGoogle(data.profileObj)
+      .then((res) => {
+        if (res.code) {
+          setIsSuccess(false);
+          setIsError(true);
+          setErrorMessage(res.message);
+        } else {
+          const { tokens, user } = res;
+          setIsError(false);
+          localStorage.setItem('tokens', JSON.stringify(tokens));
+          localStorage.setItem('profile', JSON.stringify(user));
+          setIsSuccess(true);
+          setSuccessMessage(SUCCESS_LOG_IN_MESSAGE);
+          window.location.href = '/';
+        }
+      })
+      .finally(() => setLoading(false));
   };
   const onFailure = (res) => {
     console.log('[Login failed] res:', res);
@@ -192,7 +205,7 @@ const Login = ({ isOpen, setOpen }) => {
                     onSuccess={onSuccessGoogle}
                     onFailure={onFailure}
                     cookiePolicy="single_host_origin"
-                    isSignedIn
+                    isSignedIn={false}
                   />
                 </div>
                 <div className="login__third_party-item">
