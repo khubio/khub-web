@@ -65,6 +65,7 @@
       }
 
       &--error {
+        max-width: 15rem;
         padding-top: 0.3rem;
         background-color: transparent;
         color: $error-color;

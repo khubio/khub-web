@@ -52,3 +52,19 @@ export const validateEditProfileSchema = yup.object().shape({
   lastName: yup.string().required('Last name is required'),
   phone: yup.string().required('Phone is required').min(10, 'Phone must be at least 10 characters').max(11, 'Phone must be maximum 11 characters'),
 });
+
+export const validateChangePasswordSchema = yup.object().shape({
+  oldPassword: yup
+    .string()
+    .required('Old password is required'),
+  newPassword: yup
+    .string()
+    .min(8, 'Password must be at least 8 characters')
+    .max(32, 'Password must be maximum 32 characters')
+    .notOneOf([yup.ref('oldPassword'), null], 'New password must be different from old password')
+    .required('New password is required'),
+  confirmPassword: yup
+    .string()
+    .oneOf([yup.ref('newPassword'), null], 'Passwords must match')
+    .required('Confirm password is required'),
+});

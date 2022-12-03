@@ -34,9 +34,13 @@ const Topbar = () => {
     }
     setOpen(false);
   };
-  const handleToProfile = () => {
+  const handleToProfilePage = () => {
     setOpen(false);
     window.location.href = '/profile';
+  };
+  const handleToChangePasswordPage = () => {
+    setOpen(false);
+    window.location.href = '/profile/change-password';
   };
   const handleLogout = () => {
     setOpen(false);
@@ -132,8 +136,10 @@ const Topbar = () => {
                           onKeyDown={handleListKeyDown}
                           sx={{ mt: 2 }}
                         >
-                          <MenuItem onClick={handleToProfile}>Profile</MenuItem>
-                          <MenuItem onClick={handleClose}>
+                          <MenuItem onClick={handleToProfilePage}>
+                            Profile
+                          </MenuItem>
+                          <MenuItem onClick={handleToChangePasswordPage}>
                             Change Password
                           </MenuItem>
                           <MenuItem onClick={handleLogout}>Logout</MenuItem>

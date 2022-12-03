@@ -18,6 +18,7 @@ import { useEffect } from 'react';
 import { useDispatch } from 'react-redux';
 import { setUser } from '@store/slice/auth.slice';
 import Profile from '@pages/Profile/Profile';
+import ChangePassword from '@pages/ChangePassword';
 
 function App() {
   const dispatch = useDispatch();
@@ -46,14 +47,25 @@ function App() {
               </PrivateLayout>
             }
           />
-          <Route
-            path="/profile"
-            element={
-              <PrivateLayout>
-                <Profile />
-              </PrivateLayout>
-            }
-          />
+
+          <Route path="profile">
+            <Route
+              index
+              element={
+                <PrivateLayout>
+                  <Profile />
+                </PrivateLayout>
+              }
+            />
+            <Route
+              path="change-password"
+              element={
+                <PrivateLayout>
+                  <ChangePassword />
+                </PrivateLayout>
+              }
+            />
+          </Route>
 
           <Route path="groups">
             <Route
