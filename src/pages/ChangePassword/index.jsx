@@ -39,8 +39,8 @@ const FORM_CHANGE_PASSWORD = {
     message: 'Already have an account?',
   },
 };
-const userId = JSON.parse(localStorage.getItem('profile')).id;
 const ChangePassword = () => {
+  const userId = JSON.parse(localStorage.getItem('profile')).id;
   const [user, setUser] = useState({});
   const [isError, setIsError] = useState(false);
   const [errorMessage, setErrorMessage] = useState('');

@@ -42,14 +42,14 @@ const Topbar = () => {
     setOpen(false);
     window.location.href = '/profile/change-password';
   };
-  const handleLogout = () => {
+  const handleLogout = async () => {
     setOpen(false);
     const refreshToken = JSON.parse(localStorage.getItem('tokens')).refresh
       .token;
     const logoutForm = queryString.stringify({ refreshToken });
     localStorage.removeItem('tokens');
     localStorage.removeItem('profile');
-    logout(logoutForm);
+    await logout(logoutForm);
     window.location.reload();
   };
 
