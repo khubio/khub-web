@@ -73,6 +73,7 @@ const ChangePassword = () => {
         } else {
           setIsError(false);
           setIsSuccess(true);
+          setSuccessMessage(SUCCESS_MESSAGE);
           window.location.href = '/profile';
         }
       })
@@ -144,6 +145,15 @@ const ChangePassword = () => {
                 <span className="edit__form-submit-result-message--error">
                   {' '}
                   {errorMessage}
+                </span>
+              </>
+            )}
+            {!loading && isSuccess && (
+              <>
+                <IoCheckmarkDoneCircleSharp className="edit__form-submit-result-status--success" />
+                <span className="edit__form-submit-result-message--success">
+                  {' '}
+                  {successMessage}
                 </span>
               </>
             )}

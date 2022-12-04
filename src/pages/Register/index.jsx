@@ -133,6 +133,15 @@ const Register = ({ isOpen, setOpen }) => {
                 </span>
               </>
             )}
+            {!loading && isSuccess && (
+              <>
+                <IoCheckmarkDoneCircleSharp className="register__form-submit-result-status--success" />
+                <span className="register__form-submit-result-message--success">
+                  {' '}
+                  {successMessage}
+                </span>
+              </>
+            )}
           </div>
 
           <button className="register__form-button" type="submit">

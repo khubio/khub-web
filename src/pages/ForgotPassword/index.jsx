@@ -118,6 +118,15 @@ const ForgotPassword = ({ isOpen, setOpen }) => {
                 </span>
               </>
             )}
+            {!loading && isSuccess && (
+              <>
+                <IoCheckmarkDoneCircleSharp className="forgot-password__form-submit-result-status--success" />
+                <span className="forgot-password__form-submit-result-message--success">
+                  {' '}
+                  {successMessage}
+                </span>
+              </>
+            )}
           </div>
 
           <button className="forgot-password__form-button" type="submit">

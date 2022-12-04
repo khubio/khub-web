@@ -65,6 +65,7 @@ const ResetPassword = ({ isOpen, setOpen }) => {
         } else {
           setIsError(false);
           setIsSuccess(true);
+          setSuccessMessage(SUCCESS_MESSAGE);
         }
       })
       .finally(() => setLoading(false));
@@ -122,6 +123,15 @@ const ResetPassword = ({ isOpen, setOpen }) => {
                 <span className="reset-password__form-submit-result-message--error">
                   {' '}
                   {errorMessage}
+                </span>
+              </>
+            )}
+            {!loading && isSuccess && (
+              <>
+                <IoCheckmarkDoneCircleSharp className="reset-password__form-submit-result-status--success" />
+                <span className="reset-password__form-submit-result-message--success">
+                  {' '}
+                  {successMessage}
                 </span>
               </>
             )}

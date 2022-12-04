@@ -119,7 +119,7 @@
           }
 
           &--success {
-            color: $success-color;
+            color: green;
           }
         }
 
@@ -127,7 +127,7 @@
           &--success {
             font-size: smaller;
             padding-left: 0.5rem;
-            color: $success-color;
+            color: green;
           }
           &--error {
             font-size: smaller;

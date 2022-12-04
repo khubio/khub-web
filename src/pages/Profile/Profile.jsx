@@ -82,6 +82,7 @@ const Profile = () => {
         } else {
           setIsError(false);
           setIsSuccess(true);
+          setSuccessMessage(SUCCESS_EDIT_MESSAGE);
           window.location.reload();
         }
       })
@@ -163,6 +164,15 @@ const Profile = () => {
                 <span className="edit__form-submit-result-message--error">
                   {' '}
                   {errorMessage}
+                </span>
+              </>
+            )}
+            {!loading && isSuccess && (
+              <>
+                <IoCheckmarkDoneCircleSharp className="edit__form-submit-result-status--success" />
+                <span className="edit__form-submit-result-message--success">
+                  {' '}
+                  {successMessage}
                 </span>
               </>
             )}
