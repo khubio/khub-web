@@ -73,6 +73,7 @@ const ChangePassword = () => {
         } else {
           setIsError(false);
           setIsSuccess(true);
+          reset();
           setSuccessMessage(SUCCESS_MESSAGE);
           window.location.href = '/profile';
         }

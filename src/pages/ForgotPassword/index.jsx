@@ -58,6 +58,8 @@ const ForgotPassword = ({ isOpen, setOpen }) => {
         } else {
           setIsError(false);
           setIsSuccess(true);
+          setSuccessMessage(SUCCESS_MESSAGE);
+          reset();
         }
       })
       .finally(() => setLoading(false));

@@ -65,7 +65,9 @@ const ResetPassword = ({ isOpen, setOpen }) => {
         } else {
           setIsError(false);
           setIsSuccess(true);
+          reset();
           setSuccessMessage(SUCCESS_MESSAGE);
+          window.location.href = 'auth/login';
         }
       })
       .finally(() => setLoading(false));

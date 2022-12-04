@@ -75,6 +75,7 @@ const Register = ({ isOpen, setOpen }) => {
         } else {
           setIsError(false);
           setIsSuccess(true);
+          reset();
           setSuccessMessage(SUCCESS_SIGN_UP_MESSAGE);
         }
       })

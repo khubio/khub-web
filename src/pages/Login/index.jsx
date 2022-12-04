@@ -86,6 +86,7 @@ const Login = ({ isOpen, setOpen }) => {
           localStorage.setItem('tokens', JSON.stringify(tokens));
           localStorage.setItem('profile', JSON.stringify(user));
           setIsSuccess(true);
+          reset();
           window.location.href = '/';
         }
       })
