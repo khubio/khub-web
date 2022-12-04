@@ -86,7 +86,6 @@ const Login = ({ isOpen, setOpen }) => {
           localStorage.setItem('tokens', JSON.stringify(tokens));
           localStorage.setItem('profile', JSON.stringify(user));
           setIsSuccess(true);
-          setSuccessMessage(SUCCESS_LOG_IN_MESSAGE);
           window.location.href = '/';
         }
       })
@@ -167,15 +166,6 @@ const Login = ({ isOpen, setOpen }) => {
                 <span className="login__form-submit-result-message--error">
                   {' '}
                   {errorMessage}
-                </span>
-              </>
-            )}
-            {!loading && isSuccess && (
-              <>
-                <IoCheckmarkDoneCircleSharp className="login__form-submit-result-status--success" />
-                <span className="login__form-submit-result-message--success">
-                  {' '}
-                  {successMessage}
                 </span>
               </>
             )}

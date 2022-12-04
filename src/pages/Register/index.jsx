@@ -7,7 +7,6 @@ import { IoCheckmarkDoneCircleSharp } from 'react-icons/io5';
 import { RiErrorWarningFill } from 'react-icons/ri';
 import { Link } from 'react-router-dom';
 import { validateSignUpSchema } from '@models/validateFormSchema';
-import axiosConfig from '@services/axiosConfig';
 import { register as registerHandle } from '@services/auth.service';
 import './Register.scss';
 
@@ -65,11 +64,9 @@ const Register = ({ isOpen, setOpen }) => {
   });
 
   const handleSubmitForm = async (data) => {
-    const targetUrl = '/auth/register';
     setLoading(true);
     const submitData = queryString.stringify(data);
-    await axiosConfig
-      .post(targetUrl, submitData)
+    await registerHandle(submitData)
       .then((res) => {
         if (res.code) {
           setIsSuccess(false);
@@ -133,15 +130,6 @@ const Register = ({ isOpen, setOpen }) => {
                 <span className="register__form-submit-result-message--error">
                   {' '}
                   {errorMessage}
-                </span>
-              </>
-            )}
-            {!loading && isSuccess && (
-              <>
-                <IoCheckmarkDoneCircleSharp className="register__form-submit-result-status--success" />
-                <span className="register__form-submit-result-message--success">
-                  {' '}
-                  {successMessage}
                 </span>
               </>
             )}

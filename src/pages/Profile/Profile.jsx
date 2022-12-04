@@ -32,12 +32,12 @@ const FORM_EDIT = {
       placeholder: '',
       key: 'profile/lastName',
     },
-    {
-      type: 'phone',
-      title: 'Phone number',
-      placeholder: '',
-      key: 'profile/email',
-    },
+    // {
+    //   type: 'phone',
+    //   title: 'Phone number',
+    //   placeholder: '',
+    //   key: 'profile/phone',
+    // },
   ],
   button: {
     title: 'Update now',
@@ -82,7 +82,6 @@ const Profile = () => {
         } else {
           setIsError(false);
           setIsSuccess(true);
-          setSuccessMessage(SUCCESS_EDIT_MESSAGE);
           window.location.reload();
         }
       })
@@ -164,15 +163,6 @@ const Profile = () => {
                 <span className="edit__form-submit-result-message--error">
                   {' '}
                   {errorMessage}
-                </span>
-              </>
-            )}
-            {!loading && isSuccess && (
-              <>
-                <IoCheckmarkDoneCircleSharp className="edit__form-submit-result-status--success" />
-                <span className="edit__form-submit-result-message--success">
-                  {' '}
-                  {successMessage}
                 </span>
               </>
             )}

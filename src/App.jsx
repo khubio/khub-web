@@ -19,6 +19,7 @@ import { useDispatch } from 'react-redux';
 import { setUser } from '@store/slice/auth.slice';
 import Profile from '@pages/Profile/Profile';
 import ChangePassword from '@pages/ChangePassword';
+import VerifyEmail from '@pages/VerifyEmail';
 
 function App() {
   const dispatch = useDispatch();
@@ -36,6 +37,7 @@ function App() {
             <Route path="sign-up" element={<Register />} />
             <Route path="forgot-password" element={<ForgotPassword />} />
             <Route path="reset-password" element={<ResetPassword />} />
+            <Route path="verify-email" element={<VerifyEmail />} />
             <Route path="*" element={<Login key="login" />} />
           </Route>
 

@@ -50,7 +50,8 @@ export const validateResetPasswordSchema = yup.object().shape({
 export const validateEditProfileSchema = yup.object().shape({
   firstName: yup.string().required('First name is required'),
   lastName: yup.string().required('Last name is required'),
-  phone: yup.string().required('Phone is required').min(10, 'Phone must be at least 10 characters').max(11, 'Phone must be maximum 11 characters'),
+  // eslint-disable-next-line max-len
+  // phone: yup.string().required('Phone is required').min(10, 'Phone must be at least 10 characters').max(11, 'Phone must be maximum 11 characters'),
 });
 
 export const validateChangePasswordSchema = yup.object().shape({

@@ -69,6 +69,7 @@ const Topbar = () => {
 
     prevOpen.current = open;
   }, [open]);
+  const isAllowChangePassword = JSON.parse(localStorage.getItem('profile')).service == null;
   return (
     <Box display="flex" justifyContent="space-between" p={2}>
       {/* SEARCH BAR */}
@@ -139,9 +140,11 @@ const Topbar = () => {
                           <MenuItem onClick={handleToProfilePage}>
                             Profile
                           </MenuItem>
-                          <MenuItem onClick={handleToChangePasswordPage}>
-                            Change Password
-                          </MenuItem>
+                          {isAllowChangePassword && (
+                            <MenuItem onClick={handleToChangePasswordPage}>
+                              Change Password
+                            </MenuItem>
+                          )}
                           <MenuItem onClick={handleLogout}>Logout</MenuItem>
                         </MenuList>
                       </ClickAwayListener>
