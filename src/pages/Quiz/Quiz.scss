@@ -1,0 +1,59 @@
+@import '../../assets/scss/mixins.scss';
+@import '../../assets/scss/variables.scss';
+.quiz {
+  height: 100vh;
+  background-color: $light-blue--op;
+  &__container {
+    height: 100vh;
+    background-color: $light-blue--op;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+
+  &__question {
+    @include flex(center, center);
+    font-size: 2rem;
+    font-weight: 800;
+    border-radius: 2rem !important;
+    border: $dark-blue solid 1rem;
+    max-width: 70vw;
+    text-align: center;
+  }
+
+  &__answers {
+    @include flex(center, center);
+  }
+
+  &__answer {
+    @include flex(center, center);
+    flex-wrap: wrap;
+    font-size: 1.5rem;
+    border-radius: 3rem !important;
+
+    &--0 {
+      background-color: $orange-primary !important;
+    }
+    &--1 {
+      background-color: $beige-primary !important;
+    }
+    &--2 {
+      background-color: $dark-blue !important;
+      color: white !important;
+    }
+    &--3 {
+      background-color: $green-primary !important;
+    }
+    &:hover {
+      cursor: pointer;
+      background-color: $light-blue !important;
+      color: $white-primary;
+      box-shadow: $dark-blue 0.5rem 1rem 1rem 0.4rem;
+    }
+    &-icon {
+      justify-self: flex-start;
+      margin-right: 1rem;
+      color: rgb(91, 255, 91);
+    }
+  }
+}

@@ -1,4 +1,4 @@
-@import "./variables.scss";
+@import './variables.scss';
 
 @mixin logo_icon {
   width: $icon-height;
@@ -44,9 +44,9 @@
 }
 
 @mixin defaultBackground($imageName) {
-  background-image: url("../../../public/images/#{$imageName}");
+  background-image: url('../../../public/images/#{$imageName}');
   background-position: center;
   background-repeat: no-repeat;
   background-size: cover;
-  min-height: 100vh;
+  min-height: 80vh;
 }

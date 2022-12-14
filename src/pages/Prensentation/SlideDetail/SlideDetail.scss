@@ -1,0 +1,32 @@
+@import '../../../assets/scss/mixins.scss';
+@import '../../../assets/scss/variables.scss';
+.detail {
+  // background-color: rgb(114, 161, 226);
+  height: 80vh;
+  box-sizing: border-box;
+
+  &__container {
+    display: flex;
+    flex-direction: column;
+    padding: 0 1rem;
+    max-width: 100%;
+    box-sizing: border-box;
+  }
+
+  &__question {
+    @include flex(flex-start, center);
+    font-size: 2rem;
+    font-weight: 900;
+    border-radius: 2rem;
+    max-width: 100%;
+    padding: 2rem 0 3rem 0;
+  }
+
+  &__navigation {
+    @include flex(center, space-between);
+    margin-top: 2rem;
+    &-btn {
+      background-color: $light-blue !important;
+    }
+  }
+}
