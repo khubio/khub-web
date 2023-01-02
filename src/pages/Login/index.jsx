@@ -199,24 +199,6 @@ const Login = ({ isOpen, setOpen }) => {
                     isSignedIn={false}
                   />
                 </div>
-                <div className="login__third_party-item">
-                  <FacebookLogin
-                    appId={FACEBOOK_ID}
-                    autoLoad={false}
-                    fields="name,email,picture"
-                    callback={onSuccessFacebook}
-                    render={(renderProps) => (
-                      <img
-                        className="login__third_party-item-button"
-                        onClick={renderProps.onClick}
-                        disabled={renderProps.disabled}
-                        src={`${process.env.PUBLIC_URL}/images/facebook_icon.png`}
-                        alt="facebook"
-                        aria-hidden
-                      />
-                    )}
-                  />
-                </div>
               </div>
             </div>
           </div>

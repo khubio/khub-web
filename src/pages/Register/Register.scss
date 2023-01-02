@@ -4,7 +4,7 @@
 .register {
   @include flex(center, center);
   @include defaultBackground('khub-auth-background.png');
-
+  min-height: 100vh;
   &__container {
     @include flex(center, center);
     flex-direction: column;
