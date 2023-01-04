@@ -25,10 +25,10 @@ import Quiz from '@pages/Quiz';
 
 function App() {
   const dispatch = useDispatch();
-  // const user = JSON.parse(localStorage.getItem('profile'));
-  // useEffect(() => {
-  //   dispatch(setUser(user));
-  // }, [dispatch, user]);
+  const user = JSON.parse(localStorage.getItem('profile'));
+  useEffect(() => {
+    dispatch(setUser(user));
+  }, [dispatch, user]);
 
   // return <Quiz />;
   return (
