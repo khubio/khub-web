@@ -44,12 +44,10 @@ const Topbar = () => {
   };
   const handleLogout = async () => {
     setOpen(false);
-    const refreshToken = JSON.parse(localStorage.getItem('tokens')).refresh
-      .token;
-    const logoutForm = queryString.stringify({ refreshToken });
+    const refreshToken = JSON.parse(localStorage.getItem('tokens')).refresh.token;
+    await logout({ refreshToken });
     localStorage.removeItem('tokens');
     localStorage.removeItem('profile');
-    await logout(logoutForm);
     window.location.reload();
   };
 
@@ -62,6 +60,8 @@ const Topbar = () => {
     }
   };
   const prevOpen = useRef(open);
+  const isAllowChangePassword = JSON.parse(localStorage.getItem('profile'))?.service == null;
+
   useEffect(() => {
     if (prevOpen.current === true && open === false) {
       anchorRef.current.focus();
@@ -69,7 +69,6 @@ const Topbar = () => {
 
     prevOpen.current = open;
   }, [open]);
-  const isAllowChangePassword = JSON.parse(localStorage.getItem('profile')).service == null;
   return (
     <Box display="flex" justifyContent="space-between" p={2}>
       {/* SEARCH BAR */}

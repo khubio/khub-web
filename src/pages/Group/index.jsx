@@ -206,6 +206,13 @@ const Group = () => {
           '& .MuiCheckbox-root': {
             color: `${colors.greenAccent[200]} !important`,
           },
+          '& .MuiDataGrid-cell:focus-within, & .MuiDataGrid-cell:focus': {
+            outline: 'none !important',
+          },
+          '& .MuiDataGrid-columnHeader:focus-within, & .MuiDataGrid-columnHeader:focus':
+          {
+            outline: 'none !important',
+          },
         }}
       >
         <DataGrid checkboxSelection rows={groups} columns={columns} />

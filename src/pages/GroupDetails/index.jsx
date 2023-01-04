@@ -1,11 +1,18 @@
-import { Box, Typography, useTheme } from '@mui/material';
+import {
+  Box,
+  Typography,
+  useTheme,
+  Button,
+  Input,
+  TextField,
+} from '@mui/material';
 import { DataGrid } from '@mui/x-data-grid';
 import Header from '@components/Header';
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useCallback } from 'react';
 import { getGroupById } from '@services/group.service';
 import { useParams } from 'react-router-dom';
+import { useMounted } from 'src/hooks/useMounted';
 import { tokens } from '../../theme';
-import ConfirmationDialogRaw from './RoleAssignment';
 
 const GroupDetails = () => {
   const theme = useTheme();
@@ -14,26 +21,32 @@ const GroupDetails = () => {
     id: '',
     users: [],
   });
+  const [invitedEmail, setInvitedEmail] = useState('');
+  const { isMounted } = useMounted();
   const params = useParams();
-
+  const fetch = useCallback(() => {
+    getGroupById(params.id).then((data) => {
+      if (isMounted.current) {
+        setGroup(data);
+      }
+    });
+  }, [isMounted]);
   useEffect(() => {
-    (async () => {
-      const res = await getGroupById(params.id);
-      const users = res.users.map((user) => {
-        return {
-          id: user.user.id,
-          role: user.role,
-          firstName: user.user.firstName,
-          lastName: user.user.lastName,
-        };
-      });
-      res.users = users;
-      setGroup(res);
-    })();
-  }, []);
+    fetch();
+  }, [fetch]);
+  useEffect(() => {
+    fetch();
+  }, [fetch]);
+
   const colors = tokens(theme.palette.mode);
   const columns = [
     { field: 'id', headerName: 'User Id', flex: 1 },
+    {
+      field: 'lastName',
+      headerName: 'Last Name',
+      flex: 1,
+      cellClassName: 'name-column--cell',
+    },
     {
       field: 'firstName',
       headerName: 'First Name',
@@ -41,8 +54,8 @@ const GroupDetails = () => {
       cellClassName: 'name-column--cell',
     },
     {
-      field: 'lastName',
-      headerName: 'Last Name',
+      field: 'email',
+      headerName: 'Email',
       flex: 1,
       cellClassName: 'name-column--cell',
     },
@@ -63,14 +76,14 @@ const GroupDetails = () => {
             m="5px"
             p="5px"
             display="flex"
-            justifyContent="center"
-            backgroundColor={colors.greenAccent[700]}
+            // backgroundColor={colors.greenAccent[700]}
             borderRadius="4px"
             sx={{ cursor: 'pointer' }}
           >
             <Typography color={colors.grey[100]} sx={{ ml: '5px' }}>
-              <ConfirmationDialogRaw roleInGroup={role} />
+              ...
             </Typography>
+            {/* <ConfirmationDialogRaw roleInGroup={role} /> */}
           </Box>
         );
       },
@@ -78,7 +91,28 @@ const GroupDetails = () => {
   ];
   return (
     <Box m="20px">
-      <Header title="GROUP DETAILS" subtitle={`Details of group: ${group.name}`} />
+      <Header title="GROUP DETAILS" subtitle={`Group name: ${group.name}`} />
+      <form>
+        <Box display="flex" justifyContent="flex-end" sx={{ p: '0' }}>
+          <TextField
+            label="Enter email to invite member to join this group"
+            type="email"
+            variant="filled"
+            color="info"
+            sx={{ width: '300px' }}
+            onChange={(e) => setInvitedEmail(e.target.value)}
+            value={invitedEmail}
+          />
+          <Button
+            variant="outlined"
+            color="info"
+            sx={{ ml: '10px' }}
+            onClick={() => alert(invitedEmail)}
+          >
+            Send
+          </Button>
+        </Box>
+      </form>
       <Box
         m="40px 0 0 0"
         height="75vh"
@@ -106,6 +140,13 @@ const GroupDetails = () => {
           '& .MuiCheckbox-root': {
             color: `${colors.greenAccent[200]} !important`,
           },
+          '& .MuiDataGrid-cell:focus-within, & .MuiDataGrid-cell:focus': {
+            outline: 'none !important',
+          },
+          '& .MuiDataGrid-columnHeader:focus-within, & .MuiDataGrid-columnHeader:focus':
+            {
+              outline: 'none !important',
+            },
         }}
       >
         <DataGrid checkboxSelection rows={group.users} columns={columns} />
