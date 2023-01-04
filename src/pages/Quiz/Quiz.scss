@@ -1,10 +1,9 @@
 @import '../../assets/scss/mixins.scss';
 @import '../../assets/scss/variables.scss';
 .quiz {
-  height: 100vh;
   background-color: $light-blue--op;
   &__container {
-    height: 100vh;
+    min-height: 100vh;
     background-color: $light-blue--op;
     display: flex;
     align-items: center;
