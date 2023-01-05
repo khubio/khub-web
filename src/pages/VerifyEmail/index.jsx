@@ -1,22 +1,24 @@
 import React, { useEffect, useState } from 'react';
 import queryString from 'query-string';
 import { verifyEmail } from '@services/auth.service';
+import { useNavigate } from 'react-router-dom';
 
 const VerifyEmail = () => {
   const [isError, setIsError] = useState(false);
   const [errorMessage, setErrorMessage] = useState('');
+  const navigate = useNavigate();
   const handleVerifyEmail = async () => {
     const token = queryString.parse(window.location.search)?.token;
-    await verifyEmail(token).then((res) => {
-      if (res.code) {
-        setIsError(true);
-        setErrorMessage(res.message);
-      } else {
+    await verifyEmail(token)
+      .then((res) => {
         setIsError(false);
         setErrorMessage('');
-        window.location.href = '/auth/login';
-      }
-    });
+        navigate('/auth/login');
+      })
+      .catch((err) => {
+        setIsError(true);
+        setErrorMessage(err.message);
+      });
   };
   useEffect(() => {
     handleVerifyEmail();

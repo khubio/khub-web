@@ -1,4 +1,3 @@
-/* eslint-disable operator-linebreak */
 import { yupResolver } from '@hookform/resolvers/yup';
 import { validateChangePasswordSchema } from '@models/validateFormSchema';
 import axiosConfig from '@services/axiosConfig';
@@ -9,6 +8,7 @@ import { RiErrorWarningFill } from 'react-icons/ri';
 import { IoCheckmarkDoneCircleSharp } from 'react-icons/io5';
 import { changePassword } from '@services/user.service';
 import './ChangePassword.scss';
+import { useNavigate } from 'react-router-dom';
 
 const SUCCESS_MESSAGE = 'Change password successfully!';
 const FORM_CHANGE_PASSWORD = {
@@ -47,6 +47,8 @@ const ChangePassword = () => {
   const [isSuccess, setIsSuccess] = useState(false);
   const [successMessage, setSuccessMessage] = useState('');
   const [loading, setLoading] = useState(false);
+  const navigate = useNavigate();
+
   const {
     register,
     handleSubmit,
@@ -66,17 +68,16 @@ const ChangePassword = () => {
     const requestBody = queryString.stringify(submitData);
     await changePassword(userId, requestBody)
       .then((res) => {
-        if (res.code) {
-          setIsSuccess(false);
-          setIsError(true);
-          setErrorMessage(res.message);
-        } else {
-          setIsError(false);
-          setIsSuccess(true);
-          reset();
-          setSuccessMessage(SUCCESS_MESSAGE);
-          window.location.href = '/profile';
-        }
+        setIsError(false);
+        setIsSuccess(true);
+        reset();
+        setSuccessMessage(SUCCESS_MESSAGE);
+        navigate('/profile');
+      })
+      .catch((err) => {
+        setIsSuccess(false);
+        setIsError(true);
+        setErrorMessage(err.message);
       })
       .finally(() => setLoading(false));
   };
@@ -87,13 +88,12 @@ const ChangePassword = () => {
       await axiosConfig
         .get(targetUrl)
         .then((res) => {
-          if (res.code) {
-            setIsSuccess(false);
-            setIsError(true);
-            setErrorMessage(res.message);
-          } else {
-            setUser(res);
-          }
+          setUser(res);
+        })
+        .catch((err) => {
+          setIsSuccess(false);
+          setIsError(true);
+          setErrorMessage(err.message);
         })
         .finally(() => setLoading(false));
     };

@@ -1,4 +1,3 @@
-/* eslint-disable operator-linebreak */
 import { yupResolver } from '@hookform/resolvers/yup';
 import queryString from 'query-string';
 import { useState } from 'react';
@@ -51,16 +50,15 @@ const ForgotPassword = ({ isOpen, setOpen }) => {
     await axiosConfig
       .post(targetUrl, submitData)
       .then((res) => {
-        if (res.code) {
-          setIsSuccess(false);
-          setIsError(true);
-          setErrorMessage(res.message);
-        } else {
-          setIsError(false);
-          setIsSuccess(true);
-          setSuccessMessage(SUCCESS_MESSAGE);
-          reset();
-        }
+        setIsError(false);
+        setIsSuccess(true);
+        setSuccessMessage(SUCCESS_MESSAGE);
+        reset();
+      })
+      .catch((err) => {
+        setIsSuccess(false);
+        setIsError(true);
+        setErrorMessage(err.message);
       })
       .finally(() => setLoading(false));
   };

@@ -1,11 +1,10 @@
-/* eslint-disable operator-linebreak */
 import { yupResolver } from '@hookform/resolvers/yup';
 import queryString from 'query-string';
 import { useState } from 'react';
 import { useForm } from 'react-hook-form';
 import { IoCheckmarkDoneCircleSharp } from 'react-icons/io5';
 import { RiErrorWarningFill } from 'react-icons/ri';
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import { validateResetPasswordSchema } from '@models/validateFormSchema';
 import axiosConfig from '@services/axiosConfig';
 import './ResetPassword.scss';
@@ -38,6 +37,7 @@ const ResetPassword = ({ isOpen, setOpen }) => {
   const [isSuccess, setIsSuccess] = useState(false);
   const [successMessage, setSuccessMessage] = useState('');
   const [loading, setLoading] = useState(false);
+  const navigate = useNavigate();
 
   const {
     register,
@@ -58,17 +58,16 @@ const ResetPassword = ({ isOpen, setOpen }) => {
     await axiosConfig
       .post(targetUrl, submitData)
       .then((res) => {
-        if (res.code) {
-          setIsSuccess(false);
-          setIsError(true);
-          setErrorMessage(res.message);
-        } else {
-          setIsError(false);
-          setIsSuccess(true);
-          reset();
-          setSuccessMessage(SUCCESS_MESSAGE);
-          window.location.href = 'auth/login';
-        }
+        setIsError(false);
+        setIsSuccess(true);
+        reset();
+        setSuccessMessage(SUCCESS_MESSAGE);
+        navigate('auth/login');
+      })
+      .catch((err) => {
+        setIsSuccess(false);
+        setIsError(true);
+        setErrorMessage(err.message);
       })
       .finally(() => setLoading(false));
   };

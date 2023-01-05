@@ -1,4 +1,3 @@
-/* eslint-disable operator-linebreak */
 import { yupResolver } from '@hookform/resolvers/yup';
 import { validateEditProfileSchema } from '@models/validateFormSchema';
 import axiosConfig from '@services/axiosConfig';
@@ -8,7 +7,6 @@ import queryString from 'query-string';
 import { RiErrorWarningFill } from 'react-icons/ri';
 import { IoCheckmarkDoneCircleSharp } from 'react-icons/io5';
 import { MdEdit } from 'react-icons/md';
-import { Link } from 'react-router-dom';
 import './Profile.scss';
 
 const SUCCESS_EDIT_MESSAGE = 'Edit profile successfully!';
@@ -75,16 +73,15 @@ const Profile = () => {
     await axiosConfig
       .patch(targetUrl, requestBody)
       .then((res) => {
-        if (res.code) {
-          setIsSuccess(false);
-          setIsError(true);
-          setErrorMessage(res.message);
-        } else {
-          setIsError(false);
-          setIsSuccess(true);
-          setSuccessMessage(SUCCESS_EDIT_MESSAGE);
-          window.location.reload();
-        }
+        setIsError(false);
+        setIsSuccess(true);
+        setSuccessMessage(SUCCESS_EDIT_MESSAGE);
+        window.location.reload();
+      })
+      .catch((err) => {
+        setIsSuccess(false);
+        setIsError(true);
+        setErrorMessage(err.message);
       })
       .finally(() => setLoading(false));
   };
@@ -95,13 +92,12 @@ const Profile = () => {
       await axiosConfig
         .get(targetUrl)
         .then((res) => {
-          if (res.code) {
-            setIsSuccess(false);
-            setIsError(true);
-            setErrorMessage(res.message);
-          } else {
-            setUser(res);
-          }
+          setUser(res);
+        })
+        .catch((err) => {
+          setIsSuccess(false);
+          setIsError(true);
+          setErrorMessage(err.message);
         })
         .finally(() => setLoading(false));
     };

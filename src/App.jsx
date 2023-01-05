@@ -1,4 +1,3 @@
-/* eslint-disable react/jsx-wrap-multilines */
 import Login from '@pages/Login';
 import Register from '@pages/Register';
 // import Home from '@pages/Home';
@@ -40,11 +39,11 @@ function App() {
           <Route path="auth">
             <Route
               path="login"
-              element={
+              element={(
                 <PrivateLayout>
                   <Login />
                 </PrivateLayout>
-              }
+              )}
             />
             <Route path="sign-up" element={<Register />} />
             <Route path="forgot-password" element={<ForgotPassword />} />
@@ -53,57 +52,57 @@ function App() {
           </Route>
           <Route
             path="/"
-            element={
+            element={(
               <PrivateLayout>
                 <Group />
               </PrivateLayout>
-            }
+            )}
           />
 
           <Route path="profile">
             <Route
               index
-              element={
+              element={(
                 <PrivateLayout>
                   <Profile />
                 </PrivateLayout>
-              }
+              )}
             />
             <Route
               path="change-password"
-              element={
+              element={(
                 <PrivateLayout>
                   <ChangePassword />
                 </PrivateLayout>
-              }
+              )}
             />
           </Route>
 
           <Route path="groups">
             <Route
               index
-              element={
+              element={(
                 <PrivateLayout>
                   <Group />
                 </PrivateLayout>
-              }
+              )}
             />
             <Route path=":id">
               <Route
                 index
-                element={
+                element={(
                   <PrivateLayout>
                     <GroupDetails />
                   </PrivateLayout>
-                }
+                )}
               />
               <Route
                 path="join"
-                element={
+                element={(
                   <PrivateLayout>
                     <GroupJoin />
                   </PrivateLayout>
-                }
+                )}
               />
             </Route>
           </Route>

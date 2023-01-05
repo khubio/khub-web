@@ -1,4 +1,3 @@
-/* eslint-disable operator-linebreak */
 import { yupResolver } from '@hookform/resolvers/yup';
 import queryString from 'query-string';
 import { useState } from 'react';
@@ -10,8 +9,7 @@ import { validateSignUpSchema } from '@models/validateFormSchema';
 import { register as registerHandle } from '@services/auth.service';
 import './Register.scss';
 
-const SUCCESS_SIGN_UP_MESSAGE =
-  'Success! Please confirm your account in email!';
+const SUCCESS_SIGN_UP_MESSAGE = 'Success! Please confirm your account in email!';
 const FORM_SIGN_UP = {
   data: [
     {
@@ -68,16 +66,15 @@ const Register = ({ isOpen, setOpen }) => {
     const submitData = queryString.stringify(data);
     await registerHandle(submitData)
       .then((res) => {
-        if (res.code) {
-          setIsSuccess(false);
-          setIsError(true);
-          setErrorMessage(res.message);
-        } else {
-          setIsError(false);
-          setIsSuccess(true);
-          reset();
-          setSuccessMessage(SUCCESS_SIGN_UP_MESSAGE);
-        }
+        setIsError(false);
+        setIsSuccess(true);
+        reset();
+        setSuccessMessage(SUCCESS_SIGN_UP_MESSAGE);
+      })
+      .catch((err) => {
+        setIsSuccess(false);
+        setIsError(true);
+        setErrorMessage(err.message);
       })
       .finally(() => setLoading(false));
   };

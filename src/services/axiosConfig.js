@@ -2,21 +2,18 @@
 import axios from 'axios';
 import {
   getLocalRefreshToken,
+  getLocalAccessToken,
   setTokens,
 } from '@utils/localstorageUtil';
 
 const axiosConfig = axios.create({
   baseURL: process.env.REACT_APP_BASE_API_URL,
-  headers: {
-    'Content-Type': 'application/json',
-  },
 });
 
 axiosConfig.interceptors.request.use(
   (config) => {
     if (localStorage.getItem('tokens')) {
-      const accessToken = JSON.parse(localStorage.getItem('tokens')).access
-        .token;
+      const accessToken = getLocalAccessToken();
       config.headers.Authorization = `Bearer ${accessToken}`;
     }
     return config;
@@ -43,11 +40,11 @@ axiosConfig.interceptors.response.use(
           setTokens(tokens);
           return axiosConfig(originalConfig);
         } catch (_error) {
-          return Promise.reject(_error);
+          return Promise.reject(_error.response.data);
         }
       }
     }
-    return Promise.reject(error);
+    return Promise.reject(error.response.data);
   },
 );
 

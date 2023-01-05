@@ -56,23 +56,22 @@ const Login = ({ isOpen, setOpen }) => {
     const submitData = new URLSearchParams(data);
     login(submitData)
       .then((res) => {
-        if (res.code) {
-          setIsSuccess(false);
-          setIsError(true);
-          setErrorMessage(res.message);
+        const { tokens, user } = res;
+        setIsError(false);
+        localStorage.setItem('tokens', JSON.stringify(tokens));
+        localStorage.setItem('profile', JSON.stringify(user));
+        setIsSuccess(true);
+        setSuccessMessage(SUCCESS_LOG_IN_MESSAGE);
+        if (location.state?.from) {
+          navigate(location.state.from);
         } else {
-          const { tokens, user } = res;
-          setIsError(false);
-          localStorage.setItem('tokens', JSON.stringify(tokens));
-          localStorage.setItem('profile', JSON.stringify(user));
-          setIsSuccess(true);
-          setSuccessMessage(SUCCESS_LOG_IN_MESSAGE);
-          if (location.state?.from) {
-            navigate(location.state.from);
-          } else {
-            navigate('/');
-          }
+          navigate('/');
         }
+      })
+      .catch((err) => {
+        setIsSuccess(false);
+        setIsError(true);
+        setErrorMessage(err.message);
       })
       .finally(() => setLoading(false));
   };
@@ -80,23 +79,22 @@ const Login = ({ isOpen, setOpen }) => {
   const onSuccessGoogle = async (data) => {
     await loginWithGoogle(data.profileObj)
       .then((res) => {
-        if (res.code) {
-          setIsSuccess(false);
-          setIsError(true);
-          setErrorMessage(res.message);
+        const { tokens, user } = res;
+        setIsError(false);
+        localStorage.setItem('tokens', JSON.stringify(tokens));
+        localStorage.setItem('profile', JSON.stringify(user));
+        setIsSuccess(true);
+        reset();
+        if (location.state?.from) {
+          navigate(location.state.from);
         } else {
-          const { tokens, user } = res;
-          setIsError(false);
-          localStorage.setItem('tokens', JSON.stringify(tokens));
-          localStorage.setItem('profile', JSON.stringify(user));
-          setIsSuccess(true);
-          reset();
-          if (location.state?.from) {
-            navigate(location.state.from);
-          } else {
-            navigate('/');
-          }
+          navigate('/');
         }
+      })
+      .catch((err) => {
+        setIsSuccess(false);
+        setIsError(true);
+        setErrorMessage(err.message);
       })
       .finally(() => setLoading(false));
   };

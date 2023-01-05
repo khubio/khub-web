@@ -38,9 +38,10 @@ const GroupDetails = () => {
         setGroup(data);
       }
     }).catch((error) => {
-      if (error.response.data.code === 403) {
+      console.log(error);
+      if (error.code === 403) {
         setOpenError(true);
-      } else if (error.response.data.code === 400) {
+      } else if (error.code === 400) {
         navigate('/not-found');
       }
     });
@@ -101,7 +102,7 @@ const GroupDetails = () => {
         await inviteToGroupByEmail(group.id, email);
         setSuccessEmail('Invited member by email');
       } catch (error) {
-        setErrorEmail(error.response.data.message);
+        setErrorEmail(error.message);
         setTimeout(() => setErrorEmail(''), 2000);
       }
     }
