@@ -4,7 +4,7 @@ import {
 import { DataGrid } from '@mui/x-data-grid';
 import Header from '@components/Header';
 import { useState, useEffect, useCallback } from 'react';
-import { getGroupById, inviteToGroupByEmail } from '@services/group.service';
+import { getGroupById, inviteToGroupByEmail, deleteGroupById } from '@services/group.service';
 import { useParams, useNavigate } from 'react-router-dom';
 import { useMounted } from 'src/hooks/useMounted';
 import RoleFilter from '@components/RoleFilter';
@@ -13,6 +13,7 @@ import { validateEmail } from '@utils/validateUtil';
 import { tokens } from '../../theme';
 import InvitationDialog from './InvitationDialog';
 import ErrorDialog from './ErrorDialog';
+import ConfirmDialog from './ConfirmDialog';
 
 const GroupDetails = () => {
   const theme = useTheme();
@@ -29,22 +30,25 @@ const GroupDetails = () => {
     message: '',
   });
   const [openError, setOpenError] = useState(false);
+  const [openDeleteGroup, setOpenDeleteGroup] = useState(false);
   const { isMounted } = useMounted();
   const params = useParams();
   const navigate = useNavigate();
+
   const fetch = useCallback(() => {
-    getGroupById(params.id, roles).then((data) => {
-      if (isMounted.current) {
-        setGroup(data);
-      }
-    }).catch((error) => {
-      console.log(error);
-      if (error.code === 403) {
-        setOpenError(true);
-      } else if (error.code === 400) {
-        navigate('/not-found');
-      }
-    });
+    getGroupById(params.id, roles)
+      .then((data) => {
+        if (isMounted.current) {
+          setGroup(data);
+        }
+      })
+      .catch((error) => {
+        if (error.code === 403) {
+          setOpenError(true);
+        } else if (error.code === 400) {
+          navigate('/not-found');
+        }
+      });
   }, [isMounted, roles]);
 
   useEffect(() => {
@@ -63,12 +67,27 @@ const GroupDetails = () => {
     setOpen(true);
   };
   const handleClose = () => {
+    setEmail('');
     setOpen(false);
   };
 
   const handleCloseError = () => {
     setOpenError(false);
     navigate('/');
+  };
+
+  const handleOpenDeleteGroup = () => {
+    setOpenDeleteGroup(true);
+  };
+
+  const handleCloseDeleteGroup = () => {
+    setOpenDeleteGroup(false);
+  };
+
+  const handleDeleteGroup = async () => {
+    await deleteGroupById(params.id);
+    setOpenDeleteGroup(false);
+    navigate('/groups');
   };
 
   const setErrorEmail = (message) => {
@@ -101,6 +120,8 @@ const GroupDetails = () => {
       try {
         await inviteToGroupByEmail(group.id, email);
         setSuccessEmail('Invited member by email');
+        setEmail('');
+        setTimeout(() => setSuccessEmail(''), 2000);
       } catch (error) {
         setErrorEmail(error.message);
         setTimeout(() => setErrorEmail(''), 2000);
@@ -158,20 +179,29 @@ const GroupDetails = () => {
       },
     },
   ];
+
   return (
     <Box m="20px">
-      <ErrorDialog open={openError} onClose={handleCloseError} />
       <Header title="GROUP DETAILS" subtitle={`Group name: ${group.name}`} />
       <Box display="flex" justifyContent="space-between" sx={{ p: '0' }}>
         <RoleFilter roles={roles} onChange={handleChange} />
-        <Button
-          variant="outlined"
-          color="info"
-          sx={{ ml: '10px' }}
-          onClick={() => handleOpen()}
-        >
-          Share
-        </Button>
+        <Box display="flex" justifyContent="flex-end" sx={{ p: '0' }}>
+          <Button
+            variant="outlined"
+            color="error"
+            onClick={() => handleOpenDeleteGroup()}
+          >
+            Delete
+          </Button>
+          <Button
+            variant="outlined"
+            color="info"
+            sx={{ ml: '15px' }}
+            onClick={() => handleOpen()}
+          >
+            Share
+          </Button>
+        </Box>
         <InvitationDialog
           open={open}
           onClose={handleClose}
@@ -181,6 +211,14 @@ const GroupDetails = () => {
           infoEmail={infoEmail}
         />
       </Box>
+      <ErrorDialog open={openError} onClose={handleCloseError} />
+      <ConfirmDialog
+        open={openDeleteGroup}
+        onClose={handleCloseDeleteGroup}
+        onOk={handleDeleteGroup}
+        title="Are you sure to delete this group"
+        subtitle="If you click AGREE, this group will delete permanently"
+      />
       <Box
         m="40px 0 0 0"
         height="75vh"

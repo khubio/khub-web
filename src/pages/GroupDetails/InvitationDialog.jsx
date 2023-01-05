@@ -47,7 +47,7 @@ const InvitationDialog = ({
           value={email}
         />
       </DialogContent>
-      {!copied && (
+      {(!copied && !infoEmail.message) && (
         <DialogActions sx={{ p: '16px 24px', justifyContent: 'space-between' }}>
           <CopyToClipboard text={`${window.location.href}/join`} onCopy={handleCopy}>
             <Button color="success" variant="outlined">
