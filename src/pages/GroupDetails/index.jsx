@@ -1,10 +1,15 @@
-import {
-  Box, Typography, useTheme, Button,
-} from '@mui/material';
+import { Box, useTheme, Button } from '@mui/material';
 import { DataGrid } from '@mui/x-data-grid';
 import Header from '@components/Header';
 import { useState, useEffect, useCallback } from 'react';
-import { getGroupById, inviteToGroupByEmail, deleteGroupById } from '@services/group.service';
+import {
+  getGroupById,
+  inviteToGroupByEmail,
+  deleteGroupById,
+  getRoleInGroup,
+  updateUserGroupById,
+  deleteUserGroupById,
+} from '@services/group.service';
 import { useParams, useNavigate } from 'react-router-dom';
 import { useMounted } from 'src/hooks/useMounted';
 import RoleFilter from '@components/RoleFilter';
@@ -14,6 +19,7 @@ import { tokens } from '../../theme';
 import InvitationDialog from './InvitationDialog';
 import ErrorDialog from './ErrorDialog';
 import ConfirmDialog from './ConfirmDialog';
+import MenuAction from './MenuAction';
 
 const GroupDetails = () => {
   const theme = useTheme();
@@ -23,6 +29,7 @@ const GroupDetails = () => {
     users: [],
   });
   const [roles, setRoles] = useState(rolesInGroup);
+  const [role, setRole] = useState('');
   const [open, setOpen] = useState(false);
   const [email, setEmail] = useState('');
   const [infoEmail, setInfoEmail] = useState({
@@ -35,21 +42,20 @@ const GroupDetails = () => {
   const params = useParams();
   const navigate = useNavigate();
 
-  const fetch = useCallback(() => {
-    getGroupById(params.id, roles)
-      .then((data) => {
-        if (isMounted.current) {
-          setGroup(data);
-        }
-      })
-      .catch((error) => {
-        if (error.code === 403) {
-          setOpenError(true);
-        } else if (error.code === 400) {
-          navigate('/not-found');
-        }
-      });
-  }, [isMounted, roles]);
+  const fetch = useCallback(async () => {
+    try {
+      const roleUser = await getRoleInGroup(params.id);
+      const data = await getGroupById(params.id, roles);
+      setRole(roleUser);
+      setGroup(data);
+    } catch (error) {
+      if (error.code === 403) {
+        setOpenError(true);
+      } else if (error.code === 400) {
+        navigate('/not-found');
+      }
+    }
+  }, [isMounted, roles, role]);
 
   useEffect(() => {
     fetch();
@@ -129,6 +135,16 @@ const GroupDetails = () => {
     }
   };
 
+  const handleUpdateRole = async (userId, updatedRole) => {
+    await updateUserGroupById(group.id, { userId, role: updatedRole });
+    fetch();
+  };
+
+  const handleKickOutGroup = async (userId) => {
+    await deleteUserGroupById(group.id, { userId });
+    fetch();
+  };
+
   const colors = tokens(theme.palette.mode);
   const columns = [
     { field: 'id', headerName: 'User Id', flex: 1 },
@@ -160,7 +176,7 @@ const GroupDetails = () => {
       field: 'action',
       headerName: 'Action',
       flex: 1,
-      renderCell: () => {
+      renderCell: ({ row: { role: userRole, id: user } }) => {
         return (
           <Box
             width="30%"
@@ -171,9 +187,14 @@ const GroupDetails = () => {
             borderRadius="4px"
             sx={{ cursor: 'pointer' }}
           >
-            <Typography color={colors.grey[100]} sx={{ ml: '5px' }}>
-              ...
-            </Typography>
+            {role === 'owner' && userRole !== 'owner' && (
+              <MenuAction
+                role={userRole}
+                user={user}
+                onUpdateRole={handleUpdateRole}
+                onKickOut={handleKickOutGroup}
+              />
+            )}
           </Box>
         );
       },
@@ -185,40 +206,45 @@ const GroupDetails = () => {
       <Header title="GROUP DETAILS" subtitle={`Group name: ${group.name}`} />
       <Box display="flex" justifyContent="space-between" sx={{ p: '0' }}>
         <RoleFilter roles={roles} onChange={handleChange} />
-        <Box display="flex" justifyContent="flex-end" sx={{ p: '0' }}>
-          <Button
-            variant="outlined"
-            color="error"
-            onClick={() => handleOpenDeleteGroup()}
-          >
-            Delete
-          </Button>
-          <Button
-            variant="outlined"
-            color="info"
-            sx={{ ml: '15px' }}
-            onClick={() => handleOpen()}
-          >
-            Share
-          </Button>
-        </Box>
-        <InvitationDialog
-          open={open}
-          onClose={handleClose}
-          onInvite={handleInvite}
-          email={email}
-          onChangeEmail={handleChangeEmail}
-          infoEmail={infoEmail}
-        />
+        {role === 'owner' && (
+          <>
+            <Box display="flex" justifyContent="flex-end" sx={{ p: '0' }}>
+              <Button
+                variant="outlined"
+                color="error"
+                onClick={() => handleOpenDeleteGroup()}
+              >
+                Delete
+              </Button>
+              <Button
+                variant="outlined"
+                color="info"
+                sx={{ ml: '15px' }}
+                onClick={() => handleOpen()}
+              >
+                Share
+              </Button>
+            </Box>
+            <InvitationDialog
+              open={open}
+              onClose={handleClose}
+              onInvite={handleInvite}
+              email={email}
+              onChangeEmail={handleChangeEmail}
+              infoEmail={infoEmail}
+            />
+            <ConfirmDialog
+              open={openDeleteGroup}
+              onClose={handleCloseDeleteGroup}
+              onOk={handleDeleteGroup}
+              title="Are you sure to delete this group"
+              subtitle="If you click AGREE, this group will delete permanently"
+            />
+          </>
+        )}
       </Box>
       <ErrorDialog open={openError} onClose={handleCloseError} />
-      <ConfirmDialog
-        open={openDeleteGroup}
-        onClose={handleCloseDeleteGroup}
-        onOk={handleDeleteGroup}
-        title="Are you sure to delete this group"
-        subtitle="If you click AGREE, this group will delete permanently"
-      />
+
       <Box
         m="40px 0 0 0"
         height="75vh"
