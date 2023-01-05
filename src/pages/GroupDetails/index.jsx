@@ -1,18 +1,18 @@
 import {
-  Box,
-  Typography,
-  useTheme,
-  Button,
-  Input,
-  TextField,
+  Box, Typography, useTheme, Button,
 } from '@mui/material';
 import { DataGrid } from '@mui/x-data-grid';
 import Header from '@components/Header';
 import { useState, useEffect, useCallback } from 'react';
-import { getGroupById } from '@services/group.service';
-import { useParams } from 'react-router-dom';
+import { getGroupById, inviteToGroupByEmail } from '@services/group.service';
+import { useParams, useNavigate } from 'react-router-dom';
 import { useMounted } from 'src/hooks/useMounted';
+import RoleFilter from '@components/RoleFilter';
+import { rolesInGroup } from '@constants/rolesInGroup';
+import { validateEmail } from '@utils/validateUtil';
 import { tokens } from '../../theme';
+import InvitationDialog from './InvitationDialog';
+import ErrorDialog from './ErrorDialog';
 
 const GroupDetails = () => {
   const theme = useTheme();
@@ -21,22 +21,91 @@ const GroupDetails = () => {
     id: '',
     users: [],
   });
-  const [invitedEmail, setInvitedEmail] = useState('');
+  const [roles, setRoles] = useState(rolesInGroup);
+  const [open, setOpen] = useState(false);
+  const [email, setEmail] = useState('');
+  const [infoEmail, setInfoEmail] = useState({
+    type: 'error',
+    message: '',
+  });
+  const [openError, setOpenError] = useState(false);
   const { isMounted } = useMounted();
   const params = useParams();
+  const navigate = useNavigate();
   const fetch = useCallback(() => {
-    getGroupById(params.id).then((data) => {
+    getGroupById(params.id, roles).then((data) => {
       if (isMounted.current) {
         setGroup(data);
       }
+    }).catch((error) => {
+      if (error.response.data.code === 403) {
+        setOpenError(true);
+      } else if (error.response.data.code === 400) {
+        navigate('/not-found');
+      }
     });
-  }, [isMounted]);
+  }, [isMounted, roles]);
+
   useEffect(() => {
     fetch();
   }, [fetch]);
-  useEffect(() => {
-    fetch();
-  }, [fetch]);
+
+  const handleChange = (event) => {
+    const { value } = event.target;
+    const chosenRoles = typeof value === 'string' ? value.split(',') : value;
+    if (chosenRoles?.length) {
+      setRoles(chosenRoles);
+    }
+  };
+
+  const handleOpen = () => {
+    setOpen(true);
+  };
+  const handleClose = () => {
+    setOpen(false);
+  };
+
+  const handleCloseError = () => {
+    setOpenError(false);
+    navigate('/');
+  };
+
+  const setErrorEmail = (message) => {
+    setInfoEmail({
+      type: 'error',
+      message,
+    });
+  };
+
+  const setSuccessEmail = (message) => {
+    setInfoEmail({
+      type: 'success',
+      message,
+    });
+  };
+
+  const handleChangeEmail = (e) => {
+    setErrorEmail('');
+    setEmail(e.target.value);
+  };
+
+  const handleInvite = async () => {
+    if (!email.trim().length) {
+      setErrorEmail('Please input email');
+      setTimeout(() => setErrorEmail(''), 2000);
+    } else if (!validateEmail(email)) {
+      setErrorEmail('Please input valid email!');
+      setTimeout(() => setErrorEmail(''), 1500);
+    } else {
+      try {
+        await inviteToGroupByEmail(group.id, email);
+        setSuccessEmail('Invited member by email');
+      } catch (error) {
+        setErrorEmail(error.response.data.message);
+        setTimeout(() => setErrorEmail(''), 2000);
+      }
+    }
+  };
 
   const colors = tokens(theme.palette.mode);
   const columns = [
@@ -69,7 +138,7 @@ const GroupDetails = () => {
       field: 'action',
       headerName: 'Action',
       flex: 1,
-      renderCell: ({ row: { role } }) => {
+      renderCell: () => {
         return (
           <Box
             width="30%"
@@ -83,7 +152,6 @@ const GroupDetails = () => {
             <Typography color={colors.grey[100]} sx={{ ml: '5px' }}>
               ...
             </Typography>
-            {/* <ConfirmationDialogRaw roleInGroup={role} /> */}
           </Box>
         );
       },
@@ -91,28 +159,27 @@ const GroupDetails = () => {
   ];
   return (
     <Box m="20px">
+      <ErrorDialog open={openError} onClose={handleCloseError} />
       <Header title="GROUP DETAILS" subtitle={`Group name: ${group.name}`} />
-      <form>
-        <Box display="flex" justifyContent="flex-end" sx={{ p: '0' }}>
-          <TextField
-            label="Enter email to invite member to join this group"
-            type="email"
-            variant="filled"
-            color="info"
-            sx={{ width: '300px' }}
-            onChange={(e) => setInvitedEmail(e.target.value)}
-            value={invitedEmail}
-          />
-          <Button
-            variant="outlined"
-            color="info"
-            sx={{ ml: '10px' }}
-            onClick={() => alert(invitedEmail)}
-          >
-            Send
-          </Button>
-        </Box>
-      </form>
+      <Box display="flex" justifyContent="space-between" sx={{ p: '0' }}>
+        <RoleFilter roles={roles} onChange={handleChange} />
+        <Button
+          variant="outlined"
+          color="info"
+          sx={{ ml: '10px' }}
+          onClick={() => handleOpen()}
+        >
+          Share
+        </Button>
+        <InvitationDialog
+          open={open}
+          onClose={handleClose}
+          onInvite={handleInvite}
+          email={email}
+          onChangeEmail={handleChangeEmail}
+          infoEmail={infoEmail}
+        />
+      </Box>
       <Box
         m="40px 0 0 0"
         height="75vh"

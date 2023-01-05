@@ -1,15 +1,13 @@
-import { FACEBOOK_ID, GOOGLE_ID } from '@configs';
+import { GOOGLE_ID } from '@configs';
 import { yupResolver } from '@hookform/resolvers/yup';
 import { validateLoginSchema } from '@models/validateFormSchema';
 import { login, loginWithGoogle } from '@services/auth.service';
 import { gapi } from 'gapi-script';
 import { useEffect, useState } from 'react';
-import FacebookLogin from 'react-facebook-login/dist/facebook-login-render-props';
 import GoogleLogin from 'react-google-login';
 import { useForm } from 'react-hook-form';
-import { IoCheckmarkDoneCircleSharp } from 'react-icons/io5';
 import { RiErrorWarningFill } from 'react-icons/ri';
-import { Link } from 'react-router-dom';
+import { Link, useNavigate, useLocation } from 'react-router-dom';
 import './Login.scss';
 
 const SUCCESS_LOG_IN_MESSAGE = 'Login successfully';
@@ -42,6 +40,8 @@ const Login = ({ isOpen, setOpen }) => {
   const [isSuccess, setIsSuccess] = useState(false);
   const [successMessage, setSuccessMessage] = useState('');
   const [loading, setLoading] = useState(false);
+  const navigate = useNavigate();
+  const location = useLocation();
   const {
     register,
     handleSubmit,
@@ -67,7 +67,11 @@ const Login = ({ isOpen, setOpen }) => {
           localStorage.setItem('profile', JSON.stringify(user));
           setIsSuccess(true);
           setSuccessMessage(SUCCESS_LOG_IN_MESSAGE);
-          window.location.href = '/';
+          if (location.state?.from) {
+            navigate(location.state.from);
+          } else {
+            navigate('/');
+          }
         }
       })
       .finally(() => setLoading(false));
@@ -87,16 +91,17 @@ const Login = ({ isOpen, setOpen }) => {
           localStorage.setItem('profile', JSON.stringify(user));
           setIsSuccess(true);
           reset();
-          window.location.href = '/';
+          if (location.state?.from) {
+            navigate(location.state.from);
+          } else {
+            navigate('/');
+          }
         }
       })
       .finally(() => setLoading(false));
   };
   const onFailure = (res) => {
     console.log('[Login failed] res:', res);
-  };
-  const onSuccessFacebook = (res) => {
-    console.log('[Login Success] currentUser:', res);
   };
 
   useEffect(() => {

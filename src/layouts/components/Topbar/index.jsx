@@ -15,7 +15,7 @@ import MenuList from '@mui/material/MenuList';
 import Stack from '@mui/material/Stack';
 import SearchIcon from '@mui/icons-material/Search';
 import { logout } from '@services/auth.service';
-import queryString from 'query-string';
+import { useNavigate } from 'react-router-dom';
 import { ColorModeContext, tokens } from '../../../theme';
 
 const Topbar = () => {
@@ -23,6 +23,7 @@ const Topbar = () => {
   const colors = tokens(theme.palette.mode);
   const colorMode = useContext(ColorModeContext);
   const [open, setOpen] = useState(false);
+  const navigate = useNavigate();
   const anchorRef = useRef(null);
   const handleToggle = () => {
     setOpen((prevOpen) => !prevOpen);
@@ -36,11 +37,11 @@ const Topbar = () => {
   };
   const handleToProfilePage = () => {
     setOpen(false);
-    window.location.href = '/profile';
+    navigate('/profile');
   };
   const handleToChangePasswordPage = () => {
     setOpen(false);
-    window.location.href = '/profile/change-password';
+    navigate('/profile/change-password');
   };
   const handleLogout = async () => {
     setOpen(false);
@@ -136,11 +137,11 @@ const Topbar = () => {
                           onKeyDown={handleListKeyDown}
                           sx={{ mt: 2 }}
                         >
-                          <MenuItem onClick={handleToProfilePage}>
+                          <MenuItem onClick={() => handleToProfilePage()}>
                             Profile
                           </MenuItem>
                           {isAllowChangePassword && (
-                            <MenuItem onClick={handleToChangePasswordPage}>
+                            <MenuItem onClick={() => handleToChangePasswordPage()}>
                               Change Password
                             </MenuItem>
                           )}

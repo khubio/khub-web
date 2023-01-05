@@ -20,6 +20,8 @@ import { setUser } from '@store/slice/auth.slice';
 import Profile from '@pages/Profile/Profile';
 import ChangePassword from '@pages/ChangePassword';
 import VerifyEmail from '@pages/VerifyEmail';
+import GroupJoin from '@pages/GroupJoin';
+import NotFound from '@pages/NotFound';
 import Presentation from '@pages/Prensentation';
 import Quiz from '@pages/Quiz';
 
@@ -36,14 +38,19 @@ function App() {
       <div className="App">
         <Routes>
           <Route path="auth">
-            <Route path="login" element={<Login />} />
+            <Route
+              path="login"
+              element={
+                <PrivateLayout>
+                  <Login />
+                </PrivateLayout>
+              }
+            />
             <Route path="sign-up" element={<Register />} />
             <Route path="forgot-password" element={<ForgotPassword />} />
             <Route path="reset-password" element={<ResetPassword />} />
             <Route path="verify-email" element={<VerifyEmail />} />
-            <Route path="*" element={<Login key="login" />} />
           </Route>
-
           <Route
             path="/"
             element={
@@ -81,16 +88,27 @@ function App() {
                 </PrivateLayout>
               }
             />
-            <Route
-              path=":id"
-              element={
-                <PrivateLayout>
-                  <GroupDetails />
-                </PrivateLayout>
-              }
-            />
+            <Route path=":id">
+              <Route
+                index
+                element={
+                  <PrivateLayout>
+                    <GroupDetails />
+                  </PrivateLayout>
+                }
+              />
+              <Route
+                path="join"
+                element={
+                  <PrivateLayout>
+                    <GroupJoin />
+                  </PrivateLayout>
+                }
+              />
+            </Route>
           </Route>
-          <Route path="*" element={<Navigate to="/auth/login" replace />} />
+          <Route path="not-found" element={<NotFound />} />
+          <Route path="*" element={<Navigate to="/not-found" replace />} />
         </Routes>
       </div>
     </Router>

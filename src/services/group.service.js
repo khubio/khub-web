@@ -8,7 +8,15 @@ export const getGroupsOfUser = (roles) => {
 };
 
 export const createGroup = (body) => axiosConfig.post('/groups', body);
-export const getGroupById = (id) => axiosConfig.get(`/groups/${id}`);
+export const getGroupById = (id, roles) => {
+  if (roles && roles.length) {
+    return axiosConfig.get(`/groups/${id}?roles=${roles.join(',')}`);
+  }
+  return axiosConfig.get(`/groups/${id}`);
+};
+
+export const inviteToGroupByEmail = (groupId, email) => axiosConfig.post(`/groups/${groupId}/invite-by-email`, { email });
+
 export const updateGroupById = (id, body) => axiosConfig.patch(`/group/${id}`, body);
 
 export const updateUserGroupById = (id, body) => axiosConfig.patch(`/group/${id}/members`, body);

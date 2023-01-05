@@ -9,13 +9,6 @@ import {
   TextField,
   DialogActions,
   Button,
-  FormControl,
-  InputLabel,
-  Select,
-  MenuItem,
-  Checkbox,
-  ListItemText,
-  OutlinedInput,
 } from '@mui/material';
 import { DataGrid } from '@mui/x-data-grid';
 import Header from '@components/Header';
@@ -24,6 +17,7 @@ import { getGroupsOfUser, createGroup } from '@services/group.service';
 import { Link } from 'react-router-dom';
 import { useMounted } from 'src/hooks/useMounted';
 import { rolesInGroup } from '@constants/rolesInGroup';
+import RoleFilter from '@components/RoleFilter';
 import { tokens } from '../../theme';
 
 const Group = () => {
@@ -41,9 +35,11 @@ const Group = () => {
       }
     });
   }, [isMounted, roles]);
+
   useEffect(() => {
     fetch();
   }, [fetch]);
+
   const colors = tokens(theme.palette.mode);
   const columns = [
     { field: 'id', headerName: 'ID', flex: 1 },
@@ -80,7 +76,10 @@ const Group = () => {
   const handleOpen = () => {
     setOpen(true);
   };
-  const handleClose = () => setOpen(false);
+  const handleClose = () => {
+    setNewGroup('');
+    setOpen(false);
+  };
   const handleCreate = async () => {
     if (newGroup.trim() === '') {
       console.log('Please enter group name');
@@ -90,17 +89,6 @@ const Group = () => {
     setOpen(false);
     setNewGroup('');
     fetch();
-  };
-
-  const ITEM_HEIGHT = 48;
-  const ITEM_PADDING_TOP = 8;
-  const MenuProps = {
-    PaperProps: {
-      style: {
-        maxHeight: ITEM_HEIGHT * 4.5 + ITEM_PADDING_TOP,
-        width: 200,
-      },
-    },
   };
 
   const handleChange = (event) => {
@@ -143,38 +131,8 @@ const Group = () => {
         </DialogActions>
       </Dialog>
       <Box display="flex" justifyContent="space-between" sx={{ p: '0' }}>
-        <FormControl
-          sx={{ m: 1, width: 200 }}
-          variant="outlined"
-          color="success"
-        >
-          <InputLabel>Roles</InputLabel>
-          <Select
-            labelId="demo-multiple-checkbox-label"
-            id="demo-multiple-checkbox"
-            multiple
-            value={roles}
-            onChange={handleChange}
-            input={<OutlinedInput label="Roles" />}
-            renderValue={(selected) => selected.join(', ')}
-            MenuProps={MenuProps}
-          >
-            {rolesInGroup.map((name) => (
-              <MenuItem key={name} value={name}>
-                <Checkbox checked={roles.indexOf(name) > -1} color="success" />
-                <ListItemText
-                  primary={name}
-                  primaryTypographyProps={{
-                    style: {
-                      color: '#66bb6a',
-                    },
-                  }}
-                />
-              </MenuItem>
-            ))}
-          </Select>
-        </FormControl>
-        <Button variant="outlined" color="success" onClick={handleOpen}>
+        <RoleFilter roles={roles} onChange={handleChange} />
+        <Button variant="outlined" color="info" onClick={handleOpen}>
           New Group
         </Button>
       </Box>
@@ -210,9 +168,9 @@ const Group = () => {
             outline: 'none !important',
           },
           '& .MuiDataGrid-columnHeader:focus-within, & .MuiDataGrid-columnHeader:focus':
-          {
-            outline: 'none !important',
-          },
+            {
+              outline: 'none !important',
+            },
         }}
       >
         <DataGrid checkboxSelection rows={groups} columns={columns} />

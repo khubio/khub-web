@@ -32,8 +32,7 @@ function PrivateLayout({ children }) {
   if (location.pathname === '/auth/login') {
     return children;
   }
-
-  return <Navigate to={{ pathname: '/auth/login', state: { from: location } }} replace />;
+  return <Navigate to="/auth/login" state={{ from: location }} replace />;
 }
 
 export default PrivateLayout;
