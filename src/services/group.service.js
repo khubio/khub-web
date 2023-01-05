@@ -15,6 +15,9 @@ export const getGroupById = (id, roles) => {
   return axiosConfig.get(`/groups/${id}`);
 };
 
+export const groupJoin = (id) => axiosConfig.get(`groups/${id}/join`);
+export const joinGroup = (id) => axiosConfig.post(`groups/${id}/join`);
+
 export const inviteToGroupByEmail = (groupId, email) => axiosConfig.post(`/groups/${groupId}/invite-by-email`, { email });
 
 export const updateGroupById = (id, body) => axiosConfig.patch(`/group/${id}`, body);
