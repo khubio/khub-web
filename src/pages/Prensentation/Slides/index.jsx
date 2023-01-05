@@ -36,7 +36,7 @@ const Slides = ({ currentSlide, setCurrentSlide, slides, setSlides }) => {
     <div className="slides">
       <Stack spacing={2}>
         <div className="slides__add-btn">
-          <Button variant="outlined" startIcon={<Add />} onClick={addNewSlide}>
+          <Button variant="contained" startIcon={<Add />} onClick={addNewSlide}>
             Add new slide
           </Button>
         </div>

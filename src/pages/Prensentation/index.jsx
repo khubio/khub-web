@@ -1,7 +1,8 @@
-import { PlayArrow } from '@mui/icons-material';
+import { PlayArrow, Share } from '@mui/icons-material';
 import { Button, Grid } from '@mui/material';
 import { useState } from 'react';
 import './Presentation.scss';
+import BasicModal from '@components/Modal';
 import SlideDemo from './SlideDemo';
 import SlideDetail from './SlideDetail';
 import Slides from './Slides';
@@ -55,6 +56,9 @@ const slideList = [
 const Presentation = () => {
   const [slides, setSlides] = useState(slideList);
   const [currentSlide, setCurrentSlide] = useState(0);
+  const [open, setOpen] = useState(false);
+  const handleOpen = () => setOpen(true);
+  const handleClose = () => setOpen(false);
   const totalSlides = slides.length;
   return (
     <div>
@@ -64,7 +68,28 @@ const Presentation = () => {
           src={`${process.env.PUBLIC_URL}/images/khub_icon_3.png`}
           alt="logo"
         />
-        <Button color="primary" variant="contained" startIcon={<PlayArrow />}>
+        <Button
+          className="presentation__btn-item--share"
+          color="secondary"
+          variant="contained"
+          onClick={handleOpen}
+          startIcon={<Share />}
+        >
+          Share
+        </Button>
+        <BasicModal
+          open={open}
+          handleClose={handleClose}
+          aria-labelledby="modal-modal-title"
+          aria-describedby="modal-modal-description"
+        />
+
+        <Button
+          className="presentation__btn-item--present"
+          color="primary"
+          variant="contained"
+          startIcon={<PlayArrow />}
+        >
           Present
         </Button>
       </div>

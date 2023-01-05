@@ -3,20 +3,14 @@
 .presentation {
   &__btn {
     @include flex(center, flex-end);
-    padding: 0.5rem 2rem 0 2rem;
-
+    padding: 0.5rem 2rem 0.5rem 2rem;
     > button {
       margin: 0.5rem;
       border: none;
       border-radius: 0.5rem;
-      background-color: $light-blue;
       color: $white-primary;
       font-size: $font-size--xl;
       font-weight: $font-weight--bold;
-      &:hover {
-        cursor: pointer;
-        background-color: $violet;
-      }
     }
   }
 

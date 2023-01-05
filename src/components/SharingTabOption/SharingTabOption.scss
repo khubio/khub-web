@@ -1,0 +1,59 @@
+.participation,
+.presentation {
+  &__permission {
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+    align-self: center;
+    padding: 0 0 1rem;
+    &-icon {
+      display: flex;
+      justify-content: center;
+      align-self: center;
+      padding: 0.5rem;
+      max-width: 3rem;
+      max-height: 3rem;
+      border-radius: 50%;
+      background-color: skyblue;
+    }
+    &-detail {
+      display: flex;
+      justify-content: flex-start;
+      align-self: center;
+      width: 90%;
+    }
+  }
+  &__link {
+    background-color: rgba(223, 220, 220, 0.8);
+    width: 90%;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    border: 0.1rem solid #ccc;
+    border-radius: 0.3rem;
+    box-shadow: 0 0.1rem 0.2rem rgba(0, 0, 0, 0.2);
+    &-url {
+      display: inline-block;
+      padding: 0.5rem;
+      font-size: 0.8rem;
+      max-width: 90%;
+      flex-grow: 2;
+      overflow: hidden;
+      border: none;
+    }
+    &-btn {
+      font-size: 0.5rem;
+      // margin-left: 0.5rem;
+    }
+    &-copy {
+      display: flex;
+      width: 100%;
+      justify-self: end;
+      padding: 0.5rem;
+    }
+  }
+}
+
+.MuiTab-root {
+  text-transform: none;
+}

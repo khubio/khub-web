@@ -31,7 +31,7 @@ function App() {
     dispatch(setUser(user));
   }, [dispatch, user]);
 
-  // return <Quiz />;
+  // return <Presentation />;
   return (
     <Router>
       <div className="App">
