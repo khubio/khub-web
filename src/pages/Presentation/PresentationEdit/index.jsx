@@ -24,7 +24,7 @@ const slideList = [
     expectedAnswerIdx: [3],
   },
 ];
-const Presentation = () => {
+const PresentationEdit = () => {
   const [slides, setSlides] = useState(slideList);
   const [currentSlide, setCurrentSlide] = useState(0);
   const [open, setOpen] = useState(false);
@@ -98,4 +98,4 @@ const Presentation = () => {
   );
 };
 
-export default Presentation;
+export default PresentationEdit;

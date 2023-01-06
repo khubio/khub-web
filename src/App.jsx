@@ -21,8 +21,8 @@ import ChangePassword from '@pages/Authentication/ChangePassword';
 import VerifyEmail from '@pages/Authentication/VerifyEmail';
 import GroupJoin from '@pages/Group/GroupJoin';
 import NotFound from '@pages/NotFound';
-import Presentation from '@pages/Prensentation';
-import PresentationList from '@pages/Prensentation/PresentationList';
+import PresentationEdit from '@pages/Presentation/PresentationEdit';
+import PresentationList from '@pages/Presentation/PresentationList';
 import Quiz from '@pages/Quiz';
 
 function App() {
@@ -113,6 +113,14 @@ function App() {
               element={(
                 <PrivateLayout>
                   <PresentationList />
+                </PrivateLayout>
+              )}
+            />
+            <Route
+              path=":id/edit"
+              element={(
+                <PrivateLayout>
+                  <PresentationEdit />
                 </PrivateLayout>
               )}
             />
