@@ -1,8 +1,7 @@
-import Login from '@pages/Login';
-import Register from '@pages/Register';
-import Groups from '@pages/Group';
-import GroupDetails from '@pages/GroupDetails';
-import NewGroup from '@pages/NewGroup';
+import Login from '@pages/Authentication/Login';
+import Register from '@pages/Authentication/Register';
+import Groups from '@pages/Group/GroupList';
+import GroupDetails from '@pages/Group/GroupDetails';
 import Home from '@pages/Home';
 import Profile from '@pages/Profile';
 
@@ -39,10 +38,5 @@ export const privateRoutes = [
     path: '/groups/:id',
     key: 'group-details',
     component: GroupDetails,
-  },
-  {
-    path: '/groups/new',
-    key: 'groups-new',
-    component: NewGroup,
   },
 ];

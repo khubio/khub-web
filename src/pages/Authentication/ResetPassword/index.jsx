@@ -4,35 +4,40 @@ import { useState } from 'react';
 import { useForm } from 'react-hook-form';
 import { IoCheckmarkDoneCircleSharp } from 'react-icons/io5';
 import { RiErrorWarningFill } from 'react-icons/ri';
-import { Link } from 'react-router-dom';
-import { validateForgotPasswordSchema } from '@models/validateFormSchema';
+import { Link, useNavigate } from 'react-router-dom';
+import { validateResetPasswordSchema } from '@models/validateFormSchema';
 import axiosConfig from '@services/axiosConfig';
-import './ForgotPassword.scss';
+import './ResetPassword.scss';
 
-const SUCCESS_MESSAGE = 'Email has been sent';
+const SUCCESS_MESSAGE = 'Your password has been changed successfully';
 const FORM_FORGET_PASSWORD = {
   data: [
     {
-      type: 'email',
-      title: 'Enter your registered email',
-      placeholder: 'god.mentor@kms-technology.com',
-      key: 'forgot/email',
+      type: 'password',
+      title: 'New Password',
+      placeholder: '',
+    },
+    {
+      type: 'confirmPassword',
+      title: 'Confirm Password',
+      placeholder: '',
     },
   ],
   button: {
     title: 'Send',
-    target: '/forgot-password',
+    target: '/reset-password',
     option: 'Login',
-    message: 'Already have an account?',
+    message: 'Proceed to',
   },
 };
 
-const ForgotPassword = ({ isOpen, setOpen }) => {
+const ResetPassword = ({ isOpen, setOpen }) => {
   const [isError, setIsError] = useState(false);
   const [errorMessage, setErrorMessage] = useState('');
   const [isSuccess, setIsSuccess] = useState(false);
   const [successMessage, setSuccessMessage] = useState('');
   const [loading, setLoading] = useState(false);
+  const navigate = useNavigate();
 
   const {
     register,
@@ -40,20 +45,24 @@ const ForgotPassword = ({ isOpen, setOpen }) => {
     formState: { errors },
     reset,
   } = useForm({
-    resolver: yupResolver(validateForgotPasswordSchema),
+    resolver: yupResolver(validateResetPasswordSchema),
   });
 
   const handleSubmitForm = async (data) => {
-    const targetUrl = '/auth/forgot-password';
+    const { password } = data;
+    const urlParams = new URLSearchParams(window.location.search);
+    const token = urlParams.get('token');
+    const targetUrl = `/auth/reset-password?token=${token}`;
     setLoading(true);
-    const submitData = queryString.stringify(data);
+    const submitData = queryString.stringify({ password });
     await axiosConfig
       .post(targetUrl, submitData)
-      .then((res) => {
+      .then(() => {
         setIsError(false);
         setIsSuccess(true);
-        setSuccessMessage(SUCCESS_MESSAGE);
         reset();
+        setSuccessMessage(SUCCESS_MESSAGE);
+        navigate('auth/login');
       })
       .catch((err) => {
         setIsSuccess(false);
@@ -63,44 +72,44 @@ const ForgotPassword = ({ isOpen, setOpen }) => {
       .finally(() => setLoading(false));
   };
   return (
-    <div className="forgot-password">
-      <div className="forgot-password__container">
+    <div className="reset-password">
+      <div className="reset-password__container">
         <div
-          className="forgot-password__close-tag"
+          className="reset-password__close-tag"
           onClick={() => setOpen(!isOpen)}
           aria-hidden
         />
-        <div className="forgot-password__logo">
+        <div className="reset-password__logo">
           <img
             src={`${process.env.PUBLIC_URL}/images/khub_icon_3.png`}
             alt="logo"
           />
         </div>
         <form
-          className="forgot-password__form"
+          className="reset-password__form"
           onSubmit={handleSubmit((data) => handleSubmitForm(data))}
         >
           {FORM_FORGET_PASSWORD.data.map((item) => {
             const { type, title, placeholder } = item;
             const validateErrorMessage = errors[type]?.message;
             return (
-              <div className="forgot-password__form-item" key={item.key}>
+              <div className="reset-password__form-item">
                 <label
-                  className="forgot-password__form-item-label"
+                  className="reset-password__form-item-label"
                   htmlFor={type}
                 >
                   {title}
                 </label>
                 <input
-                  className="forgot-password__form-item-input"
-                  type={type === 'password' ? 'password' : 'text'}
+                  className="reset-password__form-item-input"
+                  type="password"
                   id={type}
                   placeholder={placeholder}
                   onFocus={(e) => (e.target.placeholder = '')}
                   {...register(type, { required: true })}
                 />
                 {validateErrorMessage && (
-                  <span className="forgot-password__form-item--error">
+                  <span className="reset-password__form-item--error">
                     {validateErrorMessage}
                   </span>
                 )}
@@ -108,11 +117,11 @@ const ForgotPassword = ({ isOpen, setOpen }) => {
             );
           })}
 
-          <div className="forgot-password__form-submit-result">
+          <div className="reset-password__form-submit-result">
             {!loading && isError && (
               <>
-                <RiErrorWarningFill className="forgot-password__form-submit-result-status--error" />
-                <span className="forgot-password__form-submit-result-message--error">
+                <RiErrorWarningFill className="reset-password__form-submit-result-status--error" />
+                <span className="reset-password__form-submit-result-message--error">
                   {' '}
                   {errorMessage}
                 </span>
@@ -120,8 +129,8 @@ const ForgotPassword = ({ isOpen, setOpen }) => {
             )}
             {!loading && isSuccess && (
               <>
-                <IoCheckmarkDoneCircleSharp className="forgot-password__form-submit-result-status--success" />
-                <span className="forgot-password__form-submit-result-message--success">
+                <IoCheckmarkDoneCircleSharp className="reset-password__form-submit-result-status--success" />
+                <span className="reset-password__form-submit-result-message--success">
                   {' '}
                   {successMessage}
                 </span>
@@ -129,14 +138,14 @@ const ForgotPassword = ({ isOpen, setOpen }) => {
             )}
           </div>
 
-          <button className="forgot-password__form-button" type="submit">
+          <button className="reset-password__form-button" type="submit">
             {loading ? 'Please wait...' : FORM_FORGET_PASSWORD.button.title}
           </button>
 
-          <div className="forgot-password__form-option">
+          <div className="reset-password__form-option">
             <span>{FORM_FORGET_PASSWORD.button.message}</span>
             <Link
-              className="forgot-password__form-option-link"
+              className="reset-password__form-option-link"
               to="/auth/login"
               aria-hidden
             >
@@ -149,4 +158,4 @@ const ForgotPassword = ({ isOpen, setOpen }) => {
   );
 };
 
-export default ForgotPassword;
+export default ResetPassword;

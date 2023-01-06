@@ -1,7 +1,7 @@
-@import '../../assets/scss/mixins.scss';
-@import '../../assets/scss/variables.scss';
+@import '../../../assets/scss/mixins.scss';
+@import '../../../assets/scss/variables.scss';
 
-.forgot-password {
+.register {
   @include flex(center, center);
   @include defaultBackground('khub-auth-background.png');
   min-height: 100vh;
@@ -65,6 +65,7 @@
       }
 
       &--error {
+        max-width: 15rem;
         padding-top: 0.3rem;
         background-color: transparent;
         color: $error-color;
@@ -74,7 +75,7 @@
     &-button {
       width: 100%;
       padding: 0.625rem 0;
-      margin-top: 0.5rem;
+      margin-top: 1rem;
       border-radius: 0.3rem;
       border: none;
       color: white;
@@ -126,7 +127,7 @@
           &--success {
             font-size: smaller;
             padding-left: 0.5rem;
-            color: $success-color;
+            color: green;
           }
           &--error {
             font-size: smaller;

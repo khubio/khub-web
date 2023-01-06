@@ -10,7 +10,7 @@ const VerifyEmail = () => {
   const handleVerifyEmail = async () => {
     const token = queryString.parse(window.location.search)?.token;
     await verifyEmail(token)
-      .then((res) => {
+      .then(() => {
         setIsError(false);
         setErrorMessage('');
         navigate('/auth/login');

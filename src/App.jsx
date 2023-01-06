@@ -1,8 +1,8 @@
-import Login from '@pages/Login';
-import Register from '@pages/Register';
+import Login from '@pages/Authentication/Login';
+import Register from '@pages/Authentication/Register';
 // import Home from '@pages/Home';
-import ForgotPassword from '@pages/ForgotPassword';
-import ResetPassword from '@pages/ResetPassword';
+import ForgotPassword from '@pages/Authentication/ForgotPassword';
+import ResetPassword from '@pages/Authentication/ResetPassword';
 import PrivateLayout from '@layouts/PrivateLayout';
 import {
   BrowserRouter as Router,
@@ -11,15 +11,15 @@ import {
   Navigate,
 } from 'react-router-dom';
 import './App.scss';
-import Group from '@pages/Group';
-import GroupDetails from '@pages/GroupDetails';
+import Group from '@pages/Group/GroupList';
+import GroupDetails from '@pages/Group/GroupDetails';
 import { useEffect } from 'react';
 import { useDispatch } from 'react-redux';
 import { setUser } from '@store/slice/auth.slice';
 import Profile from '@pages/Profile/Profile';
-import ChangePassword from '@pages/ChangePassword';
-import VerifyEmail from '@pages/VerifyEmail';
-import GroupJoin from '@pages/GroupJoin';
+import ChangePassword from '@pages/Authentication/ChangePassword';
+import VerifyEmail from '@pages/Authentication/VerifyEmail';
+import GroupJoin from '@pages/Group/GroupJoin';
 import NotFound from '@pages/NotFound';
 import Presentation from '@pages/Prensentation';
 import Quiz from '@pages/Quiz';
@@ -105,6 +105,16 @@ function App() {
                 )}
               />
             </Route>
+          </Route>
+          <Route path="presentations">
+            <Route
+              index
+              element={(
+                <PrivateLayout>
+                  <Presentation />
+                </PrivateLayout>
+              )}
+            />
           </Route>
           <Route path="not-found" element={<NotFound />} />
           <Route path="*" element={<Navigate to="/not-found" replace />} />

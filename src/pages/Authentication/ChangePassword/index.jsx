@@ -67,7 +67,7 @@ const ChangePassword = () => {
     setLoading(true);
     const requestBody = queryString.stringify(submitData);
     await changePassword(userId, requestBody)
-      .then((res) => {
+      .then(() => {
         setIsError(false);
         setIsSuccess(true);
         reset();

@@ -15,7 +15,7 @@ import Header from '@components/Header';
 import { DataGrid } from '@mui/x-data-grid';
 import { groupJoin, joinGroup } from '@services/group.service';
 import { useParams, useNavigate } from 'react-router-dom';
-import { tokens } from '../../theme';
+import { tokens } from '../../../theme';
 
 const GroupJoin = () => {
   const [open, setOpen] = useState(false);
@@ -86,7 +86,7 @@ const GroupJoin = () => {
     },
   ];
   const handleClick = async () => {
-    joinGroup(params.id).then((res) => {
+    joinGroup(params.id).then(() => {
       setInfo(true);
       setTimeout(() => {
         setInfo(false);

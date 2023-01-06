@@ -18,7 +18,7 @@ import { Link } from 'react-router-dom';
 import { useMounted } from 'src/hooks/useMounted';
 import { rolesInGroup } from '@constants/rolesInGroup';
 import RoleFilter from '@components/RoleFilter';
-import { tokens } from '../../theme';
+import { tokens } from '../../../theme';
 
 const Group = () => {
   const theme = useTheme();
@@ -82,7 +82,6 @@ const Group = () => {
   };
   const handleCreate = async () => {
     if (newGroup.trim() === '') {
-      console.log('Please enter group name');
       return;
     }
     await createGroup({ name: newGroup });

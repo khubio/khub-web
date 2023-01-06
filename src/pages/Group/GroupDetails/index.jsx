@@ -15,7 +15,7 @@ import { useMounted } from 'src/hooks/useMounted';
 import RoleFilter from '@components/RoleFilter';
 import { rolesInGroup } from '@constants/rolesInGroup';
 import { validateEmail } from '@utils/validateUtil';
-import { tokens } from '../../theme';
+import { tokens } from '../../../theme';
 import InvitationDialog from './InvitationDialog';
 import ErrorDialog from './ErrorDialog';
 import ConfirmDialog from './ConfirmDialog';

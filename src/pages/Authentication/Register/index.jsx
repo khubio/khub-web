@@ -4,40 +4,53 @@ import { useState } from 'react';
 import { useForm } from 'react-hook-form';
 import { IoCheckmarkDoneCircleSharp } from 'react-icons/io5';
 import { RiErrorWarningFill } from 'react-icons/ri';
-import { Link, useNavigate } from 'react-router-dom';
-import { validateResetPasswordSchema } from '@models/validateFormSchema';
-import axiosConfig from '@services/axiosConfig';
-import './ResetPassword.scss';
+import { Link } from 'react-router-dom';
+import { validateSignUpSchema } from '@models/validateFormSchema';
+import { register as registerHandle } from '@services/auth.service';
+import './Register.scss';
 
-const SUCCESS_MESSAGE = 'Your password has been changed successfully';
-const FORM_FORGET_PASSWORD = {
+const SUCCESS_SIGN_UP_MESSAGE = 'Success! Please confirm your account in email!';
+const FORM_SIGN_UP = {
   data: [
     {
-      type: 'password',
-      title: 'New Password',
-      placeholder: '',
+      type: 'firstName',
+      title: 'First name',
+      placeholder: 'Nguyen',
+      key: 'signUp/firstName',
     },
     {
-      type: 'confirmPassword',
-      title: 'Confirm Password',
+      type: 'lastName',
+      title: 'Last name',
+      placeholder: 'Trinh',
+      key: 'signUp/lastName',
+    },
+    {
+      type: 'email',
+      title: 'Email',
+      placeholder: 'god.mentor@kms-technology.com',
+      key: 'signUp/email',
+    },
+    {
+      type: 'password',
+      title: 'Password',
       placeholder: '',
+      key: 'signUp/password',
     },
   ],
   button: {
-    title: 'Send',
-    target: '/reset-password',
+    title: 'Sign up',
+    target: '/registration',
     option: 'Login',
-    message: 'Proceed to',
+    message: 'Already have an account?',
   },
 };
 
-const ResetPassword = ({ isOpen, setOpen }) => {
+const Register = ({ isOpen, setOpen }) => {
   const [isError, setIsError] = useState(false);
   const [errorMessage, setErrorMessage] = useState('');
   const [isSuccess, setIsSuccess] = useState(false);
   const [successMessage, setSuccessMessage] = useState('');
   const [loading, setLoading] = useState(false);
-  const navigate = useNavigate();
 
   const {
     register,
@@ -45,24 +58,18 @@ const ResetPassword = ({ isOpen, setOpen }) => {
     formState: { errors },
     reset,
   } = useForm({
-    resolver: yupResolver(validateResetPasswordSchema),
+    resolver: yupResolver(validateSignUpSchema),
   });
 
   const handleSubmitForm = async (data) => {
-    const { password } = data;
-    const urlParams = new URLSearchParams(window.location.search);
-    const token = urlParams.get('token');
-    const targetUrl = `/auth/reset-password?token=${token}`;
     setLoading(true);
-    const submitData = queryString.stringify({ password });
-    await axiosConfig
-      .post(targetUrl, submitData)
-      .then((res) => {
+    const submitData = queryString.stringify(data);
+    await registerHandle(submitData)
+      .then(() => {
         setIsError(false);
         setIsSuccess(true);
         reset();
-        setSuccessMessage(SUCCESS_MESSAGE);
-        navigate('auth/login');
+        setSuccessMessage(SUCCESS_SIGN_UP_MESSAGE);
       })
       .catch((err) => {
         setIsSuccess(false);
@@ -72,44 +79,41 @@ const ResetPassword = ({ isOpen, setOpen }) => {
       .finally(() => setLoading(false));
   };
   return (
-    <div className="reset-password">
-      <div className="reset-password__container">
+    <div className="register">
+      <div className="register__container">
         <div
-          className="reset-password__close-tag"
+          className="register__close-tag"
           onClick={() => setOpen(!isOpen)}
           aria-hidden
         />
-        <div className="reset-password__logo">
+        <div className="register__logo">
           <img
             src={`${process.env.PUBLIC_URL}/images/khub_icon_3.png`}
             alt="logo"
           />
         </div>
         <form
-          className="reset-password__form"
+          className="register__form"
           onSubmit={handleSubmit((data) => handleSubmitForm(data))}
         >
-          {FORM_FORGET_PASSWORD.data.map((item) => {
+          {FORM_SIGN_UP.data.map((item) => {
             const { type, title, placeholder } = item;
             const validateErrorMessage = errors[type]?.message;
             return (
-              <div className="reset-password__form-item">
-                <label
-                  className="reset-password__form-item-label"
-                  htmlFor={type}
-                >
+              <div className="register__form-item" key={item.key}>
+                <label className="register__form-item-label" htmlFor={type}>
                   {title}
                 </label>
                 <input
-                  className="reset-password__form-item-input"
-                  type="password"
+                  className="register__form-item-input"
+                  type={type === 'password' ? 'password' : 'text'}
                   id={type}
                   placeholder={placeholder}
                   onFocus={(e) => (e.target.placeholder = '')}
                   {...register(type, { required: true })}
                 />
                 {validateErrorMessage && (
-                  <span className="reset-password__form-item--error">
+                  <span className="register__form-item--error">
                     {validateErrorMessage}
                   </span>
                 )}
@@ -117,11 +121,11 @@ const ResetPassword = ({ isOpen, setOpen }) => {
             );
           })}
 
-          <div className="reset-password__form-submit-result">
+          <div className="register__form-submit-result">
             {!loading && isError && (
               <>
-                <RiErrorWarningFill className="reset-password__form-submit-result-status--error" />
-                <span className="reset-password__form-submit-result-message--error">
+                <RiErrorWarningFill className="register__form-submit-result-status--error" />
+                <span className="register__form-submit-result-message--error">
                   {' '}
                   {errorMessage}
                 </span>
@@ -129,8 +133,8 @@ const ResetPassword = ({ isOpen, setOpen }) => {
             )}
             {!loading && isSuccess && (
               <>
-                <IoCheckmarkDoneCircleSharp className="reset-password__form-submit-result-status--success" />
-                <span className="reset-password__form-submit-result-message--success">
+                <IoCheckmarkDoneCircleSharp className="register__form-submit-result-status--success" />
+                <span className="register__form-submit-result-message--success">
                   {' '}
                   {successMessage}
                 </span>
@@ -138,18 +142,18 @@ const ResetPassword = ({ isOpen, setOpen }) => {
             )}
           </div>
 
-          <button className="reset-password__form-button" type="submit">
-            {loading ? 'Please wait...' : FORM_FORGET_PASSWORD.button.title}
+          <button className="register__form-button" type="submit">
+            {loading ? 'Please wait...' : FORM_SIGN_UP.button.title}
           </button>
 
-          <div className="reset-password__form-option">
-            <span>{FORM_FORGET_PASSWORD.button.message}</span>
+          <div className="register__form-option">
+            <span>{FORM_SIGN_UP.button.message}</span>
             <Link
-              className="reset-password__form-option-link"
+              className="register__form-option-link"
               to="/auth/login"
               aria-hidden
             >
-              {FORM_FORGET_PASSWORD.button.option}
+              {FORM_SIGN_UP.button.option}
             </Link>
           </div>
         </form>
@@ -158,4 +162,4 @@ const ResetPassword = ({ isOpen, setOpen }) => {
   );
 };
 
-export default ResetPassword;
+export default Register;
