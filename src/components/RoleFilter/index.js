@@ -8,7 +8,6 @@ import {
   ListItemText,
   OutlinedInput,
 } from '@mui/material';
-import { rolesInGroup } from '@constants/rolesInGroup';
 
 const ITEM_HEIGHT = 48;
 const ITEM_PADDING_TOP = 8;
@@ -21,7 +20,7 @@ const MenuProps = {
   },
 };
 
-const RoleFilter = ({ roles, onChange }) => {
+const RoleFilter = ({ roles, onChange, allRoles }) => {
   return (
     <FormControl sx={{ m: 1, width: 200 }} variant="outlined" color="success">
       <InputLabel>Roles</InputLabel>
@@ -35,7 +34,7 @@ const RoleFilter = ({ roles, onChange }) => {
         renderValue={(selected) => selected.join(', ')}
         MenuProps={MenuProps}
       >
-        {rolesInGroup.map((name) => (
+        {allRoles.map((name) => (
           <MenuItem key={name} value={name}>
             <Checkbox checked={roles.indexOf(name) > -1} color="success" />
             <ListItemText

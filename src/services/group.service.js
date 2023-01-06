@@ -7,7 +7,7 @@ export const getGroupsOfUser = (roles) => {
   return axiosConfig.get('/groups');
 };
 
-export const createGroup = (body) => axiosConfig.post('/groups', body);
+export const createGroup = (name) => axiosConfig.post('/groups', { name });
 export const getGroupById = (id, roles) => {
   if (roles && roles.length) {
     return axiosConfig.get(`/groups/${id}?roles=${roles.join(',')}`);

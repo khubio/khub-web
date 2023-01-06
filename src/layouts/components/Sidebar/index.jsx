@@ -96,7 +96,7 @@ const Sidebar = () => {
           </Box>
           <Box paddingLeft={isCollapsed ? undefined : '10%'}>
             <Item
-              title="Group"
+              title="Groups"
               to="/"
               icon={<GroupIcon />}
               selected={selected}
@@ -105,7 +105,7 @@ const Sidebar = () => {
           </Box>
           <Box paddingLeft={isCollapsed ? undefined : '10%'}>
             <Item
-              title="Presentation"
+              title="Presentations"
               to="/presentations"
               icon={<SlideshowIcon />}
               selected={selected}

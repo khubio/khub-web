@@ -13,13 +13,15 @@ import {
 import { useParams, useNavigate } from 'react-router-dom';
 import { useMounted } from 'src/hooks/useMounted';
 import RoleFilter from '@components/RoleFilter';
-import { rolesInGroup } from '@constants/rolesInGroup';
+import { rolesInGroup } from '@configs';
 import { validateEmail } from '@utils/validateUtil';
+import MenuAction from '@components/MenuAction';
+import Settings from '@mui/icons-material/Settings';
+import Logout from '@mui/icons-material/Logout';
 import { tokens } from '../../../theme';
 import InvitationDialog from './InvitationDialog';
 import ErrorDialog from './ErrorDialog';
 import ConfirmDialog from './ConfirmDialog';
-import MenuAction from './MenuAction';
 
 const GroupDetails = () => {
   const theme = useTheme();
@@ -145,6 +147,27 @@ const GroupDetails = () => {
     fetch();
   };
 
+  const getMenuItemTop = (userId, userRole) => {
+    return [
+      {
+        text: userRole === 'member' ? 'Promote to co-owner' : 'Demote to member',
+        onClick: () => handleUpdateRole(userId, userRole === 'member' ? 'coOwner' : 'member'),
+        key: 'updateRole',
+        icon: <Settings fontSize="small" />,
+      },
+    ];
+  };
+  const getMenuItemDown = (userId) => {
+    return [
+      {
+        text: 'Kick out of group',
+        onClick: () => handleKickOutGroup(userId),
+        key: 'deleteRole',
+        icon: <Logout fontSize="small" />,
+      },
+    ];
+  };
+
   const colors = tokens(theme.palette.mode);
   const columns = [
     { field: 'id', headerName: 'User Id', flex: 1 },
@@ -189,10 +212,8 @@ const GroupDetails = () => {
           >
             {role === 'owner' && userRole !== 'owner' && (
               <MenuAction
-                role={userRole}
-                user={user}
-                onUpdateRole={handleUpdateRole}
-                onKickOut={handleKickOutGroup}
+                menuItemTop={getMenuItemTop(user, userRole)}
+                menuItemDown={getMenuItemDown(user)}
               />
             )}
           </Box>
@@ -205,7 +226,7 @@ const GroupDetails = () => {
     <Box m="20px">
       <Header title="GROUP DETAILS" subtitle={`Group name: ${group.name}`} />
       <Box display="flex" justifyContent="space-between" sx={{ p: '0' }}>
-        <RoleFilter roles={roles} onChange={handleChange} />
+        <RoleFilter roles={roles} onChange={handleChange} allRoles={rolesInGroup} />
         {role === 'owner' && (
           <>
             <Box display="flex" justifyContent="flex-end" sx={{ p: '0' }}>

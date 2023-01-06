@@ -6,12 +6,8 @@ import ListItemIcon from '@mui/material/ListItemIcon';
 import Divider from '@mui/material/Divider';
 import IconButton from '@mui/material/IconButton';
 import MoreVertIcon from '@mui/icons-material/MoreVert';
-import Settings from '@mui/icons-material/Settings';
-import Logout from '@mui/icons-material/Logout';
 
-export default function MenuAction({
-  role, user, onUpdateRole, onKickOut,
-}) {
+const MenuAction = ({ menuItemTop, menuItemDown }) => {
   const [anchorEl, setAnchorEl] = useState(null);
   const open = Boolean(anchorEl);
   const handleClick = (event) => {
@@ -69,22 +65,34 @@ export default function MenuAction({
         transformOrigin={{ horizontal: 'right', vertical: 'top' }}
         anchorOrigin={{ horizontal: 'right', vertical: 'bottom' }}
       >
-        <MenuItem
-          onClick={() => onUpdateRole(user, role === 'member' ? 'coOwner' : 'member')}
-        >
-          <ListItemIcon>
-            <Settings fontSize="small" />
-          </ListItemIcon>
-          {role === 'member' ? 'Promote to co-owner' : 'Demote to member'}
-        </MenuItem>
+        {menuItemTop.map(({
+          text, onClick, Icon, key,
+        }) => {
+          return (
+            <MenuItem onClick={onClick} key={key}>
+              <ListItemIcon>
+                {Icon}
+                {text}
+              </ListItemIcon>
+            </MenuItem>
+          );
+        })}
         <Divider />
-        <MenuItem onClick={() => onKickOut(user)}>
-          <ListItemIcon>
-            <Logout fontSize="small" />
-          </ListItemIcon>
-          Kick out of group
-        </MenuItem>
+        {menuItemDown.map(({
+          text, onClick, Icon, key,
+        }) => {
+          return (
+            <MenuItem onClick={onClick} key={key}>
+              <ListItemIcon>
+                {Icon}
+                {text}
+              </ListItemIcon>
+            </MenuItem>
+          );
+        })}
       </Menu>
     </>
   );
-}
+};
+
+export default MenuAction;

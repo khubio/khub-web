@@ -13,28 +13,24 @@ import {
 import { DataGrid } from '@mui/x-data-grid';
 import Header from '@components/Header';
 import { useState, useEffect, useCallback } from 'react';
-import { getGroupsOfUser, createGroup } from '@services/group.service';
+import { getPresentations, createPresentation } from '@services/presentation.service';
 import { Link } from 'react-router-dom';
 import { useMounted } from 'src/hooks/useMounted';
-import { rolesInGroup } from '@configs';
+import { rolesInPresentation } from '@configs';
 import RoleFilter from '@components/RoleFilter';
 import { tokens } from '../../../theme';
 
-const GroupList = () => {
+const PresentationList = () => {
   const theme = useTheme();
-  const [groups, setGroups] = useState([]);
+  const [presentations, setPresentations] = useState([]);
   const [open, setOpen] = useState(false);
-  const [newGroup, setNewGroup] = useState('');
+  const [newPresentation, setNewPresentation] = useState('');
   const { isMounted } = useMounted();
-  const [roles, setRoles] = useState(rolesInGroup);
+  const [roles, setRoles] = useState(rolesInPresentation);
 
   const fetch = useCallback(() => {
-    getGroupsOfUser(roles).then((data) => {
-      if (isMounted.current) {
-        setGroups(data);
-      }
-    });
-  }, [isMounted, roles]);
+    getPresentations(roles).then((data) => setPresentations(data));
+  }, [isMounted]);
 
   useEffect(() => {
     fetch();
@@ -45,7 +41,13 @@ const GroupList = () => {
     { field: 'id', headerName: 'ID', flex: 1 },
     {
       field: 'name',
-      headerName: 'Group Name',
+      headerName: 'Presentation Name',
+      flex: 1,
+      cellClassName: 'name-column--cell',
+    },
+    {
+      field: 'creator',
+      headerName: 'Creator',
       flex: 1,
       cellClassName: 'name-column--cell',
     },
@@ -66,7 +68,7 @@ const GroupList = () => {
             sx={{ cursor: 'pointer' }}
           >
             <Typography color={colors.grey[100]} sx={{ ml: '5px' }}>
-              <Link to={`/groups/${id}`}>Details</Link>
+              <Link to={`/presentations/${id}`}>Details</Link>
             </Typography>
           </Box>
         );
@@ -77,16 +79,16 @@ const GroupList = () => {
     setOpen(true);
   };
   const handleClose = () => {
-    setNewGroup('');
+    setNewPresentation('');
     setOpen(false);
   };
   const handleCreate = async () => {
-    if (newGroup.trim() === '') {
+    if (newPresentation.trim() === '') {
       return;
     }
-    await createGroup(newGroup);
+    await createPresentation(newPresentation);
     setOpen(false);
-    setNewGroup('');
+    setNewPresentation('');
     fetch();
   };
 
@@ -100,24 +102,24 @@ const GroupList = () => {
 
   return (
     <Box m="20px">
-      <Header title="GROUP" subtitle="All group you have joined" />
+      <Header title="PRESENTATION" subtitle="All presentation you can access" />
       <Dialog open={open} onClose={handleClose}>
-        <DialogTitle>Create New Group</DialogTitle>
+        <DialogTitle>Create New Presentation</DialogTitle>
         <DialogContent>
           <DialogContentText>
-            To create a new group, please enter group name
+            To create a new presentation, please enter presentation name
           </DialogContentText>
           <TextField
             autoFocus
             margin="dense"
             id="name"
-            label="Group name"
+            label="Presentation name"
             type="text"
             fullWidth
             variant="filled"
             color="info"
-            onChange={(e) => setNewGroup(e.target.value)}
-            value={newGroup}
+            onChange={(e) => setNewPresentation(e.target.value)}
+            value={newPresentation}
           />
         </DialogContent>
         <DialogActions>
@@ -130,9 +132,9 @@ const GroupList = () => {
         </DialogActions>
       </Dialog>
       <Box display="flex" justifyContent="space-between" sx={{ p: '0' }}>
-        <RoleFilter roles={roles} onChange={handleChange} allRoles={rolesInGroup} />
+        <RoleFilter roles={roles} onChange={handleChange} allRoles={rolesInPresentation} />
         <Button variant="outlined" color="info" onClick={handleOpen}>
-          New Group
+          New Presentation
         </Button>
       </Box>
 
@@ -172,10 +174,10 @@ const GroupList = () => {
             },
         }}
       >
-        <DataGrid checkboxSelection rows={groups} columns={columns} />
+        <DataGrid checkboxSelection rows={presentations} columns={columns} />
       </Box>
     </Box>
   );
 };
 
-export default GroupList;
+export default PresentationList;

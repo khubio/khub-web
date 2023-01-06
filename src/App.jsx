@@ -11,7 +11,7 @@ import {
   Navigate,
 } from 'react-router-dom';
 import './App.scss';
-import Group from '@pages/Group/GroupList';
+import GroupList from '@pages/Group/GroupList';
 import GroupDetails from '@pages/Group/GroupDetails';
 import { useEffect } from 'react';
 import { useDispatch } from 'react-redux';
@@ -22,6 +22,7 @@ import VerifyEmail from '@pages/Authentication/VerifyEmail';
 import GroupJoin from '@pages/Group/GroupJoin';
 import NotFound from '@pages/NotFound';
 import Presentation from '@pages/Prensentation';
+import PresentationList from '@pages/Prensentation/PresentationList';
 import Quiz from '@pages/Quiz';
 
 function App() {
@@ -54,7 +55,7 @@ function App() {
             path="/"
             element={(
               <PrivateLayout>
-                <Group />
+                <GroupList />
               </PrivateLayout>
             )}
           />
@@ -83,7 +84,7 @@ function App() {
               index
               element={(
                 <PrivateLayout>
-                  <Group />
+                  <GroupList />
                 </PrivateLayout>
               )}
             />
@@ -111,7 +112,7 @@ function App() {
               index
               element={(
                 <PrivateLayout>
-                  <Presentation />
+                  <PresentationList />
                 </PrivateLayout>
               )}
             />
