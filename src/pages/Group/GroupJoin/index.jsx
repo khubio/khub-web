@@ -64,7 +64,7 @@ const GroupJoin = () => {
     },
     {
       field: 'action',
-      headerName: 'Action',
+      headerName: '',
       flex: 1,
       renderCell: () => {
         return (

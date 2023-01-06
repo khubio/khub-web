@@ -8,7 +8,6 @@ import {
   BrowserRouter as Router,
   Routes,
   Route,
-  Navigate,
 } from 'react-router-dom';
 import './App.scss';
 import GroupList from '@pages/Group/GroupList';
@@ -126,7 +125,7 @@ function App() {
             />
           </Route>
           <Route path="not-found" element={<NotFound />} />
-          <Route path="*" element={<Navigate to="/not-found" replace />} />
+          <Route path="*" element={<NotFound />} />
         </Routes>
       </div>
     </Router>

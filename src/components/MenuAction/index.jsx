@@ -66,27 +66,23 @@ const MenuAction = ({ menuItemTop, menuItemDown }) => {
         anchorOrigin={{ horizontal: 'right', vertical: 'bottom' }}
       >
         {menuItemTop.map(({
-          text, onClick, Icon, key,
+          text, onClick, icon, key,
         }) => {
           return (
             <MenuItem onClick={onClick} key={key}>
-              <ListItemIcon>
-                {Icon}
-                {text}
-              </ListItemIcon>
+              <ListItemIcon>{icon}</ListItemIcon>
+              {text}
             </MenuItem>
           );
         })}
-        <Divider />
+        {menuItemDown.length > 0 && <Divider />}
         {menuItemDown.map(({
-          text, onClick, Icon, key,
+          text, onClick, icon, key,
         }) => {
           return (
             <MenuItem onClick={onClick} key={key}>
-              <ListItemIcon>
-                {Icon}
-                {text}
-              </ListItemIcon>
+              <ListItemIcon>{icon}</ListItemIcon>
+              {text}
             </MenuItem>
           );
         })}
