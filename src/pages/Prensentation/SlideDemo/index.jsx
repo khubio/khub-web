@@ -4,15 +4,19 @@ import { Box, Grid, Paper, Stack } from '@mui/material';
 import { useState } from 'react';
 import './SlideDemo.scss';
 
-const SlideDemo = ({ slides, setSlides, currentSlide }) => {
-  const content = slides[currentSlide];
-  const { question, options, expectedAnswerIdx: answerIdx } = content;
-  const [expectedAnswerIdx, setExpectedAnswerIdx] = useState(answerIdx);
+const SlideDemo = ({ slides, setSlides, currentSlide, answerList }) => {
+  const slideContent = slides[currentSlide];
+  const { question, options, expectedAnswerIdx } = slideContent;
   const handleClickAnswer = (idx) => {
-    setExpectedAnswerIdx(idx);
+    let newExpectedAnswerIdx;
+    if (expectedAnswerIdx.includes(idx)) {
+      newExpectedAnswerIdx = expectedAnswerIdx.filter((item) => item !== idx);
+    } else {
+      newExpectedAnswerIdx = [...expectedAnswerIdx, idx];
+    }
     setSlides((prev) => {
       const newSlides = [...prev];
-      newSlides[currentSlide].expectedAnswerIdx = idx;
+      newSlides[currentSlide].expectedAnswerIdx = newExpectedAnswerIdx;
       return newSlides;
     });
   };
@@ -40,8 +44,11 @@ const SlideDemo = ({ slides, setSlides, currentSlide }) => {
 
         <Box sx={{ width: '100%' }}>
           <Grid className="demo__answers" container rowSpacing={2}>
-            {options.map(({ content: answer }, idx) => {
-              const isExpectedAnswer = idx === answerIdx;
+            {options.map((option, idx) => {
+              const isExpectedAnswer = expectedAnswerIdx.includes(idx);
+              console.log('idx: ', idx);
+              console.log('expectedAnswerIdx: ', expectedAnswerIdx);
+              console.log(`${option} is expected answer: `, isExpectedAnswer);
               return (
                 <Grid
                   item
@@ -73,7 +80,7 @@ const SlideDemo = ({ slides, setSlides, currentSlide }) => {
                     {isExpectedAnswer && (
                       <Verified className="demo__answer-icon" />
                     )}
-                    {answer}
+                    {option}
                   </Paper>
                 </Grid>
               );

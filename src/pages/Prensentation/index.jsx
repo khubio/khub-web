@@ -10,47 +10,18 @@ import Slides from './Slides';
 const slideList = [
   {
     question: 'Cau hoi so 1?',
-    options: [
-      {
-        content: 'Hanoi',
-        isCorrect: true,
-      },
-      {
-        content: 'Ho Chi Minh City',
-        isCorrect: false,
-      },
-      {
-        content: 'Da Nang',
-        isCorrect: false,
-      },
-      {
-        content: 'Hue',
-        isCorrect: false,
-      },
-    ],
-    expectedAnswerIdx: 0,
+    options: ['Hanoi', 'Ho Chi Minh City', 'Da Nang', 'Hue'],
+    expectedAnswerIdx: [1, 2],
   },
   {
-    question: 'Cau hoi so 2?',
-    options: [
-      {
-        content: 'Hanoi 2',
-        isCorrect: true,
-      },
-      {
-        content: 'Ho Chi Minh City 2',
-        isCorrect: false,
-      },
-      {
-        content: 'Da Nang 2',
-        isCorrect: false,
-      },
-      {
-        content: 'Hue 2',
-        isCorrect: false,
-      },
-    ],
-    expectedAnswerIdx: 1,
+    question: 'Ai đẹp trai hơn?',
+    options: ['Nam', 'Tín', 'Nguyen', 'Huy'],
+    expectedAnswerIdx: [0],
+  },
+  {
+    question: 'Laptop nào tốt hơn?',
+    options: ['Macbook', 'Dell', 'Asus', 'HP'],
+    expectedAnswerIdx: [3],
   },
 ];
 const Presentation = () => {
@@ -109,6 +80,7 @@ const Presentation = () => {
               slides={slides}
               setSlides={setSlides}
               currentSlide={currentSlide}
+              answerList={slides[currentSlide].expectedAnswerIdx}
             />
           </Grid>
           <Grid item xs={3}>
