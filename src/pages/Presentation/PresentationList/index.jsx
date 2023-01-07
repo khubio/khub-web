@@ -1,6 +1,5 @@
 import {
   Box,
-  Typography,
   useTheme,
   Dialog,
   DialogTitle,
@@ -13,11 +12,20 @@ import {
 import { DataGrid } from '@mui/x-data-grid';
 import Header from '@components/Header';
 import { useState, useEffect, useCallback } from 'react';
-import { getPresentations, createPresentation } from '@services/presentation.service';
-import { Link } from 'react-router-dom';
+import {
+  getPresentations,
+  createPresentation,
+} from '@services/presentation.service';
+import { Link, useNavigate } from 'react-router-dom';
 import { useMounted } from 'src/hooks/useMounted';
 import { rolesInPresentation } from '@configs';
 import RoleFilter from '@components/RoleFilter';
+import moment from 'moment';
+import MenuAction from '@components/MenuAction';
+import PresentToAllOutlinedIcon from '@mui/icons-material/PresentToAllOutlined';
+import ModeEditOutlineOutlinedIcon from '@mui/icons-material/ModeEditOutlineOutlined';
+import ShareOutlinedIcon from '@mui/icons-material/ShareOutlined';
+import DeleteOutlineOutlinedIcon from '@mui/icons-material/DeleteOutlineOutlined';
 import { tokens } from '../../../theme';
 
 const PresentationList = () => {
@@ -27,6 +35,7 @@ const PresentationList = () => {
   const [newPresentation, setNewPresentation] = useState('');
   const { isMounted } = useMounted();
   const [roles, setRoles] = useState(rolesInPresentation);
+  const navigate = useNavigate();
 
   const fetch = useCallback(() => {
     getPresentations(roles).then((data) => setPresentations(data));
@@ -37,8 +46,52 @@ const PresentationList = () => {
   }, [fetch]);
 
   const colors = tokens(theme.palette.mode);
+
+  const getMenuItemTop = (presentationId) => {
+    const menu = [
+      {
+        text: 'Present',
+        onClick: () => {},
+        key: 'Present',
+        icon: <PresentToAllOutlinedIcon fontSize="small" />,
+      },
+      {
+        text: 'Edit',
+        onClick: () => navigate(`/presentations/${presentationId}/edit`),
+        key: 'Details',
+        icon: <ModeEditOutlineOutlinedIcon fontSize="small" />,
+      },
+      {
+        text: 'Share',
+        onClick: () => {},
+        key: 'Share',
+        icon: <ShareOutlinedIcon fontSize="small" />,
+      },
+    ];
+    return menu;
+  };
+
+  const getMenuItemDown = (presentationId, userRole) => {
+    if (userRole !== 'owner') {
+      return [];
+    }
+    return [
+      {
+        text: 'Rename',
+        onClick: () => {},
+        key: 'Rename',
+        icon: <ModeEditOutlineOutlinedIcon fontSize="small" />,
+      },
+      {
+        text: 'Delete',
+        onClick: () => {},
+        key: 'Delete',
+        icon: <DeleteOutlineOutlinedIcon fontSize="small" />,
+      },
+    ];
+  };
   const columns = [
-    { field: 'id', headerName: 'ID', flex: 1 },
+    { field: 'id', hide: true },
     {
       field: 'name',
       headerName: 'Presentation Name',
@@ -47,29 +100,50 @@ const PresentationList = () => {
     },
     {
       field: 'creator',
-      headerName: 'Creator',
+      headerName: 'Owner',
+      flex: 1,
+      cellClassName: 'name-column-cell',
+      renderCell: ({
+        row: {
+          creator: { firstName, lastName },
+        },
+      }) => {
+        return `${firstName} ${lastName}`;
+      },
+    },
+    {
+      field: 'createdAt',
+      headerName: 'created',
       flex: 1,
       cellClassName: 'name-column--cell',
+      renderCell: ({ row: { createdAt } }) => moment(createdAt).fromNow(),
+    },
+    {
+      field: 'updatedAt',
+      headerName: 'updated',
+      flex: 1,
+      cellClassName: 'name-column--cell',
+      renderCell: ({ row: { updatedAt } }) => moment(updatedAt).fromNow(),
     },
     {
       field: 'action',
-      headerName: 'Action',
+      headerName: '',
       flex: 1,
-      renderCell: ({ row: { id } }) => {
+      renderCell: ({ row: { id, role } }) => {
         return (
           <Box
             width="30%"
-            m="5px auto"
+            m="5px"
             p="5px"
             display="flex"
             justifyContent="center"
-            backgroundColor={colors.greenAccent[700]}
             borderRadius="4px"
             sx={{ cursor: 'pointer' }}
           >
-            <Typography color={colors.grey[100]} sx={{ ml: '5px' }}>
-              <Link to={`/presentations/${id}`}>Details</Link>
-            </Typography>
+            <MenuAction
+              menuItemTop={getMenuItemTop(id, role)}
+              menuItemDown={getMenuItemDown(id, role)}
+            />
           </Box>
         );
       },
@@ -132,7 +206,11 @@ const PresentationList = () => {
         </DialogActions>
       </Dialog>
       <Box display="flex" justifyContent="space-between" sx={{ p: '0' }}>
-        <RoleFilter roles={roles} onChange={handleChange} allRoles={rolesInPresentation} />
+        <RoleFilter
+          roles={roles}
+          onChange={handleChange}
+          allRoles={rolesInPresentation}
+        />
         <Button variant="outlined" color="info" onClick={handleOpen}>
           New Presentation
         </Button>

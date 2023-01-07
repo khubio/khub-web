@@ -1,6 +1,5 @@
 import {
   Box,
-  Typography,
   useTheme,
   Dialog,
   DialogTitle,
@@ -14,10 +13,16 @@ import { DataGrid } from '@mui/x-data-grid';
 import Header from '@components/Header';
 import { useState, useEffect, useCallback } from 'react';
 import { getGroupsOfUser, createGroup } from '@services/group.service';
-import { Link } from 'react-router-dom';
+import { useNavigate } from 'react-router-dom';
 import { useMounted } from 'src/hooks/useMounted';
 import { rolesInGroup } from '@configs';
 import RoleFilter from '@components/RoleFilter';
+import MenuAction from '@components/MenuAction';
+import InfoOutlinedIcon from '@mui/icons-material/InfoOutlined';
+import ModeEditOutlineOutlinedIcon from '@mui/icons-material/ModeEditOutlineOutlined';
+import ShareOutlinedIcon from '@mui/icons-material/ShareOutlined';
+import DeleteOutlineOutlinedIcon from '@mui/icons-material/DeleteOutlineOutlined';
+import moment from 'moment';
 import { tokens } from '../../../theme';
 
 const GroupList = () => {
@@ -27,6 +32,7 @@ const GroupList = () => {
   const [newGroup, setNewGroup] = useState('');
   const { isMounted } = useMounted();
   const [roles, setRoles] = useState(rolesInGroup);
+  const navigate = useNavigate();
 
   const fetch = useCallback(() => {
     getGroupsOfUser(roles).then((data) => {
@@ -40,34 +46,99 @@ const GroupList = () => {
     fetch();
   }, [fetch]);
 
+  const getMenuItemTop = (groupId, userRole) => {
+    const menu = [
+      {
+        text: 'Details',
+        onClick: () => navigate(`/groups/${groupId}`),
+        key: 'Details',
+        icon: <InfoOutlinedIcon fontSize="small" />,
+      },
+    ];
+    if (userRole === 'owner') {
+      menu.push({
+        text: 'Rename',
+        onClick: () => {},
+        key: 'Rename',
+        icon: <ModeEditOutlineOutlinedIcon fontSize="small" />,
+      });
+      menu.push({
+        text: 'Share',
+        onClick: () => {},
+        key: 'share',
+        icon: <ShareOutlinedIcon fontSize="small" />,
+      });
+    }
+    return menu;
+  };
+
+  const getMenuItemDown = (groupId, userRole) => {
+    if (userRole !== 'owner') {
+      return [];
+    }
+    return [
+      {
+        text: 'Delete',
+        onClick: () => {},
+        key: 'Delete',
+        icon: <DeleteOutlineOutlinedIcon fontSize="small" />,
+      },
+    ];
+  };
+
   const colors = tokens(theme.palette.mode);
   const columns = [
-    { field: 'id', headerName: 'ID', flex: 1 },
+    {
+      field: 'id',
+      headerName: 'ID',
+      flex: 1,
+      hide: true,
+    },
     {
       field: 'name',
       headerName: 'Group Name',
+      flex: 2,
+      cellClassName: 'name-column--cell',
+    },
+    {
+      field: 'role',
+      headerName: 'Role in Group',
       flex: 1,
       cellClassName: 'name-column--cell',
     },
     {
-      field: 'action',
-      headerName: 'Action',
+      field: 'createdAt',
+      headerName: 'Created',
       flex: 1,
-      renderCell: ({ row: { id } }) => {
+      cellClassName: 'name-column--cell',
+      renderCell: ({ row: { createdAt } }) => moment(createdAt).fromNow(),
+    },
+    {
+      field: 'updatedAt',
+      headerName: 'Updated',
+      flex: 1,
+      cellClassName: 'name-column--cell',
+      renderCell: ({ row: { updatedAt } }) => moment(updatedAt).fromNow(),
+    },
+    {
+      field: 'action',
+      headerName: '',
+      flex: 1,
+      renderCell: ({ row: { id, role } }) => {
         return (
           <Box
             width="30%"
-            m="5px auto"
+            m="5px"
             p="5px"
             display="flex"
             justifyContent="center"
-            backgroundColor={colors.greenAccent[700]}
             borderRadius="4px"
             sx={{ cursor: 'pointer' }}
           >
-            <Typography color={colors.grey[100]} sx={{ ml: '5px' }}>
-              <Link to={`/groups/${id}`}>Details</Link>
-            </Typography>
+            <MenuAction
+              menuItemTop={getMenuItemTop(id, role)}
+              menuItemDown={getMenuItemDown(id, role)}
+            />
           </Box>
         );
       },
@@ -130,7 +201,11 @@ const GroupList = () => {
         </DialogActions>
       </Dialog>
       <Box display="flex" justifyContent="space-between" sx={{ p: '0' }}>
-        <RoleFilter roles={roles} onChange={handleChange} allRoles={rolesInGroup} />
+        <RoleFilter
+          roles={roles}
+          onChange={handleChange}
+          allRoles={rolesInGroup}
+        />
         <Button variant="outlined" color="info" onClick={handleOpen}>
           New Group
         </Button>

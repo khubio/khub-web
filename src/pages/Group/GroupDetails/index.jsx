@@ -197,7 +197,7 @@ const GroupDetails = () => {
     },
     {
       field: 'action',
-      headerName: 'Action',
+      headerName: '',
       flex: 1,
       renderCell: ({ row: { role: userRole, id: user } }) => {
         return (
@@ -206,7 +206,6 @@ const GroupDetails = () => {
             m="5px"
             p="5px"
             display="flex"
-            // backgroundColor={colors.greenAccent[700]}
             borderRadius="4px"
             sx={{ cursor: 'pointer' }}
           >
