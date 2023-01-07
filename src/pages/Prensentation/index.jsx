@@ -1,27 +1,78 @@
-import { PlayArrow, Share } from '@mui/icons-material';
+import { PlayArrow, Share, Save } from '@mui/icons-material';
 import { Button, Grid } from '@mui/material';
 import { useState } from 'react';
 import './Presentation.scss';
 import BasicModal from '@components/Modal';
 import SlideDemo from './SlideDemo';
-import SlideDetail from './SlideDetail';
 import Slides from './Slides';
+import SlideDetail from './SlideDetail';
 
 const slideList = [
   {
+    slideType: 'multipleChoice',
     question: 'Cau hoi so 1?',
-    options: ['Hanoi', 'Ho Chi Minh City', 'Da Nang', 'Hue'],
-    expectedAnswerIdx: [1, 2],
+    description: 'Sample question 1',
+    answers: [
+      {
+        id: 1,
+        text: 'A',
+        status: false,
+      },
+      {
+        id: 2,
+        text: 'B',
+        status: false,
+      },
+      {
+        id: 3,
+        text: 'C',
+        status: true,
+      },
+      {
+        id: 4,
+        text: 'D',
+        status: false,
+      },
+    ],
   },
   {
-    question: 'Ai đẹp trai hơn?',
-    options: ['Nam', 'Tín', 'Nguyen', 'Huy'],
-    expectedAnswerIdx: [0],
+    slideType: 'multipleChoice',
+    question: '1+1=?',
+    description: 'Lolo 2',
+    answers: [
+      {
+        id: 5,
+        text: '2',
+        status: false,
+      },
+      {
+        id: 6,
+        text: '3',
+        status: true,
+      },
+      {
+        id: 7,
+        text: '4',
+        status: false,
+      },
+      {
+        id: 8,
+        text: '5',
+        status: false,
+      },
+    ],
   },
   {
-    question: 'Laptop nào tốt hơn?',
-    options: ['Macbook', 'Dell', 'Asus', 'HP'],
-    expectedAnswerIdx: [3],
+    slideType: 'heading',
+    question: 'Welcome to my presentation',
+    description: 'Lolopops 2',
+    answers: [],
+  },
+  {
+    slideType: 'paragraph',
+    question: 'This is a paragraph',
+    description: 'Conchimnon 2',
+    answers: [],
   },
 ];
 const Presentation = () => {
@@ -63,6 +114,14 @@ const Presentation = () => {
         >
           Present
         </Button>
+        <Button
+          className="presentation__btn-item--present"
+          color="success"
+          variant="contained"
+          startIcon={<Save />}
+        >
+          Save
+        </Button>
       </div>
       <div className="presentation__container">
         <Grid container>
@@ -80,7 +139,6 @@ const Presentation = () => {
               slides={slides}
               setSlides={setSlides}
               currentSlide={currentSlide}
-              answerList={slides[currentSlide].expectedAnswerIdx}
             />
           </Grid>
           <Grid item xs={3}>

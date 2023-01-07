@@ -7,8 +7,30 @@ import './Slides.scss';
 const Slides = ({ currentSlide, setCurrentSlide, slides, setSlides }) => {
   const addNewSlide = () => {
     const emptySlide = {
+      slideType: 'multipleChoice',
       question: 'Your question here',
-      options: ['Option 1', 'Option 2', 'Option 3', 'Option 4'],
+      answers: [
+        {
+          id: Date.now() + 1,
+          text: 'Option 1',
+          status: false,
+        },
+        {
+          id: Date.now() + 2,
+          text: 'Option 2',
+          status: false,
+        },
+        {
+          id: Date.now() + 3,
+          text: 'Option 3',
+          status: false,
+        },
+        {
+          id: Date.now() + 4,
+          text: 'Option 4',
+          status: false,
+        },
+      ],
     };
     const newSlide = [...slides, emptySlide];
     setSlides(newSlide);

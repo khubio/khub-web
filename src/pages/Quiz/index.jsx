@@ -8,7 +8,7 @@ import { Cell, Pie, PieChart } from 'recharts';
 const content = {
   question:
     'Trên đồng cỏ có 6 con bò, đếm đi đếm lại chỉ có 12 cái chân. Câu hỏi tại sao?',
-  options: [
+  answers: [
     {
       content: 'Hanoi',
       isCorrect: true,
@@ -30,7 +30,7 @@ const content = {
 };
 const content2 = {
   question: 'Ai dep trai hon anh Thi?',
-  options: [
+  answers: [
     {
       content: 'BueDepTrai',
       isCorrect: true,
@@ -98,7 +98,7 @@ const Quiz = () => {
   const [correctAnswerIdx, setCorrectAnswerIdx] = useState([]);
   const [currentQuestionIdx, setCurrentQuestionIdx] = useState(0);
   const [currentQuestion, setCurrentQuestion] = useState(questionList[0]);
-  const { question, options } = currentQuestion;
+  const { question, answers } = currentQuestion;
   const [isFinished, setIsFinished] = useState(false);
   const [resultStatistic, setResultStatistic] = useState([]);
   const [finalPoint, setFinalPoint] = useState(0);
@@ -151,7 +151,7 @@ const Quiz = () => {
 
           <Box sx={{ width: '100%' }}>
             <Grid className="quiz__answers" container rowSpacing={2}>
-              {options.map(({ content: answer }, idx) => {
+              {answers.map(({ content: answer }, idx) => {
                 return (
                   <Grid
                     item

@@ -18,8 +18,9 @@
     font-size: 2rem;
     font-weight: 900;
     border-radius: 2rem !important;
-    border: 1rem solid;
+    border: 0.6rem solid !important;
     max-width: 100%;
+    min-height: max-content;
   }
 
   &__answers {
@@ -27,10 +28,20 @@
   }
 
   &__answer {
+    width: 100%;
+    min-height: max-content;
     @include flex(center, center);
     flex-wrap: wrap;
     font-size: 1.5rem;
     border-radius: 3rem !important;
+    margin: 2rem;
+
+    & > span {
+      width: 80%;
+      text-align: center;
+      overflow-wrap: break-word;
+    }
+
     &:hover {
       cursor: pointer;
       background-color: $light-blue;
@@ -43,9 +54,49 @@
     }
 
     &-icon {
-      justify-self: flex-start;
+      justify-self: flex-center;
+      align-self: center;
       margin-right: 1rem;
       color: rgb(91, 255, 91);
     }
+  }
+
+  &__heading {
+    @include flex(center, center);
+    letter-spacing: 0.15rem;
+    color: white !important;
+    font-size: 2.2rem;
+    font-weight: 900;
+    max-width: 100%;
+    min-height: max-content;
+    &--sub {
+      @include flex(flex-start, center);
+      font-size: 1.2rem;
+      font-weight: 300;
+      color: white !important;
+    }
+  }
+  &__paragraph {
+    &-description {
+      @include flex(center, center);
+      font-size: 1.1rem;
+      font-weight: 500;
+      max-width: 100%;
+      min-height: max-content;
+    }
+    &-heading {
+      letter-spacing: 0.1rem;
+      @include flex(center, center);
+      font-size: 1.5rem;
+      font-weight: 900;
+      max-width: 100%;
+      min-height: max-content;
+    }
+  }
+}
+
+.chart {
+  &__container {
+    @include flex(center, center);
   }
 }

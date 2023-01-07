@@ -7,7 +7,7 @@ import MenuItem from '@mui/material/MenuItem';
 import Menu from '@mui/material/Menu';
 import { Typography } from '@mui/material';
 
-const options = ['Anyone with the link, code, or QR', 'Anyone in your group'];
+const answers = ['Anyone with the link, code, or QR', 'Anyone in your group'];
 
 export default function SharingMenuOption({ title }) {
   const [anchorEl, setAnchorEl] = React.useState(null);
@@ -46,7 +46,7 @@ export default function SharingMenuOption({ title }) {
             primary={title}
             secondary={
               <Typography type="body2" style={{ color: 'blue' }}>
-                <h6>{options[selectedIndex]}</h6>
+                <h6>{answers[selectedIndex]}</h6>
               </Typography>
             }
             sx
@@ -63,7 +63,7 @@ export default function SharingMenuOption({ title }) {
           role: 'listbox',
         }}
       >
-        {options.map((option, index) => (
+        {answers.map((option, index) => (
           <MenuItem
             key={option}
             selected={index === selectedIndex}

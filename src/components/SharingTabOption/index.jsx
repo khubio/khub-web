@@ -50,6 +50,7 @@ function a11yProps(index) {
 export default function SharingTabOption() {
   const [value, setValue] = useState(0);
   const [sharingOption, setSharingOption] = useState(0);
+  const [isCopied, setIsCopied] = useState(false);
   const [presentationLink, setPresentationLink] = useState(
     'https://www.mentimeter.com/app/presentation/al69j3z5f4jk4wiuyuii7y3mgkc1s4tm',
   );
@@ -66,6 +67,10 @@ export default function SharingTabOption() {
     if (id === 'participation') {
       navigator.clipboard.writeText(participationLink);
     }
+    setIsCopied(true);
+    setTimeout(() => {
+      setIsCopied(false);
+    }, 2000);
   };
 
   return (
@@ -105,7 +110,9 @@ export default function SharingTabOption() {
               endIcon={<ContentCopyIcon />}
             />
           </div>
-          <div className="participation__link-copy">Copied</div>
+          <div className="participation__link-copy">
+            {isCopied && <p>Copied</p>}
+          </div>
         </div>
       </TabPanel>
       <TabPanel value={value} index={1}>
@@ -132,6 +139,9 @@ export default function SharingTabOption() {
               onClick={() => handleCopy('presentation')}
               endIcon={<ContentCopyIcon />}
             />
+          </div>
+          <div className="participation__link-copy">
+            {isCopied && <p>Copied</p>}
           </div>
         </div>
       </TabPanel>

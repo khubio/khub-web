@@ -1,8 +1,25 @@
 /* eslint-disable object-curly-newline */
 /* eslint-disable react/jsx-one-expression-per-line */
-import { ArrowBack, ArrowForward } from '@mui/icons-material';
-import { Button, Stack, TextField } from '@mui/material';
 import { useState } from 'react';
+import { ArrowBack, ArrowForward } from '@mui/icons-material';
+import {
+  Button,
+  InputLabel,
+  MenuItem,
+  Select,
+  Stack,
+  TextField,
+} from '@mui/material';
+import TitleIcon from '@mui/icons-material/Title';
+import SegmentIcon from '@mui/icons-material/Segment';
+import ControlPointDuplicateIcon from '@mui/icons-material/ControlPointDuplicate';
+import {
+  ADJUST_ACTION,
+  DEFAULT_PRESENTATION_TYPE,
+} from '@constants/Presentation';
+import HeadingDetail from './HeadingDetail';
+import MultipleChoiceDetail from './MultipleChoiceDetail';
+import ParagraphDetail from './ParagraphDetail';
 import './SlideDetail.scss';
 
 const SlideDetail = ({
@@ -13,7 +30,7 @@ const SlideDetail = ({
   setSlides,
 }) => {
   const [currentContent, setCurrentContent] = useState(content);
-  const { question, options } = content;
+  const { slideType: slideTypeProp, question, answers, description } = content;
   const goToNextSlide = () => {
     setCurrentSlide((prev) => {
       if (prev === totalSlides - 1) return totalSlides - 1;
@@ -26,57 +43,116 @@ const SlideDetail = ({
       return prev - 1;
     });
   };
-  const handleQuestionChange = (value) => {
-    setCurrentContent((prev) => ({ ...prev, question: value }));
+  const handleAnswerChange = (field, value, idx) => {
+    const newAnswers = [...answers];
+    newAnswers[idx][field] = value;
+    setCurrentContent((prev) => ({ ...prev, answers: newAnswers }));
     setSlides((prev) => {
       const newSlides = [...prev];
-      newSlides[currentSlide].question = value;
+      newSlides[currentSlide].answers = newAnswers;
       return newSlides;
     });
   };
-  const handleAnswerChange = (value, idx) => {
-    const newOptions = [...options];
-    newOptions[idx].content = value;
-    setCurrentContent((prev) => ({ ...prev, options: newOptions }));
+  const handleAnswerListChange = (action, idx = -1) => {
+    const newAnswers = [...answers];
+    if (action === ADJUST_ACTION.ADD) {
+      newAnswers.push({ text: '', status: false });
+    }
+    if (action === ADJUST_ACTION.REMOVE) {
+      newAnswers.splice(idx, 1);
+    }
+    setCurrentContent((prev) => ({ ...prev, answers: newAnswers }));
     setSlides((prev) => {
       const newSlides = [...prev];
-      newSlides[currentSlide].options = newOptions;
+      newSlides[currentSlide].answers = newAnswers;
       return newSlides;
     });
   };
+  const handleContentChange = (field, value) => {
+    setCurrentContent((prev) => ({ ...prev, [field]: value }));
+    setSlides((prev) => {
+      const newSlides = [...prev];
+      newSlides[currentSlide][field] = value;
+      return newSlides;
+    });
+  };
+  const handleSlideTypeChange = (event) => {
+    setSlides((prev) => {
+      const newSlides = [...prev];
+      newSlides[currentSlide].slideType = event.target.value;
+      return newSlides;
+    });
+  };
+
+  const renderDetailBySlideType = (type) => {
+    switch (type) {
+      case 'multipleChoice':
+        return (
+          <MultipleChoiceDetail
+            question={question}
+            answers={answers}
+            handleContentChange={handleContentChange}
+            handleAnswerChange={handleAnswerChange}
+            handleAnswerListChange={handleAnswerListChange}
+          />
+        );
+      case 'heading':
+        return (
+          <HeadingDetail
+            heading={question}
+            subheading={description}
+            handleContentChange={handleContentChange}
+          />
+        );
+      case 'paragraph':
+        return (
+          <ParagraphDetail
+            heading={question}
+            description={description}
+            handleContentChange={handleContentChange}
+          />
+        );
+      default:
+        return (
+          <MultipleChoiceDetail
+            question={question}
+            answers={answers}
+            handleContentChange={handleContentChange}
+          />
+        );
+    }
+  };
+
   return (
     <div className="detail">
       <div className="detail__container">
-        <Stack spacing={1} className="detail__question">
-          <h4>Question</h4>
-          <TextField
-            id="outlined-basic"
-            variant="outlined"
-            fullWidth
-            multiline
-            onChange={(e) => {
-              handleQuestionChange(e.target.value);
-            }}
-            value={question}
-          />
-        </Stack>
-        <Stack spacing={1} className="detail__answers">
-          {options.map(({ content: answer }, idx) => (
-            <>
-              <h4>Option {idx + 1}</h4>
-              <TextField
-                id="outlined-basic"
-                variant="outlined"
-                fullWidth
-                multiline
-                value={answer}
-                onChange={(e) => {
-                  handleAnswerChange(e.target.value, idx);
-                }}
-              />
-            </>
-          ))}
-        </Stack>
+        <h4 className="detail__type-header" id="detail__type">
+          Presentation type
+        </h4>
+        <Select
+          className="detail__type-select"
+          labelId="detail__type"
+          id="demo-simple-select"
+          value={slideTypeProp}
+          defaultValue={DEFAULT_PRESENTATION_TYPE}
+          label="Presentation type"
+          onChange={handleSlideTypeChange}
+        >
+          <MenuItem value="heading">
+            {' '}
+            <TitleIcon className="detail__type-icon" /> Heading
+          </MenuItem>
+          <MenuItem value="paragraph">
+            <SegmentIcon className="detail__type-icon" /> Paragraph
+          </MenuItem>
+          <MenuItem value="multipleChoice">
+            {' '}
+            <ControlPointDuplicateIcon className="detail__type-icon" /> Multiple
+            choice
+          </MenuItem>
+        </Select>
+
+        {renderDetailBySlideType(slideTypeProp)}
 
         <div className="detail__navigation">
           <Button
