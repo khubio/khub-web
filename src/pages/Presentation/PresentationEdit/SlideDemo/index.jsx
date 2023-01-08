@@ -184,7 +184,7 @@ const renderSlideDemoByType = (slideContent, handleClickAnswer) => {
     case 'paragraph':
       return <ParagraphDemo heading={question} description={description} />;
     default:
-      return <div>Not found</div>;
+      return <div>Please select type of presentation</div>;
   }
 };
 const SlideDemo = ({ slides, setSlides, currentSlide }) => {

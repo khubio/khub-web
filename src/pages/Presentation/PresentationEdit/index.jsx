@@ -1,14 +1,23 @@
 import { PlayArrow, Share, Save } from '@mui/icons-material';
 import { Button, Grid } from '@mui/material';
-import { useState } from 'react';
+import { useCallback, useEffect, useState } from 'react';
+import { useParams } from 'react-router-dom';
 import './Presentation.scss';
 import BasicModal from '@components/Modal';
+import {
+  createSlides,
+  deleteSlides,
+  getPresentation,
+  updateSlides,
+} from '@services/presentation.service';
+import { useMounted } from 'src/hooks/useMounted';
 import SlideDemo from './SlideDemo';
 import Slides from './Slides';
 import SlideDetail from './SlideDetail';
 
 const slideList = [
   {
+    id: '',
     slideType: 'multipleChoice',
     question: 'Cau hoi so 1?',
     description: 'Sample question 1',
@@ -36,6 +45,7 @@ const slideList = [
     ],
   },
   {
+    id: '',
     slideType: 'multipleChoice',
     question: '1+1=?',
     description: 'Lolo 2',
@@ -63,12 +73,14 @@ const slideList = [
     ],
   },
   {
+    id: '',
     slideType: 'heading',
     question: 'Welcome to my presentation',
     description: 'Lolopops 2',
     answers: [],
   },
   {
+    id: '',
     slideType: 'paragraph',
     question: 'This is a paragraph',
     description: 'Conchimnon 2',
@@ -76,12 +88,37 @@ const slideList = [
   },
 ];
 const PresentationEdit = () => {
+  const params = useParams();
   const [slides, setSlides] = useState(slideList);
   const [currentSlide, setCurrentSlide] = useState(0);
   const [open, setOpen] = useState(false);
+  const { isMounted } = useMounted();
+
+  const fetch = useCallback(() => {
+    getPresentation(params.id).then((data) => setSlides(data.slides));
+  }, [isMounted]);
+
+  useEffect(() => {
+    fetch();
+  }, [fetch]);
+
   const handleOpen = () => setOpen(true);
   const handleClose = () => setOpen(false);
   const totalSlides = slides.length;
+  const handleOnSavePresentation = async () => {
+    await createSlides(
+      params.id,
+      slides.filter((slide) => slide.id === '') || [],
+    );
+    await deleteSlides(
+      params.id,
+      slides.filter((slide) => slide.isDelete).map((slide) => slide.id) || [],
+    );
+    await updateSlides(
+      params.id,
+      slides.filter((slide) => slide.isUpdated) || [],
+    );
+  };
   return (
     <div>
       <div className="presentation__btn">
@@ -119,6 +156,7 @@ const PresentationEdit = () => {
           color="success"
           variant="contained"
           startIcon={<Save />}
+          onClick={handleOnSavePresentation}
         >
           Save
         </Button>
@@ -128,7 +166,7 @@ const PresentationEdit = () => {
           <Grid item xs={2}>
             <Slides
               currentSlide={currentSlide}
-              slides={slides}
+              slides={slides.filter((slide) => !slide.isDeleted)}
               setCurrentSlide={setCurrentSlide}
               setSlides={setSlides}
             />
@@ -136,7 +174,7 @@ const PresentationEdit = () => {
           <Grid item xs={7}>
             <SlideDemo
               content={slides[currentSlide]}
-              slides={slides}
+              slides={slides.filter((slide) => !slide.isDeleted)}
               setSlides={setSlides}
               currentSlide={currentSlide}
             />

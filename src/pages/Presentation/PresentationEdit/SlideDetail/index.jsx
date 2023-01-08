@@ -46,25 +46,36 @@ const SlideDetail = ({
   const handleAnswerChange = (field, value, idx) => {
     const newAnswers = [...answers];
     newAnswers[idx][field] = value;
-    setCurrentContent((prev) => ({ ...prev, answers: newAnswers }));
+    newAnswers[idx].isUpdated = true;
+    setCurrentContent((prev) => ({
+      ...prev,
+      answers: newAnswers,
+    }));
     setSlides((prev) => {
       const newSlides = [...prev];
       newSlides[currentSlide].answers = newAnswers;
+      newSlides[currentSlide].isAnswersUpdated = true;
+
       return newSlides;
     });
   };
   const handleAnswerListChange = (action, idx = -1) => {
     const newAnswers = [...answers];
     if (action === ADJUST_ACTION.ADD) {
-      newAnswers.push({ text: '', status: false });
+      newAnswers.push({ id: '', text: '', status: false });
     }
     if (action === ADJUST_ACTION.REMOVE) {
-      newAnswers.splice(idx, 1);
+      // newAnswers.splice(idx, 1);
+      newAnswers[idx].isDeleted = true;
     }
-    setCurrentContent((prev) => ({ ...prev, answers: newAnswers }));
+    setCurrentContent((prev) => ({
+      ...prev,
+      answers: newAnswers,
+    }));
     setSlides((prev) => {
       const newSlides = [...prev];
       newSlides[currentSlide].answers = newAnswers;
+      newSlides[currentSlide].isAnswersUpdated = true;
       return newSlides;
     });
   };
@@ -73,6 +84,7 @@ const SlideDetail = ({
     setSlides((prev) => {
       const newSlides = [...prev];
       newSlides[currentSlide][field] = value;
+      newSlides[currentSlide].isUpdated = true;
       return newSlides;
     });
   };
@@ -80,6 +92,7 @@ const SlideDetail = ({
     setSlides((prev) => {
       const newSlides = [...prev];
       newSlides[currentSlide].slideType = event.target.value;
+      newSlides[currentSlide].isUpdated = true;
       return newSlides;
     });
   };

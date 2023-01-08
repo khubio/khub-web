@@ -40,45 +40,50 @@ const MultipleChoiceDetail = ({
         />
       </Stack>
       <Stack spacing={1} className="detail__answers">
-        {answers.map(({ text, status }, idx) => (
+        {answers.map(({ text, status, isDeleted }, idx) => (
+          // eslint-disable-next-line react/jsx-no-useless-fragment
           <>
-            <h4>Answer {idx + 1}</h4>
-            <div className="detail__answers-item">
-              <Checkbox
-                checked={status}
-                color="success"
-                sx={{ width: '10%' }}
-                onChange={(e) => {
-                  handleAnswerChange(
-                    MULTIPLE_CHOICE_MAPPER.ANSWER.STATUS,
-                    e.target.checked,
-                    idx,
-                  );
-                }}
-              />
-              <TextField
-                id="outlined-basic"
-                variant="outlined"
-                sx={{ width: '80%' }}
-                multiline
-                size="small"
-                onChange={(e) => {
-                  handleAnswerChange(
-                    MULTIPLE_CHOICE_MAPPER.ANSWER.TEXT,
-                    e.target.value,
-                    idx,
-                  );
-                }}
-                value={text}
-              />
-              <RemoveCircleIcon
-                className="detail__answers-item-remove"
-                sx={{ width: '10%' }}
-                onClick={() => {
-                  handleAnswerListChange(ADJUST_ACTION.REMOVE, idx);
-                }}
-              />
-            </div>
+            {!isDeleted && (
+              <>
+                <h4>Answer {idx + 1}</h4>
+                <div className="detail__answers-item">
+                  <Checkbox
+                    checked={status}
+                    color="success"
+                    sx={{ width: '10%' }}
+                    onChange={(e) => {
+                      handleAnswerChange(
+                        MULTIPLE_CHOICE_MAPPER.ANSWER.STATUS,
+                        e.target.checked,
+                        idx,
+                      );
+                    }}
+                  />
+                  <TextField
+                    id="outlined-basic"
+                    variant="outlined"
+                    sx={{ width: '80%' }}
+                    multiline
+                    size="small"
+                    onChange={(e) => {
+                      handleAnswerChange(
+                        MULTIPLE_CHOICE_MAPPER.ANSWER.TEXT,
+                        e.target.value,
+                        idx,
+                      );
+                    }}
+                    value={text}
+                  />
+                  <RemoveCircleIcon
+                    className="detail__answers-item-remove"
+                    sx={{ width: '10%' }}
+                    onClick={() => {
+                      handleAnswerListChange(ADJUST_ACTION.REMOVE, idx);
+                    }}
+                  />
+                </div>
+              </>
+            )}
           </>
         ))}
       </Stack>
