@@ -28,12 +28,12 @@ const MultipleChoiceDemo = ({
           display: 'flex',
           justifyContent: 'center',
           alignItems: 'center',
+          flexDirection: 'column',
           flexWrap: 'wrap',
           '& > :not(style)': {
             m: 8,
-            p: 1.5,
+            px: 6,
             minHeight: 128,
-            width: 650,
           },
         }}
       >
@@ -95,12 +95,13 @@ const HeadingDemo = ({ heading, subheading }) => {
         display: 'flex',
         justifyContent: 'center',
         alignItems: 'center',
+        flexDirection: 'column',
         flexWrap: 'wrap',
         '& > :not(style)': {
-          // m: 1,
-          p: 1,
+          mx: 8,
+          p: 3,
+          textAlign: 'center',
           'min-height': 128,
-          width: 650,
           backgroundColor: 'transparent',
         },
       }}
@@ -121,11 +122,13 @@ const ParagraphDemo = ({ heading, description }) => {
         justifyContent: 'center',
         alignItems: 'center',
         flexWrap: 'wrap',
+        flexDirection: 'column',
         '& > :not(style)': {
-          p: 2,
+          mx: 8,
+          p: 4,
           textAlign: 'center',
           'min-height': 100,
-          width: 650,
+          maxWidth: '100%',
         },
       }}
     >
