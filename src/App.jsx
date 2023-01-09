@@ -18,7 +18,7 @@ import GroupJoin from '@pages/Group/GroupJoin';
 import NotFound from '@pages/NotFound';
 import PresentationEdit from '@pages/Presentation/PresentationEdit';
 import PresentationList from '@pages/Presentation/PresentationList';
-import Quiz from '@pages/Quiz';
+import Quiz from '@pages/Presentation/PresentationEdit/SlideDemo/Quiz';
 
 function App() {
   const dispatch = useDispatch();

@@ -1,166 +1,26 @@
+/* eslint-disable react/jsx-curly-newline */
+/* eslint-disable implicit-arrow-linebreak */
 /* eslint-disable object-curly-newline */
-import { Verified } from '@mui/icons-material';
-import { Box, Grid, Paper, Stack } from '@mui/material';
-import { useState } from 'react';
-import {
-  Bar,
-  BarChart,
-  CartesianGrid,
-  Cell,
-  Legend,
-  ResponsiveContainer,
-  Tooltip,
-  XAxis,
-  YAxis,
-} from 'recharts';
+import ArrowBackIcon from '@mui/icons-material/ArrowBack';
+import ArrowForwardIcon from '@mui/icons-material/ArrowForward';
+import { Stack } from '@mui/material';
+import HeadingDemo from './HeadingDemo';
+import MultipleChoiceDemo from './MultipleChoiceDemo';
+import ParagraphDemo from './ParagraphDemo';
+import Quiz from './Quiz';
 import './SlideDemo.scss';
 
-const MultipleChoiceDemo = ({
-  question,
-  answers,
+const styles = {
+  largeIcon: {
+    width: 60,
+    height: 60,
+  },
+};
+const renderSlideDemoByType = (
+  isPresenting,
+  slideContent,
   handleClickAnswer,
-  chartData,
-}) => {
-  return (
-    <>
-      <Box
-        sx={{
-          display: 'flex',
-          justifyContent: 'center',
-          alignItems: 'center',
-          flexDirection: 'column',
-          flexWrap: 'wrap',
-          '& > :not(style)': {
-            m: 8,
-            px: 6,
-            minHeight: 128,
-          },
-        }}
-      >
-        <Paper className="demo__question" variant="outlined" rounded>
-          {question}
-        </Paper>
-      </Box>
-      <Box sx={{ width: '100%' }}>
-        {/* <Grid className="demo__answers" container rowSpacing={2}>
-          {answers.map(({ id, text, status }, idx) => {
-            const isExpectedAnswer = status;
-            return (
-              <Grid
-                key={id}
-                item
-                xs={6}
-                rounded
-                sx={{
-                  display: 'flex',
-                  justifyContent: 'center',
-                  alignItems: 'center',
-                  flexWrap: 'wrap',
-                  '& > :not(style)': {
-                    m: 2.5,
-                    width: 800,
-                    ' min-height': 128,
-                  },
-                }}
-              >
-                <Paper
-                  className={
-                    isExpectedAnswer
-                      ? 'demo__answer demo__answer--selected'
-                      : 'demo__answer'
-                  }
-                  variant="outlined"
-                  elevation={3}
-                  rounded
-                  onClick={() => handleClickAnswer(idx)}
-                >
-                  {isExpectedAnswer && (
-                    <Verified className="demo__answer-icon" />
-                  )}
-                  <span>{text}</span>
-                </Paper>
-              </Grid>
-            );
-          })}
-        </Grid> */}
-        <ChartResultArea data={chartData} />
-      </Box>
-    </>
-  );
-};
-const HeadingDemo = ({ heading, subheading }) => {
-  return (
-    <Box
-      sx={{
-        display: 'flex',
-        justifyContent: 'center',
-        alignItems: 'center',
-        flexDirection: 'column',
-        flexWrap: 'wrap',
-        '& > :not(style)': {
-          mx: 8,
-          p: 3,
-          textAlign: 'center',
-          'min-height': 128,
-          backgroundColor: 'transparent',
-        },
-      }}
-    >
-      <Paper className="demo__heading" rounded>
-        {heading}
-      </Paper>
-      <p className="demo__heading--sub">{subheading}</p>
-    </Box>
-  );
-};
-
-const ParagraphDemo = ({ heading, description }) => {
-  return (
-    <Box
-      sx={{
-        display: 'flex',
-        justifyContent: 'center',
-        alignItems: 'center',
-        flexWrap: 'wrap',
-        flexDirection: 'column',
-        '& > :not(style)': {
-          mx: 8,
-          p: 4,
-          textAlign: 'center',
-          'min-height': 100,
-          maxWidth: '100%',
-        },
-      }}
-    >
-      <Paper className="demo__paragraph-heading" variant="outlined" rounded>
-        {heading}
-      </Paper>
-      <p className="demo__paragraph-description">{description}</p>
-    </Box>
-  );
-};
-const ChartResultArea = ({ data }) => {
-  const barColors = ['#1f77b4', '#ff7f0e', '#2ca02c', '#d62728'];
-  return (
-    <div className="chart__container">
-      <ResponsiveContainer width="90%" height={350}>
-        <BarChart data={data}>
-          {/* <CartesianGrid strokeDasharray="3 3" /> */}
-          <XAxis dataKey="name" tick={{ fill: 'white' }} stroke="white" />
-          <YAxis tick={{ fill: 'white' }} stroke="white" />
-          <Tooltip />
-          <Legend />
-          <Bar dataKey="count">
-            {data.map((entry, index) => (
-              <Cell key={`cell-${index * 10}`} fill={barColors[index]} />
-            ))}
-          </Bar>
-        </BarChart>
-      </ResponsiveContainer>
-    </div>
-  );
-};
-const renderSlideDemoByType = (slideContent, handleClickAnswer) => {
+) => {
   const { type: slideType, question, answers, description } = slideContent;
   const chartData = slideContent.answers.map((answer) => {
     const { text, status } = answer;
@@ -171,6 +31,16 @@ const renderSlideDemoByType = (slideContent, handleClickAnswer) => {
   });
   switch (slideType) {
     case 'multipleChoice':
+      if (isPresenting) {
+        return (
+          <Quiz
+            question={question}
+            answers={answers}
+            handleClickAnswer={handleClickAnswer}
+            isPresenting={isPresenting}
+          />
+        );
+      }
       return (
         <MultipleChoiceDemo
           question={question}
@@ -180,15 +50,35 @@ const renderSlideDemoByType = (slideContent, handleClickAnswer) => {
         />
       );
     case 'heading':
-      return <HeadingDemo heading={question} subheading={description} />;
+      return (
+        <HeadingDemo
+          heading={question}
+          subheading={description}
+          isPresenting={isPresenting}
+        />
+      );
     case 'paragraph':
-      return <ParagraphDemo heading={question} description={description} />;
+      return (
+        <ParagraphDemo
+          heading={question}
+          description={description}
+          isPresenting={isPresenting}
+        />
+      );
     default:
       return <div>Please select type of presentation</div>;
   }
 };
-const SlideDemo = ({ slides, setSlides, currentSlide }) => {
+const SlideDemo = ({
+  slides,
+  setSlides,
+  currentSlide,
+  isPresenting,
+  setCurrentSlide,
+  setIsPresenting,
+}) => {
   const slideContent = slides[currentSlide];
+  const totalSlide = slides.length;
   const handleClickAnswer = (idx) => {
     const { question, answers } = slideContent;
     const newAnswers = [...answers];
@@ -199,10 +89,54 @@ const SlideDemo = ({ slides, setSlides, currentSlide }) => {
       return newSlides;
     });
   };
+  const handleClickNavigate = (direction) => {
+    if (direction === 'next') {
+      if (currentSlide < totalSlide - 1) {
+        setCurrentSlide(currentSlide + 1);
+      }
+    }
+    if (direction === 'prev') {
+      if (currentSlide > 0) {
+        setCurrentSlide(currentSlide - 1);
+      }
+    }
+  };
   return (
     <div className="demo">
-      <Stack className="demo__container" direction="column" minHeight={500}>
-        {renderSlideDemoByType(slideContent, handleClickAnswer)}
+      <Stack
+        className={
+          isPresenting
+            ? 'demo__container demo__container--presenting'
+            : 'demo__container'
+        }
+        direction={isPresenting ? 'row' : 'column'}
+        minHeight={isPresenting ? '100vh' : 500}
+      >
+        {isPresenting && (
+          <ArrowBackIcon
+            sx={{
+              width: 50,
+              height: 50,
+              ':hover': {
+                cursor: 'pointer',
+              },
+            }}
+            onClick={() => handleClickNavigate('prev')}
+          />
+        )}
+        {renderSlideDemoByType(isPresenting, slideContent, handleClickAnswer)}
+        {isPresenting && (
+          <ArrowForwardIcon
+            sx={{
+              width: 50,
+              height: 50,
+              ':hover': {
+                cursor: 'pointer',
+              },
+            }}
+            onClick={() => handleClickNavigate('next')}
+          />
+        )}
       </Stack>
     </div>
   );

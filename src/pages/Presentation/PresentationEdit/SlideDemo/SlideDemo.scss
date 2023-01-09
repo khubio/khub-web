@@ -3,14 +3,26 @@
 
 .demo {
   // background-color: rgb(150, 248, 135);
-  height: 80vh;
+  // min-height: 80vh;
+  background-color: $light-blue--op;
+
+  &--presenting {
+    // min-width: 80vw;
+    // min-width: 100vw;
+    min-height: 100vh;
+    background-color: white;
+    background-color: $gray-dark !important;
+  }
+
   &__container {
     display: flex;
     align-items: center;
     justify-content: center;
-    border-radius: 1rem;
+    // border-radius: 1rem;
     box-shadow: $light-blue 0px 0px 0.7rem 0px;
-    background-color: $light-blue--op;
+    &--presenting {
+      width: 60vw !important;
+    }
   }
 
   &__question {
@@ -69,6 +81,10 @@
     font-weight: 900;
     max-width: 100%;
     min-height: max-content;
+    &--presenting {
+      width: 60vw;
+      min-height: 80vh;
+    }
     &--sub {
       @include flex(flex-start, center);
       font-size: 1.2rem;
@@ -77,6 +93,9 @@
     }
   }
   &__paragraph {
+    &--presenting {
+      // min-width: 80vw;
+    }
     &-description {
       @include flex(center, center);
       font-size: 1.1rem;

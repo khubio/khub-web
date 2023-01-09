@@ -1,3 +1,4 @@
+/* eslint-disable react/no-array-index-key */
 /* eslint-disable object-curly-newline */
 /* eslint-disable react/jsx-one-expression-per-line */
 import React from 'react';
@@ -42,7 +43,7 @@ const MultipleChoiceDetail = ({
       <Stack spacing={1} className="detail__answers">
         {answers.map(({ text, status, isDeleted }, idx) => (
           // eslint-disable-next-line react/jsx-no-useless-fragment
-          <>
+          <div key={idx}>
             {!isDeleted && (
               <>
                 <h4>Answer {idx + 1}</h4>
@@ -84,7 +85,7 @@ const MultipleChoiceDetail = ({
                 </div>
               </>
             )}
-          </>
+          </div>
         ))}
       </Stack>
       <Button

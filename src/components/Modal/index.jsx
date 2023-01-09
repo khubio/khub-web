@@ -14,7 +14,7 @@ const style = {
   left: '50%',
   transform: 'translate(-50%, -50%)',
   width: '40vw',
-  'min-height': '50vh',
+  minHeight: '50vh',
   bgcolor: 'background.paper',
   border: '2px solid #000',
   boxShadow: 24,

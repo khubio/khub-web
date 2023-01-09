@@ -7,6 +7,7 @@ import './Slides.scss';
 const Slides = ({ currentSlide, setCurrentSlide, slides, setSlides }) => {
   const addNewSlide = () => {
     const emptySlide = {
+      id: '',
       type: 'multipleChoice',
       question: 'Your question here',
       answers: [
@@ -47,6 +48,8 @@ const Slides = ({ currentSlide, setCurrentSlide, slides, setSlides }) => {
         </div>
         {slides.map((slide, idx) => (
           <Box
+            // eslint-disable-next-line react/no-array-index-key
+            key={idx}
             sx={{
               display: 'flex',
               flexWrap: 'wrap',
@@ -59,9 +62,6 @@ const Slides = ({ currentSlide, setCurrentSlide, slides, setSlides }) => {
           >
             <Paper
               className={idx === currentSlide ? 'slide slide--active' : 'slide'}
-              variant="outlined"
-              elevation={3}
-              rounded
               onClick={() => {
                 setCurrentSlide(idx);
               }}
