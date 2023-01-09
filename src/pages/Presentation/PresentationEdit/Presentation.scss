@@ -17,5 +17,12 @@
   &__logo {
     max-width: 10rem;
     max-height: 10rem;
+    margin-right: auto;
   }
+}
+
+// quick fix margin for the add new option button
+button.MuiButtonBase-root.MuiButton-root.MuiButton-contained.MuiButton-containedPrimary.MuiButton-sizeMedium.MuiButton-containedSizeMedium.MuiButton-root.MuiButton-contained.MuiButton-containedPrimary.MuiButton-sizeMedium.MuiButton-containedSizeMedium.css-16mv40t-MuiButtonBase-root-MuiButton-root {
+  background: #293299;
+  margin-top: 1rem;
 }

@@ -19,7 +19,22 @@
     font-weight: 900;
     border-radius: 2rem;
     max-width: 100%;
-    padding: 2rem 0 3rem 0;
+    padding: 0 0 1rem 0;
+  }
+
+  &__answers {
+    max-height: 50vh;
+    margin-top: 0.5rem;
+    overflow-y: scroll;
+    &-item {
+      @include flex(center, center);
+      margin-top: 1rem;
+      &-remove {
+        :hover {
+          cursor: pointer;
+        }
+      }
+    }
   }
 
   &__navigation {
@@ -29,4 +44,32 @@
       background-color: $light-blue !important;
     }
   }
+  &__type {
+    &-select {
+      // @include flex(center, center);
+      margin-bottom: 1rem;
+    }
+
+    &-header {
+    }
+    &-icon {
+      margin: 0 1rem;
+    }
+  }
+}
+
+div#demo-simple-select {
+  display: FLEX;
+  align-items: CENTER;
+}
+
+button.MuiButtonBase-root.MuiButton-root.MuiButton-contained.MuiButton-containedPrimary.MuiButton-sizeMedium.MuiButton-containedSizeMedium.MuiButton-root.MuiButton-contained.MuiButton-containedPrimary.MuiButton-sizeMedium.MuiButton-containedSizeMedium.css-1qj9tk5-MuiButtonBase-root-MuiButton-root {
+  margin-top: 1rem;
+}
+
+button.MuiButtonBase-root.MuiButton-root.MuiButton-contained.MuiButton-containedPrimary.MuiButton-sizeMedium.MuiButton-containedSizeMedium.MuiButton-root.MuiButton-contained.MuiButton-containedPrimary.MuiButton-sizeMedium.MuiButton-containedSizeMedium.css-16mv40t-MuiButtonBase-root-MuiButton-root {
+  margin-top: 1rem;
+}
+button.MuiButtonBase-root.MuiButton-root.MuiButton-contained.MuiButton-containedPrimary.MuiButton-sizeMedium.MuiButton-containedSizeMedium.MuiButton-root.MuiButton-contained.MuiButton-containedPrimary.MuiButton-sizeMedium.MuiButton-containedSizeMedium.presentation__btn-item--present.css-3lgpxb-MuiButtonBase-root-MuiButton-root {
+  background: #293299;
 }

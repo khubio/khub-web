@@ -1,7 +1,10 @@
-@import '../../assets/scss/mixins.scss';
-@import '../../assets/scss/variables.scss';
+@import '../../../../../assets/scss/mixins.scss';
+@import '../../../../../assets/scss/variables.scss';
 .quiz {
   background-color: $light-blue--op;
+  &--presenting {
+    min-width: 80vw;
+  }
   &__container {
     min-height: 100vh;
     background-color: $light-blue--op;
@@ -10,14 +13,26 @@
     justify-content: center;
   }
 
+  &__logo {
+    padding: 1rem 0 0 0;
+    align-self: start;
+    &-image {
+      max-width: 12rem;
+      max-height: 12rem;
+    }
+  }
+
   &__question {
     @include flex(center, center);
     font-size: 2rem;
     font-weight: 800;
-    border-radius: 2rem !important;
-    border: $dark-blue solid 1rem;
+    word-spacing: 0.2rem;
+    letter-spacing: 0.1rem;
     max-width: 70vw;
     text-align: center;
+    background-color: transparent;
+    color: white;
+    padding-bottom: 0.5rem;
   }
 
   &__answers {
@@ -25,9 +40,10 @@
   }
 
   &__answer {
-    @include flex(center, center);
+    @include flex(center, start);
     flex-wrap: wrap;
     font-size: 1.5rem;
+    padding: 0 3rem;
     border-radius: 3rem !important;
 
     &--0 {

@@ -3,7 +3,7 @@
 
 .slides {
   // background-color: beige;
-  height: 80vh;
+  max-height: 80vh;
   overflow: auto;
   &__add-btn {
     @include flex(center, center);

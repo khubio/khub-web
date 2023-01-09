@@ -1,51 +1,56 @@
+/* eslint-disable react/no-array-index-key */
 /* eslint-disable object-curly-newline */
 import React, { useState, useEffect } from 'react';
-import { Verified } from '@mui/icons-material';
+import { Favorite, Verified } from '@mui/icons-material';
 import { Box, Grid, Paper, Stack } from '@mui/material';
 import './Quiz.scss';
 import { Cell, Pie, PieChart } from 'recharts';
 
-const content = {
+const group1 = {
   question:
     'Trên đồng cỏ có 6 con bò, đếm đi đếm lại chỉ có 12 cái chân. Câu hỏi tại sao?',
-  options: [
+  answers: [
     {
-      content: 'Hanoi',
-      isCorrect: true,
+      text: 'Hanoi',
+      status: true,
     },
     {
-      content: 'Ho Chi Minh City',
-      isCorrect: false,
+      text: 'Hanoi 2',
+      status: true,
     },
     {
-      content: 'Da Nang',
-      isCorrect: false,
+      text: 'Ho Chi Minh City',
+      status: false,
     },
     {
-      content: 'Hue',
-      isCorrect: false,
+      text: 'Da Nang',
+      status: false,
+    },
+    {
+      text: 'Hue',
+      status: false,
     },
   ],
   expectedAnswerIdx: 0,
 };
-const content2 = {
+const group2 = {
   question: 'Ai dep trai hon anh Thi?',
-  options: [
+  answers: [
     {
-      content: 'BueDepTrai',
-      isCorrect: true,
+      text: 'BueDepTrai',
+      status: true,
     },
     {
-      content: 'NamDepTrai',
-      isCorrect: false,
+      text: 'NamDepTrai',
+      status: false,
     },
     {
-      content: 'Da Nang',
-      isCorrect: false,
+      text: 'Da Nang',
+      status: false,
     },
     {
-      content: 'Hue deo biet',
-      isCorrect: false,
+      text: 'Hue deo biet',
+      status: false,
     },
   ],
   expectedAnswerIdx: 1,
@@ -77,7 +82,7 @@ const renderCustomizedLabel = ({
     </text>
   );
 };
-const questionList = [content, content2, content, content2, content];
+const questionList = [group1, group2, group1, group2, group1];
 const getResultStatistic = (correctAnswerIdx, chosenAnswerIdx) => {
   let correct = 0;
   let wrong = 0;
@@ -93,12 +98,11 @@ const getResultStatistic = (correctAnswerIdx, chosenAnswerIdx) => {
     { key: 'Wrong', value: wrong },
   ];
 };
-const Quiz = () => {
+const Quiz = ({ question, answers, isPresenting }) => {
   const [chosenAnswerIdx, setChosenAnswerIdx] = useState([]);
   const [correctAnswerIdx, setCorrectAnswerIdx] = useState([]);
   const [currentQuestionIdx, setCurrentQuestionIdx] = useState(0);
   const [currentQuestion, setCurrentQuestion] = useState(questionList[0]);
-  const { question, options } = currentQuestion;
   const [isFinished, setIsFinished] = useState(false);
   const [resultStatistic, setResultStatistic] = useState([]);
   const [finalPoint, setFinalPoint] = useState(0);
@@ -127,35 +131,26 @@ const Quiz = () => {
   };
 
   return (
-    <div className="quiz">
+    <div className={isPresenting ? 'quiz--presenting' : 'quiz'}>
+      <div className="quiz__logo">
+        <img
+          className="quiz__logo-image"
+          src={`${process.env.PUBLIC_URL}/images/khub_icon_3.png`}
+          alt="logo"
+        />
+      </div>
       {!isFinished ? (
-        <Stack className="quiz__container" direction="column">
-          <Box
-            sx={{
-              display: 'flex',
-              justifyContent: 'center',
-              alignItems: 'center',
-              flexWrap: 'wrap',
-              '& > :not(style)': {
-                m: 6,
-                p: 2,
-                height: 180,
-                width: 1000,
-              },
-            }}
-          >
-            <Paper className="quiz__question" variant="outlined">
-              {question}
-            </Paper>
-          </Box>
+        <Stack className="quiz__container">
+          <div className="quiz__question">{question}</div>
 
           <Box sx={{ width: '100%' }}>
-            <Grid className="quiz__answers" container rowSpacing={2}>
-              {options.map(({ content: answer }, idx) => {
+            <Grid className="quiz__answers" container rowSpacing={0.5}>
+              {answers.map(({ text: answer }, idx) => {
                 return (
                   <Grid
+                    key={idx}
                     item
-                    xs={6}
+                    xs={12}
                     sx={{
                       display: 'flex',
                       justifyContent: 'center',
@@ -163,13 +158,13 @@ const Quiz = () => {
                       flexWrap: 'wrap',
                       '& > :not(style)': {
                         m: 2,
-                        width: 800,
-                        height: 170,
+                        width: '60%',
+                        minHeight: 100,
                       },
                     }}
                   >
                     <Paper
-                      className={`quiz__answer quiz__answer--${idx}`}
+                      className="quiz__answer quiz__answer"
                       variant="outlined"
                       onClick={() => handleClickAnswer(idx)}
                     >

@@ -4,11 +4,7 @@ import Register from '@pages/Authentication/Register';
 import ForgotPassword from '@pages/Authentication/ForgotPassword';
 import ResetPassword from '@pages/Authentication/ResetPassword';
 import PrivateLayout from '@layouts/PrivateLayout';
-import {
-  BrowserRouter as Router,
-  Routes,
-  Route,
-} from 'react-router-dom';
+import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
 import './App.scss';
 import GroupList from '@pages/Group/GroupList';
 import GroupDetails from '@pages/Group/GroupDetails';
@@ -22,7 +18,7 @@ import GroupJoin from '@pages/Group/GroupJoin';
 import NotFound from '@pages/NotFound';
 import PresentationEdit from '@pages/Presentation/PresentationEdit';
 import PresentationList from '@pages/Presentation/PresentationList';
-import Quiz from '@pages/Quiz';
+import Quiz from '@pages/Presentation/PresentationEdit/SlideDemo/Quiz';
 
 function App() {
   const dispatch = useDispatch();
@@ -31,7 +27,6 @@ function App() {
     dispatch(setUser(user));
   }, [dispatch, user]);
 
-  // return <Presentation />;
   return (
     <Router>
       <div className="App">

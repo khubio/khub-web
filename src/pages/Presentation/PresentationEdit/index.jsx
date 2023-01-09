@@ -1,99 +1,231 @@
-import { PlayArrow, Share } from '@mui/icons-material';
+import { PlayArrow, Share, Save } from '@mui/icons-material';
 import { Button, Grid } from '@mui/material';
-import { useState } from 'react';
-import './Presentation.scss';
+import { useCallback, useEffect, useState } from 'react';
+import { useParams } from 'react-router-dom';
 import BasicModal from '@components/Modal';
+import { FullScreen, useFullScreenHandle } from 'react-full-screen';
+import {
+  createSlides,
+  deleteSlides,
+  getPresentation,
+  updateSlides,
+} from '@services/presentation.service';
+import { useMounted } from 'src/hooks/useMounted';
 import SlideDemo from './SlideDemo';
-import SlideDetail from './SlideDetail';
 import Slides from './Slides';
+import SlideDetail from './SlideDetail';
+import './Presentation.scss';
+import Quiz from './SlideDemo/Quiz';
 
-const slideList = [
+const initialSlideList = [
   {
-    question: 'Cau hoi so 1?',
-    options: ['Hanoi', 'Ho Chi Minh City', 'Da Nang', 'Hue'],
-    expectedAnswerIdx: [1, 2],
-  },
-  {
-    question: 'Ai đẹp trai hơn?',
-    options: ['Nam', 'Tín', 'Nguyen', 'Huy'],
-    expectedAnswerIdx: [0],
-  },
-  {
-    question: 'Laptop nào tốt hơn?',
-    options: ['Macbook', 'Dell', 'Asus', 'HP'],
-    expectedAnswerIdx: [3],
+    id: '',
+    type: 'paragraph',
+    question: 'Welcome to KHUB',
+    description: 'Try your best experience with us',
+    answers: [],
   },
 ];
+// const initialSlideList = [
+//   {
+//     id: '',
+//     type: 'multipleChoice',
+//     question: 'Cau hoi so 1?',
+//     description: 'Sample question 1',
+//     answers: [
+//       {
+//         id: 1,
+//         text: 'A',
+//         status: false,
+//       },
+//       {
+//         id: 2,
+//         text: 'B',
+//         status: false,
+//       },
+//       {
+//         id: 3,
+//         text: 'C',
+//         status: true,
+//       },
+//       {
+//         id: 4,
+//         text: 'D',
+//         status: false,
+//       },
+//     ],
+//   },
+//   {
+//     id: '',
+//     type: 'multipleChoice',
+//     question: '1+1=?',
+//     description: 'Lolo 2',
+//     answers: [
+//       {
+//         id: 5,
+//         text: '2',
+//         status: false,
+//       },
+//       {
+//         id: 6,
+//         text: '3',
+//         status: true,
+//       },
+//       {
+//         id: 7,
+//         text: '4',
+//         status: false,
+//       },
+//       {
+//         id: 8,
+//         text: '5',
+//         status: false,
+//       },
+//     ],
+//   },
+//   {
+//     id: '',
+//     type: 'heading',
+//     question: 'Welcome to my presentation',
+//     description: 'Lolopops 2',
+//     answers: [],
+//   },
+//   {
+//     id: '',
+//     type: 'paragraph',
+//     question: 'This is a paragraph',
+//     description: 'Conchimnon 2',
+//     answers: [],
+//   },
+// ];
 const PresentationEdit = () => {
-  const [slides, setSlides] = useState(slideList);
+  const params = useParams();
+  const [slides, setSlides] = useState(initialSlideList);
   const [currentSlide, setCurrentSlide] = useState(0);
   const [open, setOpen] = useState(false);
+  const [isPresenting, setIsPresenting] = useState(false);
+  const [loading, setLoading] = useState(false);
+  const { isMounted } = useMounted();
+  const fetch = useCallback(() => {
+    getPresentation(params.id).then((data) => setSlides(data.slides));
+  }, [isMounted]);
+
+  useEffect(() => {
+    fetch();
+  }, [fetch]);
+
+  const handleFullScreen = useFullScreenHandle();
   const handleOpen = () => setOpen(true);
   const handleClose = () => setOpen(false);
+  const handlePresent = () => {
+    handleFullScreen.enter();
+    setIsPresenting(true);
+  };
   const totalSlides = slides.length;
+  const handleOnSavePresentation = async () => {
+    setLoading(true);
+    await createSlides(
+      params.id,
+      slides.filter((slide) => slide.id === '') || [],
+    );
+    await deleteSlides(
+      params.id,
+      slides.filter((slide) => slide.isDeleted).map((slide) => slide.id) || [],
+    );
+    await updateSlides(
+      params.id,
+      slides.filter((slide) => slide.isUpdated && !slide.isDeleted) || [],
+    );
+    setLoading(false);
+  };
   return (
-    <div>
-      <div className="presentation__btn">
-        <img
-          className="presentation__logo"
-          src={`${process.env.PUBLIC_URL}/images/khub_icon_3.png`}
-          alt="logo"
+    <div className="presentation">
+      {isPresenting ? (
+        <SlideDemo
+          isPresenting={isPresenting}
+          setIsPresenting={setIsPresenting}
+          content={slides[currentSlide]}
+          slides={slides.filter((slide) => !slide.isDeleted)}
+          setSlides={setSlides}
+          currentSlide={currentSlide}
+          setCurrentSlide={setCurrentSlide}
         />
-        <Button
-          className="presentation__btn-item--share"
-          color="secondary"
-          variant="contained"
-          onClick={handleOpen}
-          startIcon={<Share />}
-        >
-          Share
-        </Button>
-        <BasicModal
-          open={open}
-          handleClose={handleClose}
-          aria-labelledby="modal-modal-title"
-          aria-describedby="modal-modal-description"
-        />
+      ) : (
+        <>
+          <div className="presentation__btn">
+            <img
+              className="presentation__logo"
+              src={`${process.env.PUBLIC_URL}/images/khub_icon_3.png`}
+              alt="logo"
+            />
+            <Button
+              className="presentation__btn-item--share"
+              color="secondary"
+              variant="contained"
+              onClick={handleOpen}
+              startIcon={<Share />}
+            >
+              Share
+            </Button>
+            <BasicModal
+              open={open}
+              handleClose={handleClose}
+              aria-labelledby="modal-modal-title"
+              aria-describedby="modal-modal-description"
+            />
 
-        <Button
-          className="presentation__btn-item--present"
-          color="primary"
-          variant="contained"
-          startIcon={<PlayArrow />}
-        >
-          Present
-        </Button>
-      </div>
-      <div className="presentation__container">
-        <Grid container>
-          <Grid item xs={2}>
-            <Slides
-              currentSlide={currentSlide}
-              slides={slides}
-              setCurrentSlide={setCurrentSlide}
-              setSlides={setSlides}
-            />
-          </Grid>
-          <Grid item xs={7}>
-            <SlideDemo
-              content={slides[currentSlide]}
-              slides={slides}
-              setSlides={setSlides}
-              currentSlide={currentSlide}
-              answerList={slides[currentSlide].expectedAnswerIdx}
-            />
-          </Grid>
-          <Grid item xs={3}>
-            <SlideDetail
-              setSlides={setSlides}
-              content={slides[currentSlide]}
-              setCurrentSlide={setCurrentSlide}
-              currentSlide={currentSlide}
-              totalSlides={totalSlides}
-            />
-          </Grid>
-        </Grid>
-      </div>
+            <Button
+              className="presentation__btn-item--present"
+              color="primary"
+              variant="contained"
+              startIcon={<PlayArrow />}
+              onClick={handlePresent}
+            >
+              Present
+            </Button>
+            <Button
+              className="presentation__btn-item--present"
+              color="success"
+              variant="contained"
+              startIcon={<Save />}
+              onClick={handleOnSavePresentation}
+            >
+              {loading ? 'Saving...' : 'Save'}
+            </Button>
+          </div>
+          <div className="presentation__container">
+            <Grid container>
+              <Grid item xs={2}>
+                <Slides
+                  currentSlide={currentSlide}
+                  slides={slides.filter((slide) => !slide.isDeleted)}
+                  setCurrentSlide={setCurrentSlide}
+                  setSlides={setSlides}
+                />
+              </Grid>
+              <Grid item xs={isPresenting ? 12 : 7}>
+                <SlideDemo
+                  isPresenting={isPresenting}
+                  setIsPresenting={setIsPresenting}
+                  content={slides[currentSlide]}
+                  slides={slides.filter((slide) => !slide.isDeleted)}
+                  setSlides={setSlides}
+                  currentSlide={currentSlide}
+                />
+              </Grid>
+              <Grid item xs={3}>
+                <SlideDetail
+                  setSlides={setSlides}
+                  content={slides[currentSlide]}
+                  setCurrentSlide={setCurrentSlide}
+                  currentSlide={currentSlide}
+                  totalSlides={totalSlides}
+                />
+              </Grid>
+            </Grid>
+          </div>
+        </>
+      )}
     </div>
   );
 };

@@ -48,8 +48,11 @@
     &-copy {
       display: flex;
       width: 100%;
-      justify-self: end;
-      padding: 0.5rem;
+      justify-content: flex-start;
+      align-items: center;
+      height: 2rem;
+      padding: 0.5rem 0;
+      color: rgb(31, 205, 31);
     }
   }
 }
