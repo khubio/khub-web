@@ -161,7 +161,7 @@ const ChartResultArea = ({ data }) => {
   );
 };
 const renderSlideDemoByType = (slideContent, handleClickAnswer) => {
-  const { slideType, question, answers, description } = slideContent;
+  const { type: slideType, question, answers, description } = slideContent;
   const chartData = slideContent.answers.map((answer) => {
     const { text, status } = answer;
     return {

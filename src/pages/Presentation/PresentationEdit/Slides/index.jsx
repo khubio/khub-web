@@ -7,7 +7,7 @@ import './Slides.scss';
 const Slides = ({ currentSlide, setCurrentSlide, slides, setSlides }) => {
   const addNewSlide = () => {
     const emptySlide = {
-      slideType: 'multipleChoice',
+      type: 'multipleChoice',
       question: 'Your question here',
       answers: [
         {

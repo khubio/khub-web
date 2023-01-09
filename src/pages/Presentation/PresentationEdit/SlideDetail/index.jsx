@@ -30,7 +30,7 @@ const SlideDetail = ({
   setSlides,
 }) => {
   const [currentContent, setCurrentContent] = useState(content);
-  const { slideType: slideTypeProp, question, answers, description } = content;
+  const { type: slideTypeProp, question, answers, description } = content;
   const goToNextSlide = () => {
     setCurrentSlide((prev) => {
       if (prev === totalSlides - 1) return totalSlides - 1;
@@ -91,7 +91,7 @@ const SlideDetail = ({
   const handleSlideTypeChange = (event) => {
     setSlides((prev) => {
       const newSlides = [...prev];
-      newSlides[currentSlide].slideType = event.target.value;
+      newSlides[currentSlide].type = event.target.value;
       newSlides[currentSlide].isUpdated = true;
       return newSlides;
     });
