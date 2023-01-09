@@ -3,14 +3,14 @@
 .quiz {
   background-color: $light-blue--op;
   &--presenting {
-    min-width: 80vw;
+    min-width: 90vw;
   }
   &__container {
     min-height: 100vh;
     background-color: $light-blue--op;
     display: flex;
     align-items: center;
-    justify-content: center;
+    justify-content: flex-start;
   }
 
   &__logo {
@@ -28,7 +28,7 @@
     font-weight: 800;
     word-spacing: 0.2rem;
     letter-spacing: 0.1rem;
-    max-width: 70vw;
+    // max-width: 70vw;
     text-align: center;
     background-color: transparent;
     color: white;

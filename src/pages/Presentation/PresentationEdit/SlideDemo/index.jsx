@@ -75,7 +75,6 @@ const SlideDemo = ({
   currentSlide,
   isPresenting,
   setCurrentSlide,
-  setIsPresenting,
 }) => {
   const slideContent = slides[currentSlide];
   const totalSlide = slides.length;
