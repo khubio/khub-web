@@ -22,6 +22,15 @@
     }
   }
 
+  &__logo {
+    padding: 1rem 0 0 0;
+    align-self: start;
+    &-image {
+      max-width: 12rem;
+      max-height: 12rem;
+    }
+  }
+
   &__question {
     @include flex(center, center);
     font-size: 2rem;
@@ -41,8 +50,10 @@
 
   &__answer {
     @include flex(center, start);
+    @include flex(center, start);
     flex-wrap: wrap;
     font-size: 1.5rem;
+    padding: 0 3rem;
     padding: 0 3rem;
     border-radius: 3rem !important;
 
