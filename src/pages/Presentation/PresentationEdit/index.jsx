@@ -10,6 +10,9 @@ import {
   deleteSlides,
   getPresentation,
   updateSlides,
+  createAnswers,
+  deleteAnswers,
+  updateAnswers,
 } from '@services/presentation.service';
 import { useMounted } from 'src/hooks/useMounted';
 import SlideDemo from './SlideDemo';
@@ -27,78 +30,6 @@ const initialSlideList = [
     answers: [],
   },
 ];
-// const initialSlideList = [
-//   {
-//     id: '',
-//     type: 'multipleChoice',
-//     question: 'Cau hoi so 1?',
-//     description: 'Sample question 1',
-//     answers: [
-//       {
-//         id: 1,
-//         text: 'A',
-//         status: false,
-//       },
-//       {
-//         id: 2,
-//         text: 'B',
-//         status: false,
-//       },
-//       {
-//         id: 3,
-//         text: 'C',
-//         status: true,
-//       },
-//       {
-//         id: 4,
-//         text: 'D',
-//         status: false,
-//       },
-//     ],
-//   },
-//   {
-//     id: '',
-//     type: 'multipleChoice',
-//     question: '1+1=?',
-//     description: 'Lolo 2',
-//     answers: [
-//       {
-//         id: 5,
-//         text: '2',
-//         status: false,
-//       },
-//       {
-//         id: 6,
-//         text: '3',
-//         status: true,
-//       },
-//       {
-//         id: 7,
-//         text: '4',
-//         status: false,
-//       },
-//       {
-//         id: 8,
-//         text: '5',
-//         status: false,
-//       },
-//     ],
-//   },
-//   {
-//     id: '',
-//     type: 'heading',
-//     question: 'Welcome to my presentation',
-//     description: 'Lolopops 2',
-//     answers: [],
-//   },
-//   {
-//     id: '',
-//     type: 'paragraph',
-//     question: 'This is a paragraph',
-//     description: 'Conchimnon 2',
-//     answers: [],
-//   },
-// ];
 const PresentationEdit = () => {
   const params = useParams();
   const [slides, setSlides] = useState(initialSlideList);
@@ -140,6 +71,11 @@ const PresentationEdit = () => {
       params.id,
       slides.filter((slide) => slide.isUpdated && slide.id !== '') || [],
     );
+
+    const updateAnswersSlides = slides.filter((slide) => slide.id !== '' && slide.isAnswersUpdated);
+    await Promise.all(updateAnswersSlides.map((slide) => createAnswers(params.id, slide.id, slide.answers.filter((answer) => answer.id === '' && !answer.isDeleted))));
+    await Promise.all(updateAnswersSlides.map((slide) => deleteAnswers(params.id, slide.id, slide.answers.filter((answer) => answer.id !== '' && answer.isDeleted).map((answer) => answer.id))));
+    await Promise.all(updateAnswersSlides.map((slide) => updateAnswers(params.id, slide.id, slide.answers.filter((answer) => answer.id !== '' && !answer.isDeleted && answer.isUpdated))));
     setLoading(false);
   };
 

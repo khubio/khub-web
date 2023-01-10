@@ -17,6 +17,6 @@ export const createSlides = (presentationId, slides) => axiosConfig.post(`/prese
 export const deleteSlides = (presentationId, slides) => axiosConfig.delete(`/presentations/${presentationId}/slides`, { data: { slides } });
 export const updateSlides = (presentationId, slides) => axiosConfig.put(`/presentations/${presentationId}/slides`, { slides });
 
-export const createAnswers = (presentationId, slideId, answer) => axiosConfig.post(`/presentations/${presentationId}/slides/${slideId}/answers`, answer);
-export const deleteAnswers = (presentationId, slideId, answerId) => axiosConfig.delete(`/presentations/${presentationId}/slides/${slideId}/answers`, answerId);
-export const updateAnswers = (presentationId, slideId, answer) => axiosConfig.post(`/presentations/${presentationId}/slides/${slideId}/answers`, answer);
+export const createAnswers = (presentationId, slideId, answers) => axiosConfig.post(`/presentations/${presentationId}/slides/${slideId}/answers`, { answers });
+export const deleteAnswers = (presentationId, slideId, answers) => axiosConfig.delete(`/presentations/${presentationId}/slides/${slideId}/answers`, { data: { answers } });
+export const updateAnswers = (presentationId, slideId, answers) => axiosConfig.put(`/presentations/${presentationId}/slides/${slideId}/answers`, { answers });

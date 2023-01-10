@@ -34,7 +34,7 @@ const Slides = ({
 
   const deleteSlide = (idx) => {
     const newSlides = [...slides];
-    if (newSlides[idx].id) {
+    if (newSlides[idx].id !== '') {
       setSlidesDeletedId((prev) => prev.concat(newSlides[idx].id));
     }
     newSlides.splice(idx, 1);
@@ -48,28 +48,7 @@ const Slides = ({
       id: '',
       type: 'multipleChoice',
       question: 'Your question here',
-      answers: [
-        {
-          id: Date.now() + 1,
-          text: 'Option 1',
-          status: false,
-        },
-        {
-          id: Date.now() + 2,
-          text: 'Option 2',
-          status: false,
-        },
-        {
-          id: Date.now() + 3,
-          text: 'Option 3',
-          status: false,
-        },
-        {
-          id: Date.now() + 4,
-          text: 'Option 4',
-          status: false,
-        },
-      ],
+      answers: [],
       key: slides.length,
     };
     const newSlide = [...slides, emptySlide];
