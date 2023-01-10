@@ -170,7 +170,7 @@ const GroupDetails = () => {
 
   const colors = tokens(theme.palette.mode);
   const columns = [
-    { field: 'id', headerName: 'User Id', flex: 1 },
+    { field: 'id', headerName: 'User Id', hide: true },
     {
       field: 'lastName',
       headerName: 'Last Name',

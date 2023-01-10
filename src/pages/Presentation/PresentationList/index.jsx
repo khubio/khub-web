@@ -160,10 +160,11 @@ const PresentationList = () => {
     if (newPresentation.trim() === '') {
       return;
     }
-    await createPresentation(newPresentation);
+    const presentation = await createPresentation(newPresentation);
     setOpen(false);
     setNewPresentation('');
     fetch();
+    navigate(`/presentations/${presentation.id}/edit`);
   };
 
   const handleChange = (event) => {
