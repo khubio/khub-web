@@ -22,7 +22,9 @@ import Quiz from '@pages/Presentation/PresentationEdit/SlideDemo/Quiz';
 import PresentationViewerScreen from '@pages/Presentation/PresentationViewerScreen';
 import PresentationEdit from '@pages/Presentation/PresentationEdit';
 import ChatBoxWindow from '@pages/Presentation/PresentationViewerScreen/QuestionChatBoxWindow';
+import socketIO from 'socket.io-client';
 
+const socket = socketIO.connect('http://localhost:3000');
 const initialSlideList = [
   {
     id: '',
@@ -103,106 +105,116 @@ function App() {
     dispatch(setUser(user));
   }, [dispatch, user]);
 
-  return <PresentationViewerScreen slide={initialSlideList[1]} />;
-  // return <PresentationEdit />;
   // return (
-  //   <Router>
-  //     <div className="App">
-  //       <Routes>
-  //         <Route path="auth">
-  //           <Route
-  //             path="login"
-  //             element={(
-  //               <PrivateLayout>
-  //                 <Login />
-  //               </PrivateLayout>
-  //             )}
-  //           />
-  //           <Route path="sign-up" element={<Register />} />
-  //           <Route path="forgot-password" element={<ForgotPassword />} />
-  //           <Route path="reset-password" element={<ResetPassword />} />
-  //           <Route path="verify-email" element={<VerifyEmail />} />
-  //         </Route>
-  //         <Route
-  //           path="/"
-  //           element={(
-  //             <PrivateLayout>
-  //               <GroupList />
-  //             </PrivateLayout>
-  //           )}
-  //         />
-
-  //         <Route path="profile">
-  //           <Route
-  //             index
-  //             element={(
-  //               <PrivateLayout>
-  //                 <Profile />
-  //               </PrivateLayout>
-  //             )}
-  //           />
-  //           <Route
-  //             path="change-password"
-  //             element={(
-  //               <PrivateLayout>
-  //                 <ChangePassword />
-  //               </PrivateLayout>
-  //             )}
-  //           />
-  //         </Route>
-
-  //         <Route path="groups">
-  //           <Route
-  //             index
-  //             element={(
-  //               <PrivateLayout>
-  //                 <GroupList />
-  //               </PrivateLayout>
-  //             )}
-  //           />
-  //           <Route path=":id">
-  //             <Route
-  //               index
-  //               element={(
-  //                 <PrivateLayout>
-  //                   <GroupDetails />
-  //                 </PrivateLayout>
-  //               )}
-  //             />
-  //             <Route
-  //               path="join"
-  //               element={(
-  //                 <PrivateLayout>
-  //                   <GroupJoin />
-  //                 </PrivateLayout>
-  //               )}
-  //             />
-  //           </Route>
-  //         </Route>
-  //         <Route path="presentations">
-  //           <Route
-  //             index
-  //             element={(
-  //               <PrivateLayout>
-  //                 <PresentationList />
-  //               </PrivateLayout>
-  //             )}
-  //           />
-  //           <Route
-  //             path=":id/edit"
-  //             element={(
-  //               <PrivateLayout>
-  //                 <PresentationEdit />
-  //               </PrivateLayout>
-  //             )}
-  //           />
-  //         </Route>
-  //         <Route path="not-found" element={<NotFound />} />
-  //         <Route path="*" element={<NotFound />} />
-  //       </Routes>
-  //     </div>
-  //   </Router>
+  //   <PresentationViewerScreen slide={initialSlideList[1]} socket={socket} />
   // );
+  return (
+    <Router>
+      <div className="App">
+        <Routes>
+          <Route
+            path="presentation-sharing"
+            element={(
+              <PresentationViewerScreen
+                slide={initialSlideList[1]}
+                socket={socket}
+              />
+            )}
+          />
+          <Route path="auth">
+            <Route
+              path="login"
+              element={(
+                <PrivateLayout>
+                  <Login />
+                </PrivateLayout>
+              )}
+            />
+            <Route path="sign-up" element={<Register />} />
+            <Route path="forgot-password" element={<ForgotPassword />} />
+            <Route path="reset-password" element={<ResetPassword />} />
+            <Route path="verify-email" element={<VerifyEmail />} />
+          </Route>
+          <Route
+            path="/"
+            element={(
+              <PrivateLayout>
+                <GroupList />
+              </PrivateLayout>
+            )}
+          />
+
+          <Route path="profile">
+            <Route
+              index
+              element={(
+                <PrivateLayout>
+                  <Profile />
+                </PrivateLayout>
+              )}
+            />
+            <Route
+              path="change-password"
+              element={(
+                <PrivateLayout>
+                  <ChangePassword />
+                </PrivateLayout>
+              )}
+            />
+          </Route>
+
+          <Route path="groups">
+            <Route
+              index
+              element={(
+                <PrivateLayout>
+                  <GroupList />
+                </PrivateLayout>
+              )}
+            />
+            <Route path=":id">
+              <Route
+                index
+                element={(
+                  <PrivateLayout>
+                    <GroupDetails />
+                  </PrivateLayout>
+                )}
+              />
+              <Route
+                path="join"
+                element={(
+                  <PrivateLayout>
+                    <GroupJoin />
+                  </PrivateLayout>
+                )}
+              />
+            </Route>
+          </Route>
+          <Route path="presentations">
+            <Route
+              index
+              element={(
+                <PrivateLayout>
+                  <PresentationList />
+                </PrivateLayout>
+              )}
+            />
+            <Route
+              path=":id/edit"
+              element={(
+                <PrivateLayout>
+                  <PresentationEdit />
+                </PrivateLayout>
+              )}
+            />
+          </Route>
+          <Route path="not-found" element={<NotFound />} />
+          <Route path="*" element={<NotFound />} />
+        </Routes>
+      </div>
+    </Router>
+  );
 }
 
 export default App;

@@ -1,3 +1,4 @@
+/* eslint-disable object-curly-newline */
 import React, { useEffect, useState } from 'react';
 import { ChatFeed, Message } from 'react-chat-ui';
 import ChatBox, { ChatFrame } from 'react-chat-plugin';
@@ -6,7 +7,9 @@ import { PsychologyAlt, QuestionAnswer } from '@mui/icons-material';
 import QuestionBox from '../QuestionBox';
 import './QuestionChatBoxWindow.scss';
 
-const QuestionChatBoxWindow = () => {
+const QuestionChatBoxWindow = ({ socket }) => {
+  const profile = JSON.parse(localStorage.getItem('profile'));
+  const { firstName: username, id: profileId } = profile;
   const [openChat, setOpenChat] = useState(false);
   const [openQuestion, setOpenQuestion] = useState(false);
   const [messages, setMessages] = useState([
@@ -36,18 +39,6 @@ const QuestionChatBoxWindow = () => {
       text: 'Show two buttons',
       type: 'text',
       timestamp: 1578366425250,
-      buttons: [
-        {
-          type: 'URL',
-          title: 'Create a question poll',
-          payload: 'http://www.yahoo.com',
-        },
-        {
-          type: 'URL',
-          title: 'Vote for a question poll',
-          payload: 'http://www.example.com',
-        },
-      ],
     },
     {
       author: {
@@ -62,21 +53,33 @@ const QuestionChatBoxWindow = () => {
       hasError: true,
     },
   ]);
-
+  useEffect(() => {
+    socket.on('messageResponse', (data) => {
+      const { author, text, type, timestamp, socketID } = data;
+      const renderData = { ...data };
+      if (author.id === profileId) {
+        renderData.author.username = 'me';
+        renderData.author.id = 1;
+      }
+      console.log(renderData);
+      setMessages([...messages, data]);
+    });
+  }, [socket, messages]);
   const handleOnSendMessage = (message) => {
-    setMessages(
-      messages.concat({
+    if (message.trim()) {
+      socket.emit('message', {
         author: {
-          username: 'me',
-          id: 1,
+          username: username || 'Anonymous',
+          id: profileId || 1,
           avatarUrl:
             'https://cdn.iconscout.com/icon/free/png-256/avatar-370-456322.png',
         },
         text: message,
-        timestamp: +new Date(),
         type: 'text',
-      }),
-    );
+        timestamp: Date.now(),
+        socketID: socket.id,
+      });
+    }
   };
 
   return (
