@@ -75,8 +75,8 @@ const MenuAction = ({ menuItemTop, menuItemDown }) => {
             </MenuItem>
           );
         })}
-        {menuItemDown.length > 0 && <Divider />}
-        {menuItemDown.map(({
+        {menuItemDown && menuItemDown.length > 0 && <Divider />}
+        {menuItemDown && menuItemDown.map(({
           text, onClick, icon, key,
         }) => {
           return (

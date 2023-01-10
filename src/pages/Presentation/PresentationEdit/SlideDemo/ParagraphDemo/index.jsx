@@ -14,7 +14,7 @@ const ParagraphDemo = ({ heading, description, isPresenting }) => {
           mx: 8,
           p: 4,
           textAlign: 'center',
-          'min-height': 100,
+          minHeight: 100,
           maxWidth: '100%',
         },
       }}

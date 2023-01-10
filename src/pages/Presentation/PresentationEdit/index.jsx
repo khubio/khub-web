@@ -4,6 +4,7 @@ import { useCallback, useEffect, useState } from 'react';
 import { useParams } from 'react-router-dom';
 import BasicModal from '@components/Modal';
 import { FullScreen, useFullScreenHandle } from 'react-full-screen';
+import { io, Socket } from 'socket.io-client';
 import {
   createSlides,
   deleteSlides,
@@ -107,7 +108,9 @@ const PresentationEdit = () => {
   const [loading, setLoading] = useState(false);
   const { isMounted } = useMounted();
   const fetch = useCallback(() => {
-    getPresentation(params.id).then((data) => setSlides(data.slides));
+    getPresentation(params.id).then((data) => setSlides(data.slides.map((slide, index) => {
+      return { ...slide, key: index };
+    })));
   }, [isMounted]);
 
   useEffect(() => {
@@ -123,6 +126,7 @@ const PresentationEdit = () => {
   };
   const totalSlides = slides.length;
   const handleOnSavePresentation = async () => {
+    console.log(slides.filter((slide) => slide.id === ''));
     setLoading(true);
     await createSlides(
       params.id,
@@ -132,12 +136,14 @@ const PresentationEdit = () => {
       params.id,
       slides.filter((slide) => slide.isDeleted).map((slide) => slide.id) || [],
     );
+    console.log(slides.filter((slide) => slide.isUpdated && !slide.isDeleted && slide.id !== ''));
     await updateSlides(
       params.id,
-      slides.filter((slide) => slide.isUpdated && !slide.isDeleted) || [],
+      slides.filter((slide) => slide.isUpdated && !slide.isDeleted && slide.id !== '') || [],
     );
     setLoading(false);
   };
+
   return (
     <div className="presentation">
       {isPresenting ? (
@@ -145,7 +151,7 @@ const PresentationEdit = () => {
           isPresenting={isPresenting}
           setIsPresenting={setIsPresenting}
           content={slides[currentSlide]}
-          slides={slides.filter((slide) => !slide.isDeleted)}
+          slides={slides}
           setSlides={setSlides}
           currentSlide={currentSlide}
           setCurrentSlide={setCurrentSlide}
@@ -198,7 +204,7 @@ const PresentationEdit = () => {
               <Grid item xs={2}>
                 <Slides
                   currentSlide={currentSlide}
-                  slides={slides.filter((slide) => !slide.isDeleted)}
+                  slides={slides}
                   setCurrentSlide={setCurrentSlide}
                   setSlides={setSlides}
                 />
@@ -216,7 +222,7 @@ const PresentationEdit = () => {
               <Grid item xs={3}>
                 <SlideDetail
                   setSlides={setSlides}
-                  content={slides[currentSlide]}
+                  content={slides.filter((slide) => !slide.isDeleted)[currentSlide]}
                   setCurrentSlide={setCurrentSlide}
                   currentSlide={currentSlide}
                   totalSlides={totalSlides}

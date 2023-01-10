@@ -13,7 +13,7 @@ const HeadingDemo = ({ heading, subheading, isPresenting }) => {
           mx: 8,
           p: 3,
           textAlign: 'center',
-          'min-height': 128,
+          minHeight: 128,
           backgroundColor: 'transparent',
         },
       }}
