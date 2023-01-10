@@ -21,6 +21,7 @@ import PresentationList from '@pages/Presentation/PresentationList';
 import Quiz from '@pages/Presentation/PresentationEdit/SlideDemo/Quiz';
 import PresentationViewerScreen from '@pages/Presentation/PresentationViewerScreen';
 import PresentationEdit from '@pages/Presentation/PresentationEdit';
+import ChatBoxWindow from '@pages/Presentation/PresentationViewerScreen/QuestionChatBoxWindow';
 
 const initialSlideList = [
   {
@@ -102,8 +103,8 @@ function App() {
     dispatch(setUser(user));
   }, [dispatch, user]);
 
-  // return <PresentationViewerScreen slide={initialSlideList[0]} />;
-  return <PresentationEdit />;
+  return <PresentationViewerScreen slide={initialSlideList[1]} />;
+  // return <PresentationEdit />;
   // return (
   //   <Router>
   //     <div className="App">

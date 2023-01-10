@@ -36,15 +36,16 @@ const MultipleChoiceDemo = ({
   answers,
   handleClickAnswer,
   chartData,
+  isPresenting,
 }) => {
   return (
-    <>
+    <div style={{ width: '100%' }}>
       <Box
         sx={{
           display: 'flex',
           justifyContent: 'center',
           alignItems: 'center',
-          flexDirection: 'column',
+          flexDirection: 'row',
           flexWrap: 'wrap',
           '& > :not(style)': {
             m: 8,
@@ -60,7 +61,7 @@ const MultipleChoiceDemo = ({
       <Box sx={{ width: '100%' }}>
         <ChartResultArea data={chartData} />
       </Box>
-    </>
+    </div>
   );
 };
 

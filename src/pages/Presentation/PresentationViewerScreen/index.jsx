@@ -1,10 +1,12 @@
 /* eslint-disable react/jsx-curly-newline */
 /* eslint-disable implicit-arrow-linebreak */
 /* eslint-disable object-curly-newline */
+import { QuestionAnswer } from '@mui/icons-material';
 import { Stack } from '@mui/material';
 import HeadingDemo from '../PresentationEdit/SlideDemo/HeadingDemo';
 import ParagraphDemo from '../PresentationEdit/SlideDemo/ParagraphDemo';
 import Quiz from '../PresentationEdit/SlideDemo/Quiz';
+import QuestionChatBoxWindow from './QuestionChatBoxWindow';
 import './PresentationViewerScreen.scss';
 
 const renderSlideDemoByType = (slideContent, handleClickAnswer) => {
@@ -37,10 +39,13 @@ const PresentationViewerScreen = ({ slide }) => {
     <div className="demo">
       <Stack
         className="demo__container demo__container--presenting"
-        direction="row"
+        direction="column"
         minHeight="100vh"
       >
         {renderSlideDemoByType(slide, handleClickAnswer)}
+        <div>
+          <QuestionChatBoxWindow />
+        </div>
       </Stack>
     </div>
   );

@@ -31,22 +31,13 @@ const renderSlideDemoByType = (
   });
   switch (slideType) {
     case 'multipleChoice':
-      if (isPresenting) {
-        return (
-          <Quiz
-            question={question}
-            answers={answers}
-            handleClickAnswer={handleClickAnswer}
-            isPresenting={isPresenting}
-          />
-        );
-      }
       return (
         <MultipleChoiceDemo
           question={question}
           answers={answers}
           handleClickAnswer={handleClickAnswer}
           chartData={chartData}
+          isPresenting={isPresenting}
         />
       );
     case 'heading':
