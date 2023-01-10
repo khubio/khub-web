@@ -102,6 +102,7 @@ const initialSlideList = [
 const PresentationEdit = () => {
   const params = useParams();
   const [slides, setSlides] = useState(initialSlideList);
+  const [slidesDeleteId, setSlidesDeleteId] = useState([]);
   const [currentSlide, setCurrentSlide] = useState(0);
   const [open, setOpen] = useState(false);
   const [isPresenting, setIsPresenting] = useState(false);
@@ -126,7 +127,6 @@ const PresentationEdit = () => {
   };
   const totalSlides = slides.length;
   const handleOnSavePresentation = async () => {
-    console.log(slides.filter((slide) => slide.id === ''));
     setLoading(true);
     await createSlides(
       params.id,
@@ -134,12 +134,11 @@ const PresentationEdit = () => {
     );
     await deleteSlides(
       params.id,
-      slides.filter((slide) => slide.isDeleted).map((slide) => slide.id) || [],
+      slidesDeleteId,
     );
-    console.log(slides.filter((slide) => slide.isUpdated && !slide.isDeleted && slide.id !== ''));
     await updateSlides(
       params.id,
-      slides.filter((slide) => slide.isUpdated && !slide.isDeleted && slide.id !== '') || [],
+      slides.filter((slide) => slide.isUpdated && slide.id !== '') || [],
     );
     setLoading(false);
   };
@@ -150,7 +149,6 @@ const PresentationEdit = () => {
         <SlideDemo
           isPresenting={isPresenting}
           setIsPresenting={setIsPresenting}
-          content={slides[currentSlide]}
           slides={slides}
           setSlides={setSlides}
           currentSlide={currentSlide}
@@ -207,6 +205,7 @@ const PresentationEdit = () => {
                   slides={slides}
                   setCurrentSlide={setCurrentSlide}
                   setSlides={setSlides}
+                  setSlidesDeletedId={setSlidesDeleteId}
                 />
               </Grid>
               <Grid item xs={isPresenting ? 12 : 7}>
@@ -214,7 +213,7 @@ const PresentationEdit = () => {
                   isPresenting={isPresenting}
                   setIsPresenting={setIsPresenting}
                   content={slides[currentSlide]}
-                  slides={slides.filter((slide) => !slide.isDeleted)}
+                  slides={slides}
                   setSlides={setSlides}
                   currentSlide={currentSlide}
                 />
@@ -222,7 +221,7 @@ const PresentationEdit = () => {
               <Grid item xs={3}>
                 <SlideDetail
                   setSlides={setSlides}
-                  content={slides.filter((slide) => !slide.isDeleted)[currentSlide]}
+                  content={slides[currentSlide]}
                   setCurrentSlide={setCurrentSlide}
                   currentSlide={currentSlide}
                   totalSlides={totalSlides}

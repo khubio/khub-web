@@ -6,10 +6,16 @@ import Menu from '@mui/material/Menu';
 import MenuItem from '@mui/material/MenuItem';
 import './Slides.scss';
 
-const Slides = ({ currentSlide, setCurrentSlide, slides, setSlides }) => {
+const Slides = ({
+  currentSlide,
+  setCurrentSlide,
+  slides,
+  setSlides,
+  setSlidesDeletedId,
+}) => {
   const [contextMenu, setContextMenu] = useState(null);
   const [slideContext, setSlideContext] = useState(null);
-  const handleContextMenu = (event, key) => {
+  const handleContextMenu = (event, idx) => {
     event.preventDefault();
     setContextMenu(
       contextMenu === null
@@ -19,26 +25,22 @@ const Slides = ({ currentSlide, setCurrentSlide, slides, setSlides }) => {
         }
         : null,
     );
-    setSlideContext(key);
+    setSlideContext(idx);
   };
 
   const handleClose = () => {
     setContextMenu(null);
   };
 
-  const deleteSlide = (key) => {
-    console.log(key);
+  const deleteSlide = (idx) => {
     const newSlides = [...slides];
-    for (let i = 0; i < slides.length; i += 1) {
-      if (newSlides[i].key === key) {
-        newSlides[i].isDeleted = true;
-        break;
-      }
+    if (newSlides[idx].id) {
+      setSlidesDeletedId((prev) => prev.concat(newSlides[idx].id));
     }
-    console.log(newSlides);
+    newSlides.splice(idx, 1);
     setSlides(newSlides);
-    setContextMenu(null);
     setCurrentSlide(0);
+    setContextMenu(null);
   };
 
   const addNewSlide = () => {
@@ -82,47 +84,53 @@ const Slides = ({ currentSlide, setCurrentSlide, slides, setSlides }) => {
             Add new slide
           </Button>
         </div>
-        {slides.filter((slide) => !slide.isDeleted).map((slide, idx) => (
-          <Box
-            sx={{
-              display: 'flex',
-              cursor: 'context-menu',
-              flexWrap: 'wrap',
-              '& > :not(style)': {
-                m: 1,
-                width: 500,
-                height: 128,
-              },
-            }}
-            onContextMenu={(e) => handleContextMenu(e, slide.key)}
-              // eslint-disable-next-line react/no-array-index-key
-            key={idx}
-          >
-            <Paper
-              className={
-                      idx === currentSlide ? 'slide slide--active' : 'slide'
-                    }
-              onClick={() => {
-                setCurrentSlide(idx);
+        {slides
+          .map((slide, idx) => (
+            <Box
+              sx={{
+                display: 'flex',
+                cursor: 'context-menu',
+                flexWrap: 'wrap',
+                '& > :not(style)': {
+                  m: 1,
+                  width: 500,
+                  height: 128,
+                },
               }}
+              onContextMenu={(e) => handleContextMenu(e, idx)}
+              // eslint-disable-next-line react/no-array-index-key
+              key={idx}
             >
-              {idx + 1}
-            </Paper>
-          </Box>
-        ))}
+              <Paper
+                className={
+                  idx === currentSlide ? 'slide slide--active' : 'slide'
+                }
+                onClick={() => {
+                  setCurrentSlide(idx);
+                }}
+              >
+                {idx + 1}
+              </Paper>
+            </Box>
+          ))}
         <Menu
           open={contextMenu !== null}
           onClose={handleClose}
           anchorReference="anchorPosition"
           anchorPosition={
-                      contextMenu !== null
-                        ? { top: contextMenu.mouseY, left: contextMenu.mouseX }
-                        : undefined
-                    }
+            contextMenu !== null
+              ? { top: contextMenu.mouseY, left: contextMenu.mouseX }
+              : undefined
+          }
         >
           <MenuItem onClick={handleClose}>Duplicate slide</MenuItem>
           <MenuItem onClick={handleClose}>Reset slide</MenuItem>
-          <MenuItem disabled={slides.filter((slide) => !slide.isDeleted).length === 1} onClick={() => deleteSlide(slideContext)}>{slides.length === 1 ? 'Cannot delete all slides' : 'Delete slide'}</MenuItem>
+          <MenuItem
+            disabled={slides.length === 1}
+            onClick={() => deleteSlide(slideContext)}
+          >
+            {slides.length === 1 ? 'Cannot delete all slides' : 'Delete slide'}
+          </MenuItem>
         </Menu>
       </Stack>
     </div>
