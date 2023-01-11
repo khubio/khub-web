@@ -14,6 +14,13 @@ export const getPresentation = (id) => {
 export const addCollaborator = (presentationId, email) => axiosConfig.post(`/presentations/${presentationId}/collaborators/add`, { email });
 export const removeCollaborator = (presentationId, email) => axiosConfig.post(`/presentations/${presentationId}/collaborators/delete`, { email });
 
+export const changeAccessModifier = (presentationId, accessModifier, group) => {
+  if (group) {
+    axiosConfig.patch(`/presentations/${presentationId}/updateAccessModifier`, { accessModifier, group });
+  } else {
+    axiosConfig.patch(`/presentations/${presentationId}/updateAccessModifier`, { accessModifier });
+  }
+};
 export const createPresentation = (name) => axiosConfig.post('/presentations', { name });
 export const deletePresentation = (id) => axiosConfig.delete(`/presentations/${id}`);
 

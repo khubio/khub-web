@@ -1,24 +1,52 @@
-/* eslint-disable react/jsx-wrap-multilines */
-import * as React from 'react';
+import { useState, useEffect } from 'react';
 import List from '@mui/material/List';
 import ListItem from '@mui/material/ListItem';
 import ListItemText from '@mui/material/ListItemText';
 import MenuItem from '@mui/material/MenuItem';
 import Menu from '@mui/material/Menu';
 import { Typography } from '@mui/material';
+import {
+  getPresentation,
+  changeAccessModifier,
+} from '@services/presentation.service';
+import { useParams } from 'react-router-dom';
 
-const answers = ['Anyone with the link, code, or QR', 'Anyone in your group'];
-
-export default function SharingMenuOption({ title }) {
-  const [anchorEl, setAnchorEl] = React.useState(null);
-  const [selectedIndex, setSelectedIndex] = React.useState(1);
+export default function SharingMenuOption({ title, sharingOptions }) {
+  const [anchorEl, setAnchorEl] = useState(null);
+  const [selectedIndex, setSelectedIndex] = useState(0);
   const open = Boolean(anchorEl);
+  const params = useParams();
+
+  useEffect(() => {
+    getPresentation(params.id).then((data) => {
+      if (data.accessModifier === 'public') {
+        setSelectedIndex(0);
+      } else if (data.accessModifier === 'private') {
+        setSelectedIndex(1);
+      } else {
+        const index = sharingOptions.findIndex(
+          (option) => option.group === data.group,
+        );
+        if (index > 1) {
+          setSelectedIndex(index);
+        } else {
+          setSelectedIndex(0);
+        }
+      }
+    });
+  }, [sharingOptions]);
+
   const handleClickListItem = (event) => {
     setAnchorEl(event.currentTarget);
   };
 
-  const handleMenuItemClick = (event, index) => {
+  const handleMenuItemClick = async (event, index) => {
     setSelectedIndex(index);
+    await changeAccessModifier(
+      params.id,
+      sharingOptions[index].accessModifier,
+      sharingOptions[index].group,
+    );
     setAnchorEl(null);
   };
 
@@ -44,12 +72,11 @@ export default function SharingMenuOption({ title }) {
         >
           <ListItemText
             primary={title}
-            secondary={
+            secondary={(
               <Typography type="body2" style={{ color: 'blue' }}>
-                <h6>{answers[selectedIndex]}</h6>
+                {sharingOptions[selectedIndex]?.text}
               </Typography>
-            }
-            sx
+            )}
           />
         </ListItem>
       </List>
@@ -63,13 +90,13 @@ export default function SharingMenuOption({ title }) {
           role: 'listbox',
         }}
       >
-        {answers.map((option, index) => (
+        {sharingOptions.map((option, index) => (
           <MenuItem
-            key={option}
+            key={option.text}
             selected={index === selectedIndex}
             onClick={(event) => handleMenuItemClick(event, index)}
           >
-            {option}
+            {option.text}
           </MenuItem>
         ))}
       </Menu>

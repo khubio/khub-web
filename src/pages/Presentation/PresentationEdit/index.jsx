@@ -24,6 +24,7 @@ import { checkUserByEmail } from '@services/user.service';
 import { useMounted } from 'src/hooks/useMounted';
 import CollaboratorsDialog from '@components/Dialog/CollaboratorsDialog';
 import { validateEmail } from '@utils/validateUtil';
+import { getUser } from '@utils/localstorageUtil';
 import SlideDemo from './SlideDemo';
 import Slides from './Slides';
 import SlideDetail from './SlideDetail';
@@ -53,6 +54,7 @@ const PresentationEdit = () => {
   const [collaboratorDialogOpen, setCollaboratorDialogOpen] = useState(false);
   const [email, setEmail] = useState('');
   const [collaborators, setCollaborators] = useState([]);
+  const [isOwner, setIsOwner] = useState(false);
   const [infoEmail, setInfoEmail] = useState({
     type: 'error',
     message: '',
@@ -70,6 +72,7 @@ const PresentationEdit = () => {
           (collaborator) => collaborator.email,
         );
         setCollaborators(emails);
+        setIsOwner(!emails.includes(getUser().email));
       })
       .catch((err) => navigate('/forbidden'));
   }, [isMounted]);
@@ -215,15 +218,17 @@ const PresentationEdit = () => {
               src={`${process.env.PUBLIC_URL}/images/khub_icon_3.png`}
               alt="logo"
             />
-            <Button
-              className="presentation__btn-item--share"
-              color="secondary"
-              variant="contained"
-              onClick={handleOpen}
-              startIcon={<Share />}
-            >
-              Share
-            </Button>
+            {isOwner && (
+              <Button
+                className="presentation__btn-item--share"
+                color="secondary"
+                variant="contained"
+                onClick={handleOpen}
+                startIcon={<Share />}
+              >
+                Share
+              </Button>
+            )}
             <Button
               className="presentation__btn-item--present"
               color="warning"
