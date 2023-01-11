@@ -10,7 +10,7 @@ import {
   updateUserGroupById,
   deleteUserGroupById,
 } from '@services/group.service';
-import { useParams, useNavigate } from 'react-router-dom';
+import { useParams, useNavigate, Link } from 'react-router-dom';
 import { useMounted } from 'src/hooks/useMounted';
 import RoleFilter from '@components/RoleFilter';
 import { rolesInGroup } from '@configs';
@@ -150,8 +150,12 @@ const GroupDetails = () => {
   const getMenuItemTop = (userId, userRole) => {
     return [
       {
-        text: userRole === 'member' ? 'Promote to co-owner' : 'Demote to member',
-        onClick: () => handleUpdateRole(userId, userRole === 'member' ? 'coOwner' : 'member'),
+        text:
+          userRole === 'member' ? 'Promote to co-owner' : 'Demote to member',
+        onClick: () => handleUpdateRole(
+          userId,
+          userRole === 'member' ? 'coOwner' : 'member',
+        ),
         key: 'updateRole',
         icon: <Settings fontSize="small" />,
       },
@@ -225,7 +229,28 @@ const GroupDetails = () => {
     <Box m="20px">
       <Header title="GROUP DETAILS" subtitle={`Group name: ${group.name}`} />
       <Box display="flex" justifyContent="space-between" sx={{ p: '0' }}>
-        <RoleFilter roles={roles} onChange={handleChange} allRoles={rolesInGroup} />
+        <Box
+          display="flex"
+          justifyContent="flex-start"
+          alignItems="center"
+          sx={{ p: '0' }}
+        >
+          <RoleFilter
+            roles={roles}
+            onChange={handleChange}
+            allRoles={rolesInGroup}
+          />
+          {group.presentation && (
+            <Link
+              to={`/presentations/sharing/${group.presentation}`}
+              sx={{
+                cursor: 'pointer',
+              }}
+            >
+              Presenting presentation
+            </Link>
+          )}
+        </Box>
         {role === 'owner' && (
           <>
             <Box display="flex" justifyContent="flex-end" sx={{ p: '0' }}>

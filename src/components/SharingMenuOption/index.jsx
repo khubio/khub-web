@@ -10,12 +10,14 @@ import {
   changeAccessModifier,
 } from '@services/presentation.service';
 import { useParams } from 'react-router-dom';
+import ConfirmDialog from '@components/Dialog/ConfirmDialog';
 
 export default function SharingMenuOption({ title, sharingOptions }) {
   const [anchorEl, setAnchorEl] = useState(null);
   const [selectedIndex, setSelectedIndex] = useState(0);
-  const open = Boolean(anchorEl);
+  const [dialogOpen, setDialogOpen] = useState(false);
   const params = useParams();
+  const open = Boolean(anchorEl);
 
   useEffect(() => {
     getPresentation(params.id).then((data) => {
@@ -42,11 +44,24 @@ export default function SharingMenuOption({ title, sharingOptions }) {
 
   const handleMenuItemClick = async (event, index) => {
     setSelectedIndex(index);
+    if (sharingOptions[index].group) {
+      setDialogOpen(true);
+    } else {
+      await changeAccessModifier(
+        params.id,
+        sharingOptions[index].accessModifier,
+        sharingOptions[index].group,
+      );
+      setAnchorEl(null);
+    }
+  };
+  const handleOk = async (index) => {
     await changeAccessModifier(
       params.id,
       sharingOptions[index].accessModifier,
       sharingOptions[index].group,
     );
+    setDialogOpen(false);
     setAnchorEl(null);
   };
 
@@ -99,6 +114,13 @@ export default function SharingMenuOption({ title, sharingOptions }) {
             {option.text}
           </MenuItem>
         ))}
+        <ConfirmDialog
+          open={dialogOpen}
+          onClose={() => setDialogOpen(false)}
+          onOk={() => handleOk(selectedIndex)}
+          title="Are you sure change access to group"
+          subtitle="This action will stop another presentation in group"
+        />
       </Menu>
     </div>
   );
