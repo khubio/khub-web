@@ -112,15 +112,6 @@ function App() {
     <Router>
       <div className="App">
         <Routes>
-          <Route
-            path="presentation-sharing"
-            element={(
-              <PresentationViewerScreen
-                slide={initialSlideList[1]}
-                socket={socket}
-              />
-            )}
-          />
           <Route path="auth">
             <Route
               path="login"
@@ -206,6 +197,15 @@ function App() {
                 <PrivateLayout>
                   <PresentationEdit />
                 </PrivateLayout>
+              )}
+            />
+            <Route
+              path="sharing/:id"
+              element={(
+                <PresentationViewerScreen
+                  slide={initialSlideList[1]}
+                  socket={socket}
+                />
               )}
             />
           </Route>
