@@ -11,27 +11,19 @@ import {
   TextField,
   Typography,
 } from '@mui/material';
+import { getChats, getQuestions } from '@services/presentation.service';
+import { useParams } from 'react-router-dom';
+import { ANONYMOUS_USER_ID } from '@constants/Presentation';
 
 const sampleQuestionList = [
   {
-    text: 'Trên đồng cỏ có 6 con bò, đếm đi đếm lại chỉ có 12 cái chân. Câu hỏi tại sao?',
+    text: '',
     createdAt: '2021-01-01T10:10:10.000Z',
     username: 'trinhvnguyen',
-    voted: 20,
-  },
-  {
-    text: 'Cho em hỏi là deadline là bao lâu ạ?',
-    createdAt: '2023-01-01T10:10:10.000Z',
-    username: 'tungdao',
-    voted: 10,
+    voteNumber: 20,
   },
 ];
 
-// create function format time difference
-// if day = 0 return hour
-// if hour = 0 return minute
-// if minute = 0 return second
-// else return day
 const formattedTime = (time) => {
   const date = new Date(time);
   const now = new Date();
@@ -52,44 +44,80 @@ const formattedTime = (time) => {
     : `${second} second${second > 1 ? 's' : ''} ago`;
 };
 
-const QuestionBox = () => {
-  const [questionList, setQuestionList] = useState([{}]);
+const QuestionBox = ({ socket }) => {
+  const profile = JSON.parse(localStorage.getItem('profile'));
+  const { firstName: username } = profile || {
+    username: 'Anonymous',
+  };
+  const param = useParams();
+  const [questionList, setQuestionList] = useState([
+    {
+      id: '',
+      presentationId: param.id,
+      userId: ANONYMOUS_USER_ID,
+      username: 'Anonymous',
+      createdAt: Date.now(),
+      text: '',
+      voteNumber: 0,
+    },
+  ]);
   const [text, setText] = useState('');
   const divRef = useRef(null);
   const ref = useRef(null);
   const [fetching, setFetching] = useState(false);
   const [isVotedList, setIsVotedList] = useState(
-    Array(questionList.length).fill(false),
+    Array(questionList.length || 0).fill(false),
   );
-  const handleSend = () => {
-    if (text) {
-      setQuestionList([
-        ...questionList,
-        {
-          username: 'annonymus',
-          createdAt: Date.now(),
-          text,
-          voted: 1,
-        },
-      ]);
-      setText('');
+  const handleSend = (e) => {
+    e.preventDefault();
+    if (text.trim()) {
+      const sentQuestion = {
+        presentationId: param.id,
+        userId: profile?.id || ANONYMOUS_USER_ID,
+        username: profile?.firstName || 'Anonymous',
+        createdAt: Date.now(),
+        text,
+        voteNumber: 0,
+      };
+
+      socket.emit('sendQuestion', {
+        presentationId: param.id,
+        question: sentQuestion,
+      });
     }
+    setText('');
   };
-  const handleUpVote = (idx) => {
+  const handleUpVote = async (idx) => {
     const isVotedYet = isVotedList[idx];
     const newQuestionList = [...questionList];
     if (isVotedYet) {
-      newQuestionList[idx].voted -= 1;
+      newQuestionList[idx].voteNumber -= 1;
     } else {
-      newQuestionList[idx].voted += 1;
+      newQuestionList[idx].voteNumber += 1;
     }
     const newIsVotedList = [...isVotedList];
     newIsVotedList[idx] = !isVotedYet;
+    await socket.emit('updateVoteQuestion', newQuestionList[idx]);
     setQuestionList(newQuestionList);
     setIsVotedList(newIsVotedList);
   };
   useEffect(() => {
-    setQuestionList(sampleQuestionList);
+    socket.on('receiveQuestion', (data) => {
+      const { presentationId } = data;
+      const newQuestionList = [...questionList];
+      newQuestionList.push(data);
+      if (presentationId === param.id) {
+        setQuestionList(newQuestionList);
+      }
+    });
+  }, [socket, questionList]);
+  useEffect(() => {
+    setFetching(true);
+    getQuestions(param.id).then((data) => {
+      setQuestionList(data);
+      console.log(data);
+    });
+    setFetching(false);
   }, []);
 
   return (
@@ -109,107 +137,111 @@ const QuestionBox = () => {
       }}
     >
       <div
-        ref={divRef}
+        // ref={divRef}
         style={{
           overflowY: 'scroll',
+          scrollBehavior: 'smooth',
+          flexShrink: 0,
           height: '75%',
           width: '100%',
         }}
       >
         {questionList.length && !fetching ? (
-          questionList.map((question, idx) => (
-            <Box
-              ref={question.ref}
-              key={idx}
-              sx={{
-                display: 'flex',
-                gap: '1rem',
-                alignItems: 'center',
-                marginBottom: '1rem',
-                padding: '.3rem',
-                width: '99%',
-                ':hover': {
-                  backgroundColor: 'rgba(62, 67, 150,0.8);',
-                  color: 'white',
-                },
-              }}
-            >
-              <img
-                width={40}
-                height={40}
-                src="https://cdn.iconscout.com/icon/free/png-256/avatar-370-456322.png"
-                alt={question.username}
-                style={{ borderRadius: '50%' }}
-              />
+          questionList.map((question, idx) => {
+            return (
               <Box
+                // ref={question.ref}
+                key={idx}
                 sx={{
                   display: 'flex',
-                  flexDirection: 'column',
-                  alignItems: 'left',
-                  justifyContent: 'flex-start',
-                  width: '100%',
+                  gap: '1rem',
+                  alignItems: 'center',
+                  marginBottom: '1rem',
+                  padding: '.3rem',
+                  width: '99%',
+                  ':hover': {
+                    backgroundColor: 'rgba(62, 67, 150,0.8);',
+                    color: 'white',
+                  },
                 }}
               >
+                <img
+                  width={40}
+                  height={40}
+                  src="https://cdn.iconscout.com/icon/free/png-256/avatar-370-456322.png"
+                  alt={question.username || 'Anonymous'}
+                  style={{ borderRadius: '50%' }}
+                />
                 <Box
                   sx={{
                     display: 'flex',
-                    gap: '1rem',
-                    alignItems: 'center',
-                    ':hover': {
-                      color: 'white',
-                    },
+                    flexDirection: 'column',
+                    alignItems: 'left',
+                    justifyContent: 'flex-start',
+                    width: '100%',
                   }}
                 >
-                  <Typography variant="body1" sx={{ fontWeight: '600' }}>
-                    {question.username || 'Anonymous'}
-                  </Typography>
-                  <Typography
-                    variant="caption"
-                    color="black"
+                  <Box
                     sx={{
+                      display: 'flex',
+                      gap: '1rem',
+                      alignItems: 'center',
                       ':hover': {
                         color: 'white',
                       },
                     }}
                   >
-                    {formattedTime(question.createdAt)}
-                  </Typography>
-                </Box>
-                <p
-                  style={{
-                    width: '99%',
-                    wordBreak: 'break-word',
-                    fontWeight: 'lighter',
-                  }}
-                >
-                  {question.text}
-                </p>
-              </Box>
-
-              {/* <Avatar> */}
-              <IconButton aria-label="cart" onClick={() => handleUpVote(idx)}>
-                <Badge
-                  color="primary"
-                  badgeContent={question.voted}
-                  anchorOrigin={{
-                    vertical: 'bottom',
-                    horizontal: 'right',
-                  }}
-                >
-                  <ThumbUp
-                    sx={{
-                      stroke: isVotedList[idx] ? 'green' : 'black',
-                      color: isVotedList[idx] ? 'green' : 'white',
-                      ':hover': {
-                        color: 'white',
-                      },
+                    <Typography variant="body1" sx={{ fontWeight: '600' }}>
+                      {question.username || 'Anonymous'}
+                    </Typography>
+                    <Typography
+                      variant="caption"
+                      color="black"
+                      sx={{
+                        ':hover': {
+                          color: 'white',
+                        },
+                      }}
+                    >
+                      {formattedTime(question.createdAt || Date.now())}
+                    </Typography>
+                  </Box>
+                  <p
+                    style={{
+                      width: '99%',
+                      wordBreak: 'break-word',
+                      fontWeight: 'lighter',
                     }}
-                  />
-                </Badge>
-              </IconButton>
-              {/* </Avatar> */}
-            </Box>
-          ))
+                  >
+                    {question.text}
+                  </p>
+                </Box>
+
+                {/* <Avatar> */}
+                <IconButton aria-label="cart" onClick={() => handleUpVote(idx)}>
+                  <Badge
+                    color="primary"
+                    badgeContent={question.voteNumber}
+                    anchorOrigin={{
+                      vertical: 'bottom',
+                      horizontal: 'right',
+                    }}
+                  >
+                    <ThumbUp
+                      sx={{
+                        stroke: isVotedList[idx] ? 'green' : 'black',
+                        color: isVotedList[idx] ? 'green' : 'white',
+                        ':hover': {
+                          color: 'white',
+                        },
+                      }}
+                    />
+                  </Badge>
+                </IconButton>
+                {/* </Avatar> */}
+              </Box>
+            );
+          })
         ) : fetching ? (
           [1, 2, 3, 4, 5, 6, 7, 8].map((_, idx) => {
             return (
@@ -240,7 +272,7 @@ const QuestionBox = () => {
             );
           })
         ) : (
-          <Typography variant="body1" color="GrayText">
+          <Typography variant="body1" color="GrayText" sx={{ m: 2 }}>
             No questions yet
           </Typography>
         )}
@@ -257,16 +289,16 @@ const QuestionBox = () => {
           autoComplete="off"
           value={text}
           onChange={(e) => setText(e.target.value)}
-          onKeyDown={async (e) => {
+          onKeyDown={(e) => {
             if (e.key === 'Enter') {
-              await handleSend();
+              handleSend(e);
             }
           }}
           InputProps={{
             endAdornment: (
               <IconButton
                 disabled={fetching && !questionList.length}
-                onClick={() => handleSend()}
+                onClick={(e) => handleSend(e)}
               >
                 <SendSharp />
               </IconButton>

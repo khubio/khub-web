@@ -3,14 +3,13 @@
 /* eslint-disable object-curly-newline */
 import { QuestionAnswer } from '@mui/icons-material';
 import { Stack } from '@mui/material';
+import { useEffect, useState } from 'react';
 import socketIO from 'socket.io-client';
 import HeadingDemo from '../PresentationEdit/SlideDemo/HeadingDemo';
 import ParagraphDemo from '../PresentationEdit/SlideDemo/ParagraphDemo';
 import Quiz from '../PresentationEdit/SlideDemo/Quiz';
 import QuestionChatBoxWindow from './QuestionChatBoxWindow';
 import './PresentationViewerScreen.scss';
-
-// const socket = socketIO.connect('http://localhost:4000');
 
 const renderSlideDemoByType = (slideContent, handleClickAnswer) => {
   const { type: slideType, question, answers, description } = slideContent;
@@ -32,7 +31,20 @@ const renderSlideDemoByType = (slideContent, handleClickAnswer) => {
       return <div>Please select type of presentation</div>;
   }
 };
-const PresentationViewerScreen = ({ slide, socket }) => {
+const initialSlide = {
+  id: '',
+  type: 'heading',
+  question: 'Welcome to KHub',
+  description: 'Please waiting for the presenter to start the presentation',
+  answers: [],
+};
+const PresentationViewerScreen = ({ socket }) => {
+  const [slide, setSlide] = useState(initialSlide);
+  useEffect(() => {
+    socket.on('receiveCurrentSlide', (data) => {
+      setSlide(data);
+    });
+  }, [socket, slide]);
   const handleClickAnswer = (idx) => {
     const { question, answers } = slide;
     const newAnswers = [...answers];

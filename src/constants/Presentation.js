@@ -19,3 +19,5 @@ export const PRESENTATION_MAPPER = {
   SUBHEADING: 'description',
   DESCRIPTION: 'description',
 };
+
+export const ANONYMOUS_USER_ID = null;

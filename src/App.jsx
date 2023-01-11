@@ -86,7 +86,7 @@ const initialSlideList = [
     id: '',
     type: 'heading',
     question: 'Welcome to my presentation',
-    description: 'Lolopops 2',
+    description: 'Try your best experience with us',
     answers: [],
   },
   {

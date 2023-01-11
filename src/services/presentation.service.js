@@ -20,3 +20,8 @@ export const updateSlides = (presentationId, slides) => axiosConfig.put(`/presen
 export const createAnswers = (presentationId, slideId, answers) => axiosConfig.post(`/presentations/${presentationId}/slides/${slideId}/answers`, { answers });
 export const deleteAnswers = (presentationId, slideId, answers) => axiosConfig.delete(`/presentations/${presentationId}/slides/${slideId}/answers`, { data: { answers } });
 export const updateAnswers = (presentationId, slideId, answers) => axiosConfig.put(`/presentations/${presentationId}/slides/${slideId}/answers`, { answers });
+
+export const getChats = (presentationId) => axiosConfig.get(`/presentations/${presentationId}/chats`);
+export const createChats = (presentationId, chats) => axiosConfig.post(`/presentations/${presentationId}/chats`, { chats });
+export const getQuestions = (presentationId) => axiosConfig.get(`/presentations/${presentationId}/questions`);
+export const createQuestion = (presentationId, question) => axiosConfig.post(`/presentations/${presentationId}/questions`, { question });

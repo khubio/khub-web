@@ -1,3 +1,5 @@
+/* eslint-disable function-paren-newline */
+/* eslint-disable implicit-arrow-linebreak */
 import { PlayArrow, Share, Save } from '@mui/icons-material';
 import { Button, Grid } from '@mui/material';
 import { useCallback, useEffect, useState } from 'react';
@@ -20,6 +22,8 @@ import Slides from './Slides';
 import SlideDetail from './SlideDetail';
 import './Presentation.scss';
 import Quiz from './SlideDemo/Quiz';
+
+const socket = io.connect('http://localhost:3000');
 
 // const initialSlideList = [
 //   {
@@ -50,14 +54,24 @@ const PresentationEdit = () => {
   const [loading, setLoading] = useState(false);
   const { isMounted } = useMounted();
   const fetch = useCallback(() => {
-    getPresentation(params.id).then((data) => setSlides(data.slides.map((slide, index) => {
-      return { ...slide, key: index };
-    })));
+    getPresentation(params.id).then((data) =>
+      setSlides(
+        data.slides.map((slide, index) => {
+          return { ...slide, key: index };
+        }),
+      ),
+    );
   }, [isMounted]);
 
   useEffect(() => {
     fetch();
   }, [fetch]);
+
+  useEffect(() => {
+    if (isPresenting) {
+      socket.emit('sendCurrentSlide', slides[currentSlide]);
+    }
+  }, [socket, currentSlide]);
 
   const handleFullScreen = useFullScreenHandle();
   const handleOpen = () => setOpen(true);
@@ -65,6 +79,7 @@ const PresentationEdit = () => {
   const handlePresent = () => {
     handleFullScreen.enter();
     setIsPresenting(true);
+    socket.emit('sendCurrentSlide', slides[currentSlide]);
   };
   const totalSlides = slides.length;
   const handleOnSavePresentation = async () => {
@@ -73,19 +88,49 @@ const PresentationEdit = () => {
       params.id,
       slides.filter((slide) => slide.id === '') || [],
     );
-    await deleteSlides(
-      params.id,
-      slidesDeleteId,
-    );
+    await deleteSlides(params.id, slidesDeleteId);
     await updateSlides(
       params.id,
       slides.filter((slide) => slide.isUpdated && slide.id !== '') || [],
     );
 
-    const updateAnswersSlides = slides.filter((slide) => slide.id !== '' && slide.isAnswersUpdated);
-    await Promise.all(updateAnswersSlides.map((slide) => createAnswers(params.id, slide.id, slide.answers.filter((answer) => answer.id === '' && !answer.isDeleted))));
-    await Promise.all(updateAnswersSlides.map((slide) => deleteAnswers(params.id, slide.id, slide.answers.filter((answer) => answer.id !== '' && answer.isDeleted).map((answer) => answer.id))));
-    await Promise.all(updateAnswersSlides.map((slide) => updateAnswers(params.id, slide.id, slide.answers.filter((answer) => answer.id !== '' && !answer.isDeleted && answer.isUpdated))));
+    const updateAnswersSlides = slides.filter(
+      (slide) => slide.id !== '' && slide.isAnswersUpdated,
+    );
+    await Promise.all(
+      updateAnswersSlides.map((slide) =>
+        createAnswers(
+          params.id,
+          slide.id,
+          slide.answers.filter(
+            (answer) => answer.id === '' && !answer.isDeleted,
+          ),
+        ),
+      ),
+    );
+    await Promise.all(
+      updateAnswersSlides.map((slide) =>
+        deleteAnswers(
+          params.id,
+          slide.id,
+          slide.answers
+            .filter((answer) => answer.id !== '' && answer.isDeleted)
+            .map((answer) => answer.id),
+        ),
+      ),
+    );
+    await Promise.all(
+      updateAnswersSlides.map((slide) =>
+        updateAnswers(
+          params.id,
+          slide.id,
+          slide.answers.filter(
+            (answer) =>
+              answer.id !== '' && !answer.isDeleted && answer.isUpdated,
+          ),
+        ),
+      ),
+    );
     setLoading(false);
   };
 
