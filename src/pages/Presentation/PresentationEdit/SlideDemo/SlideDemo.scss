@@ -21,7 +21,7 @@
     // border-radius: 1rem;
     box-shadow: $light-blue 0px 0px 0.7rem 0px;
     &--presenting {
-      width: 60vw !important;
+      width: 100vw !important;
     }
   }
 
@@ -82,7 +82,7 @@
     max-width: 100%;
     min-height: max-content;
     &--presenting {
-      width: 60vw;
+      width: 90vw;
       min-height: 80vh;
     }
     &--sub {
@@ -94,7 +94,7 @@
   }
   &__paragraph {
     &--presenting {
-      // min-width: 80vw;
+      min-width: 90vw;
     }
     &-description {
       @include flex(center, center);
@@ -102,6 +102,7 @@
       font-weight: 500;
       max-width: 100%;
       min-height: max-content;
+      color: white;
     }
     &-heading {
       letter-spacing: 0.1rem;

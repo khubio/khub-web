@@ -1,0 +1,21 @@
+.chat {
+  position: fixed;
+  bottom: 1rem;
+  right: 1rem;
+
+  &__box {
+    border: 5px solid red;
+    border-radius: 1rem;
+  }
+
+  &__icon {
+    margin: 0.5rem 0;
+    &-container {
+      display: flex;
+      justify-content: flex-end;
+      flex-direction: column;
+      align-items: flex-end;
+      padding: 1rem 0;
+    }
+  }
+}

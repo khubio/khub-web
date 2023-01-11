@@ -3,14 +3,23 @@
 .quiz {
   background-color: $light-blue--op;
   &--presenting {
-    min-width: 80vw;
+    min-width: 90vw;
   }
   &__container {
     min-height: 100vh;
     background-color: $light-blue--op;
     display: flex;
     align-items: center;
-    justify-content: center;
+    justify-content: flex-start;
+  }
+
+  &__logo {
+    padding: 1rem 0 0 0;
+    align-self: start;
+    &-image {
+      max-width: 12rem;
+      max-height: 12rem;
+    }
   }
 
   &__logo {
@@ -28,7 +37,7 @@
     font-weight: 800;
     word-spacing: 0.2rem;
     letter-spacing: 0.1rem;
-    max-width: 70vw;
+    // max-width: 70vw;
     text-align: center;
     background-color: transparent;
     color: white;
@@ -41,8 +50,10 @@
 
   &__answer {
     @include flex(center, start);
+    @include flex(center, start);
     flex-wrap: wrap;
     font-size: 1.5rem;
+    padding: 0 3rem;
     padding: 0 3rem;
     border-radius: 3rem !important;
 

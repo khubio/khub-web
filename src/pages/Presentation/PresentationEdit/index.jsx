@@ -21,6 +21,16 @@ import SlideDetail from './SlideDetail';
 import './Presentation.scss';
 import Quiz from './SlideDemo/Quiz';
 
+// const initialSlideList = [
+//   {
+//     id: '',
+//     type: 'paragraph',
+//     question: 'Welcome to KHUB',
+//     description: 'Try your best experience with us',
+//     answers: [],
+//   },
+// ];
+
 const initialSlideList = [
   {
     id: '',
