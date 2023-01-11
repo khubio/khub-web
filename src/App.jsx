@@ -23,6 +23,7 @@ import PresentationViewerScreen from '@pages/Presentation/PresentationViewerScre
 import PresentationEdit from '@pages/Presentation/PresentationEdit';
 import ChatBoxWindow from '@pages/Presentation/PresentationViewerScreen/QuestionChatBoxWindow';
 import socketIO from 'socket.io-client';
+import Forbidden from '@pages/Forbidden';
 
 const socket = socketIO.connect('http://localhost:3000');
 const initialSlideList = [
@@ -210,6 +211,7 @@ function App() {
             />
           </Route>
           <Route path="not-found" element={<NotFound />} />
+          <Route path="forbidden" element={<Forbidden />} />
           <Route path="*" element={<NotFound />} />
         </Routes>
       </div>

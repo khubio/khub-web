@@ -15,8 +15,9 @@ import { useState, useEffect, useCallback } from 'react';
 import {
   getPresentations,
   createPresentation,
+  deletePresentation,
 } from '@services/presentation.service';
-import { Link, useNavigate } from 'react-router-dom';
+import { useNavigate } from 'react-router-dom';
 import { useMounted } from 'src/hooks/useMounted';
 import { rolesInPresentation } from '@configs';
 import RoleFilter from '@components/RoleFilter';
@@ -38,8 +39,18 @@ const PresentationList = () => {
   const navigate = useNavigate();
 
   const fetch = useCallback(() => {
-    getPresentations(roles).then((data) => setPresentations(data));
-  }, [isMounted]);
+    getPresentations(roles).then((data) => {
+      const presentationsAll = data[0]
+        .map((presentation) => {
+          return {
+            ...presentation,
+            isOwner: true,
+          };
+        })
+        .concat(data[1]);
+      setPresentations(presentationsAll);
+    });
+  }, [isMounted, roles]);
 
   useEffect(() => {
     fetch();
@@ -71,8 +82,8 @@ const PresentationList = () => {
     return menu;
   };
 
-  const getMenuItemDown = (presentationId, userRole) => {
-    if (userRole !== 'owner') {
+  const getMenuItemDown = (presentationId, isOwner) => {
+    if (!isOwner) {
       return [];
     }
     return [
@@ -84,7 +95,10 @@ const PresentationList = () => {
       },
       {
         text: 'Delete',
-        onClick: () => {},
+        onClick: async () => {
+          await deletePresentation(presentationId);
+          fetch();
+        },
         key: 'Delete',
         icon: <DeleteOutlineOutlinedIcon fontSize="small" />,
       },
@@ -105,10 +119,11 @@ const PresentationList = () => {
       cellClassName: 'name-column-cell',
       renderCell: ({
         row: {
+          isOwner,
           creator: { firstName, lastName },
         },
       }) => {
-        return `${firstName} ${lastName}`;
+        return isOwner ? 'me' : `${firstName} ${lastName}`;
       },
     },
     {
@@ -129,7 +144,7 @@ const PresentationList = () => {
       field: 'action',
       headerName: '',
       flex: 1,
-      renderCell: ({ row: { id, role } }) => {
+      renderCell: ({ row: { id, isOwner } }) => {
         return (
           <Box
             width="30%"
@@ -141,8 +156,8 @@ const PresentationList = () => {
             sx={{ cursor: 'pointer' }}
           >
             <MenuAction
-              menuItemTop={getMenuItemTop(id, role)}
-              menuItemDown={getMenuItemDown(id, role)}
+              menuItemTop={getMenuItemTop(id)}
+              menuItemDown={getMenuItemDown(id, isOwner)}
             />
           </Box>
         );
