@@ -9,7 +9,10 @@ import './QuestionChatBoxWindow.scss';
 
 const QuestionChatBoxWindow = ({ socket }) => {
   const profile = JSON.parse(localStorage.getItem('profile'));
-  const { firstName: username, id: profileId } = profile;
+  const { firstName: username, id: profileId } = profile || {
+    username: 'Anonymous',
+    id: socket.id,
+  };
   const [openChat, setOpenChat] = useState(false);
   const [openQuestion, setOpenQuestion] = useState(false);
   const [messages, setMessages] = useState([
@@ -70,7 +73,7 @@ const QuestionChatBoxWindow = ({ socket }) => {
       socket.emit('message', {
         author: {
           username: username || 'Anonymous',
-          id: profileId || 1,
+          id: profileId || socket.id,
           avatarUrl:
             'https://cdn.iconscout.com/icon/free/png-256/avatar-370-456322.png',
         },
