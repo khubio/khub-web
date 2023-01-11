@@ -36,3 +36,4 @@ export const getChats = (presentationId) => axiosConfig.get(`/presentations/${pr
 export const createChats = (presentationId, chats) => axiosConfig.post(`/presentations/${presentationId}/chats`, { chats });
 export const getQuestions = (presentationId) => axiosConfig.get(`/presentations/${presentationId}/questions`);
 export const createQuestion = (presentationId, question) => axiosConfig.post(`/presentations/${presentationId}/questions`, { question });
+export const getPresentationAccessModifier = (presentationId) => axiosConfig.get(`/presentations/${presentationId}/getAccess`);
