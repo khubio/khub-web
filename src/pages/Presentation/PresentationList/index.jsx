@@ -15,6 +15,7 @@ import { useState, useEffect, useCallback } from 'react';
 import {
   getPresentations,
   createPresentation,
+  deletePresentation,
 } from '@services/presentation.service';
 import { Link, useNavigate } from 'react-router-dom';
 import { useMounted } from 'src/hooks/useMounted';
@@ -38,8 +39,16 @@ const PresentationList = () => {
   const navigate = useNavigate();
 
   const fetch = useCallback(() => {
-    getPresentations(roles).then((data) => setPresentations(data));
-  }, [isMounted]);
+    getPresentations(roles).then((data) => {
+      const presentationsAll = data[0].map((presentation) => {
+        return {
+          ...presentation,
+          isOwner: true,
+        };
+      }).concat(data[1]);
+      setPresentations(presentationsAll);
+    });
+  }, [isMounted, roles]);
 
   useEffect(() => {
     fetch();
@@ -72,7 +81,7 @@ const PresentationList = () => {
   };
 
   const getMenuItemDown = (presentationId, userRole) => {
-    if (userRole !== 'owner') {
+    if (userRole !== 'creator') {
       return [];
     }
     return [
@@ -105,10 +114,11 @@ const PresentationList = () => {
       cellClassName: 'name-column-cell',
       renderCell: ({
         row: {
+          isOwner,
           creator: { firstName, lastName },
         },
       }) => {
-        return `${firstName} ${lastName}`;
+        return isOwner ? 'me' : `${firstName} ${lastName}`;
       },
     },
     {

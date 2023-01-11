@@ -12,6 +12,7 @@ export const getPresentation = (id) => {
 };
 
 export const createPresentation = (name) => axiosConfig.post('/presentations', { name });
+export const deletePresentation = (id) => axiosConfig.delete(`/presentation/${id}`);
 
 export const createSlides = (presentationId, slides) => axiosConfig.post(`/presentations/${presentationId}/slides`, { slides });
 export const deleteSlides = (presentationId, slides) => axiosConfig.delete(`/presentations/${presentationId}/slides`, { data: { slides } });
