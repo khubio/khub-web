@@ -90,16 +90,17 @@ const QuestionBox = ({ socket }) => {
   const handleUpVote = async (idx) => {
     const isVotedYet = isVotedList[idx];
     const newQuestionList = [...questionList];
+    const newResultQuestion = newQuestionList[idx];
     if (isVotedYet) {
-      newQuestionList[idx].voteNumber -= 1;
+      newResultQuestion.voteNumber -= 1;
     } else {
-      newQuestionList[idx].voteNumber += 1;
+      newResultQuestion.voteNumber += 1;
     }
     const newIsVotedList = [...isVotedList];
     newIsVotedList[idx] = !isVotedYet;
-    await socket.emit('updateVoteQuestion', newQuestionList[idx]);
-    setQuestionList(newQuestionList);
+    // setQuestionList(newQuestionList);
     setIsVotedList(newIsVotedList);
+    await socket.emit('updateVoteQuestion', newResultQuestion);
   };
   useEffect(() => {
     socket.on('receiveQuestion', (data) => {
@@ -115,10 +116,9 @@ const QuestionBox = ({ socket }) => {
     setFetching(true);
     getQuestions(param.id).then((data) => {
       setQuestionList(data);
-      console.log(data);
     });
     setFetching(false);
-  }, []);
+  }, [questionList]);
 
   return (
     <Box
