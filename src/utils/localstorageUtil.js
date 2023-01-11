@@ -9,3 +9,7 @@ export const getLocalAccessToken = () => {
 export const setTokens = (tokens) => {
   localStorage.setItem('tokens', JSON.stringify(tokens));
 };
+
+export const getUser = () => {
+  return JSON.parse(localStorage.getItem('profile'));
+};

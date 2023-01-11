@@ -11,6 +11,9 @@ export const getPresentation = (id) => {
   return axiosConfig.get(`/presentations/${id}`);
 };
 
+export const addCollaborator = (presentationId, email) => axiosConfig.post(`/presentations/${presentationId}/collaborators/add`, { email });
+export const removeCollaborator = (presentationId, email) => axiosConfig.post(`/presentations/${presentationId}/collaborators/delete`, { email });
+
 export const createPresentation = (name) => axiosConfig.post('/presentations', { name });
 export const deletePresentation = (id) => axiosConfig.delete(`/presentations/${id}`);
 

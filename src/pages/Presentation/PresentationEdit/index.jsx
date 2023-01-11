@@ -1,7 +1,9 @@
-import { PlayArrow, Share, Save } from '@mui/icons-material';
+import {
+  PlayArrow, Share, Save, Group,
+} from '@mui/icons-material';
 import { Button, Grid } from '@mui/material';
 import { useCallback, useEffect, useState } from 'react';
-import { useParams } from 'react-router-dom';
+import { useParams, useNavigate } from 'react-router-dom';
 import BasicModal from '@components/Modal';
 import { FullScreen, useFullScreenHandle } from 'react-full-screen';
 import { io, Socket } from 'socket.io-client';
@@ -13,23 +15,17 @@ import {
   createAnswers,
   deleteAnswers,
   updateAnswers,
+  addCollaborator,
+  removeCollaborator,
 } from '@services/presentation.service';
+import { checkUserByEmail } from '@services/user.service';
 import { useMounted } from 'src/hooks/useMounted';
+import CollaboratorsDialog from '@components/Dialog/CollaboratorsDialog';
+import { validateEmail } from '@utils/validateUtil';
 import SlideDemo from './SlideDemo';
 import Slides from './Slides';
 import SlideDetail from './SlideDetail';
 import './Presentation.scss';
-import Quiz from './SlideDemo/Quiz';
-
-// const initialSlideList = [
-//   {
-//     id: '',
-//     type: 'paragraph',
-//     question: 'Welcome to KHUB',
-//     description: 'Try your best experience with us',
-//     answers: [],
-//   },
-// ];
 
 const initialSlideList = [
   {
@@ -49,10 +45,24 @@ const PresentationEdit = () => {
   const [isPresenting, setIsPresenting] = useState(false);
   const [loading, setLoading] = useState(false);
   const { isMounted } = useMounted();
+  const [collaboratorDialogOpen, setCollaboratorDialogOpen] = useState(false);
+  const [email, setEmail] = useState('');
+  const [collaborators, setCollaborators] = useState([]);
+  const [infoEmail, setInfoEmail] = useState({
+    type: 'error',
+    message: '',
+  });
+  const navigate = useNavigate();
   const fetch = useCallback(() => {
-    getPresentation(params.id).then((data) => setSlides(data.slides.map((slide, index) => {
-      return { ...slide, key: index };
-    })));
+    getPresentation(params.id).then((data) => {
+      setSlides(
+        data.slides.map((slide, index) => {
+          return { ...slide, key: index };
+        }),
+      );
+      const emails = (data.collaborators || []).map((collaborator) => collaborator.email);
+      setCollaborators(emails);
+    }).catch((err) => navigate('/forbidden'));
   }, [isMounted]);
 
   useEffect(() => {
@@ -73,20 +83,94 @@ const PresentationEdit = () => {
       params.id,
       slides.filter((slide) => slide.id === '') || [],
     );
-    await deleteSlides(
-      params.id,
-      slidesDeleteId,
-    );
+    await deleteSlides(params.id, slidesDeleteId);
     await updateSlides(
       params.id,
       slides.filter((slide) => slide.isUpdated && slide.id !== '') || [],
     );
 
-    const updateAnswersSlides = slides.filter((slide) => slide.id !== '' && slide.isAnswersUpdated);
-    await Promise.all(updateAnswersSlides.map((slide) => createAnswers(params.id, slide.id, slide.answers.filter((answer) => answer.id === '' && !answer.isDeleted))));
-    await Promise.all(updateAnswersSlides.map((slide) => deleteAnswers(params.id, slide.id, slide.answers.filter((answer) => answer.id !== '' && answer.isDeleted).map((answer) => answer.id))));
-    await Promise.all(updateAnswersSlides.map((slide) => updateAnswers(params.id, slide.id, slide.answers.filter((answer) => answer.id !== '' && !answer.isDeleted && answer.isUpdated))));
+    const updateAnswersSlides = slides.filter(
+      (slide) => slide.id !== '' && slide.isAnswersUpdated,
+    );
+    await Promise.all(
+      updateAnswersSlides.map((slide) => createAnswers(
+        params.id,
+        slide.id,
+        slide.answers.filter(
+          (answer) => answer.id === '' && !answer.isDeleted,
+        ),
+      )),
+    );
+    await Promise.all(
+      updateAnswersSlides.map((slide) => deleteAnswers(
+        params.id,
+        slide.id,
+        slide.answers
+          .filter((answer) => answer.id !== '' && answer.isDeleted)
+          .map((answer) => answer.id),
+      )),
+    );
+    await Promise.all(
+      updateAnswersSlides.map((slide) => updateAnswers(
+        params.id,
+        slide.id,
+        slide.answers.filter(
+          (answer) => answer.id !== '' && !answer.isDeleted && answer.isUpdated,
+        ),
+      )),
+    );
     setLoading(false);
+  };
+
+  const setErrorEmail = (message) => {
+    setInfoEmail({
+      type: 'error',
+      message,
+    });
+  };
+
+  const setSuccessEmail = (message) => {
+    setInfoEmail({
+      type: 'success',
+      message,
+    });
+  };
+
+  const handleInvite = async () => {
+    if (!email.trim().length) {
+      setErrorEmail('Please input email');
+      setTimeout(() => setErrorEmail(''), 1500);
+    } else if (!validateEmail(email)) {
+      setErrorEmail('Please input valid email!');
+      setTimeout(() => setErrorEmail(''), 1500);
+    } else if (collaborators.includes(email)) {
+      setErrorEmail('Collaborator existed!');
+      setTimeout(() => setErrorEmail(''), 1500);
+    } else {
+      try {
+        const isUserExists = await checkUserByEmail(email);
+        if (isUserExists) {
+          await addCollaborator(params.id, email);
+          setSuccessEmail('Add collaborator successfully');
+          setEmail('');
+          setTimeout(() => setSuccessEmail(''), 1500);
+          fetch();
+        } else {
+          setErrorEmail("User doesn't exist");
+          setTimeout(() => setErrorEmail(''), 1500);
+        }
+      } catch (error) {
+        setErrorEmail(error.message);
+        setTimeout(() => setErrorEmail(''), 1500);
+      }
+    }
+  };
+
+  const handleRemove = async (emailUser) => {
+    await removeCollaborator(params.id, emailUser);
+    setSuccessEmail('Remove collaborator successfully');
+    setTimeout(() => setSuccessEmail(''), 1500);
+    fetch();
   };
 
   return (
@@ -117,13 +201,31 @@ const PresentationEdit = () => {
             >
               Share
             </Button>
+            <Button
+              className="presentation__btn-item--present"
+              color="warning"
+              variant="contained"
+              startIcon={<Group />}
+              onClick={() => setCollaboratorDialogOpen(true)}
+            >
+              Collaborators
+            </Button>
+            <CollaboratorsDialog
+              open={collaboratorDialogOpen}
+              onClose={() => setCollaboratorDialogOpen(false)}
+              onInvite={handleInvite}
+              email={email}
+              onChangeEmail={(e) => setEmail(e.target.value)}
+              collaborators={collaborators}
+              infoEmail={infoEmail}
+              onRemove={handleRemove}
+            />
             <BasicModal
               open={open}
               handleClose={handleClose}
               aria-labelledby="modal-modal-title"
               aria-describedby="modal-modal-description"
             />
-
             <Button
               className="presentation__btn-item--present"
               color="primary"
